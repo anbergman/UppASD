@@ -36,6 +36,8 @@ jobs:
       - name: Provide gfortran (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
+        run: |
+          pacman --noconfirm -Sy mingw-w64-x86_64-gcc-fortran 
 
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
