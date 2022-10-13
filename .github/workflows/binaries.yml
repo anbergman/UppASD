@@ -44,11 +44,6 @@ jobs:
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
 
-      - name: Install gfortran (Windows)
-        if: runner.os == 'Windows'
-        run: |
-          pacman --noconfirm -Sy mingw-w64-x86_64-gcc-fortran 
-
       - uses: actions/checkout@v3
 
       - name: Build binaries
