@@ -9,7 +9,8 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        os: [ubuntu-20.04, windows-2019, macOS-11]
+        #os: [ubuntu-20.04, windows-2019, macOS-11]
+        os: [windows-latest]
 
     steps:
       - name: Provide gfortran (macOS)
@@ -43,7 +44,10 @@ jobs:
              mingw-w64-x86_64-gcc-fortran
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
-             export FC=/mingw64/bin/gfortran.exe
+             
+      - name: Export FC  (Windows)
+        if: runner.os == 'Windows'
+        run: export FC=/mingw64/bin/gfortran.exe
 
       - uses: actions/checkout@v3
 
