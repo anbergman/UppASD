@@ -50,7 +50,7 @@ jobs:
 
       - name: Build binaries
         run: |
-             FC=/mingw64/bin/gfortran.exe cmake -S . -B build
+             cmake -DCMAKE_Fortran_COMPILER=/mingw64/bin/gfortran.exe -S . -B build
              cmake --build build
 
       - uses: actions/upload-artifact@v3
