@@ -45,15 +45,12 @@ jobs:
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
              
-      - name: Export FC  (Windows)
-        if: runner.os == 'Windows'
-        run: export FC=/mingw64/bin/gfortran.exe
 
       - uses: actions/checkout@v3
 
       - name: Build binaries
         run: |
-             cmake -S . -B build
+             FC=/mingw64/bin/gfortran.exe cmake -S . -B build
              cmake --build build
 
       - uses: actions/upload-artifact@v3
