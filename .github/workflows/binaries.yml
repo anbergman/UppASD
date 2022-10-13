@@ -43,6 +43,7 @@ jobs:
              mingw-w64-x86_64-gcc-fortran
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
+             export FC=/mingw64/bin/gfortran.exe
 
       - uses: actions/checkout@v3
 
