@@ -33,17 +33,16 @@ jobs:
           brew install fftw
           fftw-wisdom -V
 
-      - name: Provide gfortran (Windows)
+      - name: Install msys (Windows)
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         run: |
           pacman --noconfirm -Sy mingw-w64-x86_64-gcc-fortran 
 
-      - name: Tell distutils to use mingw (Windows)
+      - name: Install gfortran (Windows)
         if: runner.os == 'Windows'
         run: |
-           #echo "[build]`ncompiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg
-           echo "[build] ncompiler=mingw32" 
+          pacman --noconfirm -Sy mingw-w64-x86_64-gcc-fortran 
 
       - uses: actions/checkout@v3
 
