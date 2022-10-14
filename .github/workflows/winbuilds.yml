@@ -42,12 +42,31 @@ jobs:
           openblas:p
           lapack:p
           fftw:p
-          gcc:p
-          gcc-fortran:p
-          fftw:p
           cmake:p
           ninja:p
 
+    - name: '${{ matrix.icon }} Setup Fortran'
+      if:  ${{matrix.env}} ! 'clang-x86_64'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          git
+        pacboy: >-
+          gcc-gfortran:p
+
+    - name: '${{ matrix.icon }} Setup Flang'
+      if:  ${{matrix.env}} == 'clang-x86_64'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          git
+        pacboy: >-
+          flang:p
+          
     - name: '🚧 Build TOOL'
       run: |
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
