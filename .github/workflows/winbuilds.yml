@@ -39,6 +39,8 @@ jobs:
 
         pacboy: >-
           toolchain:p
+          openblas:p
+          lapack:p
           fftw:p
           gcc:p
           gcc-fortran:p
