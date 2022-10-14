@@ -52,10 +52,8 @@ jobs:
         msystem: ${{matrix.sys}}
         update: true
         install: >-
-          git
-        pacboy: >-
-          gcc-gfortran:p
-
+          mingw-w64-${{matrix.env}}-gcc-fortran
+          
     - name: '${{ matrix.icon }} Setup Flang'
       if:  ${{matrix.env}} == 'clang-x86_64'
       uses: msys2/setup-msys2@v2
@@ -63,9 +61,7 @@ jobs:
         msystem: ${{matrix.sys}}
         update: true
         install: >-
-          git
-        pacboy: >-
-          flang:p
+          mingw-w64-${{matrix.env}}-flang
           
     - name: '🚧 Build TOOL'
       run: |
