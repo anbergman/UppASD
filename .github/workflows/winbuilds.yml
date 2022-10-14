@@ -48,6 +48,7 @@ jobs:
     - name: '${{ matrix.icon }} Setup Fortran'
       if:  ${{matrix.env}} ! 'clang-x86_64'
       uses: msys2/setup-msys2@v2
+      shell: msys2 {0}
       with:
         msystem: ${{matrix.sys}}
         update: true
@@ -57,6 +58,7 @@ jobs:
     - name: '${{ matrix.icon }} Setup Flang'
       if:  ${{matrix.env}} == 'clang-x86_64'
       uses: msys2/setup-msys2@v2
+      shell: msys2 {0}
       with:
         msystem: ${{matrix.sys}}
         update: true
