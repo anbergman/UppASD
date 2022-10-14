@@ -3,8 +3,6 @@ name: Example CMake
 on:
   push:
   pull_request:
-  schedule:
-    - cron: '0 0 * * 3'
   workflow_dispatch:
 
 jobs:
@@ -31,6 +29,7 @@ jobs:
         fetch-depth: 0
 
     - name: '${{ matrix.icon }} Setup MSYS2'
+      uses: msys2/setup-msys2@v2
       with:
         msystem: ${{matrix.sys}}
         update: true
