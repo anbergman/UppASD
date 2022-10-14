@@ -1,0 +1,58 @@
+name: Example CMake
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 0 * * 3'
+  workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { icon: '⬛', sys: mingw32, env: i686 }
+          - { icon: '🟦', sys: mingw64, env: x86_64 }
+          - { icon: '🟨', sys: ucrt64,  env: ucrt-x86_64  } # Experimental!
+          - { icon: '🟧', sys: clang64, env: clang-x86_64 } # Experimental!
+    name: 🚧${{ matrix.icon }} ${{ matrix.sys }}
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+
+    - name: '🧰 Checkout'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: '${{ matrix.icon }} Setup MSYS2'
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          git
+          make
+          #mingw-w64-${{matrix.env}}-gcc
+          #mingw-w64-${{matrix.env}}-gcc-fortran
+          #mingw-w64-${{matrix.env}}-openblas64
+          #mingw-w64-${{matrix.env}}-fftw
+          #mingw-w64-${{matrix.env}}-cmake
+          #mingw-w64-${{matrix.env}}-ninja
+        pacboy: >-
+          toolchain:p
+          fftw:p
+          gcc:p
+          gcc-fortran:p
+          fftw:p
+          cmake:p
+          ninja:p
+
+    - name: '🚧 Build TOOL'
+      run: |
+        cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+        cmake --build build 
