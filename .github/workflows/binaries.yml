@@ -42,10 +42,12 @@ jobs:
              git 
              mingw-w64-x86_64-gcc
              mingw-w64-x86_64-gcc-fortran
-             mingw-w64-x86_64-openblas
+             mingw-w64-x86_64-openblas64
              mingw-w64-x86_64-fftw
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
+        env:
+           MSYSTEM: MINGW64
              
 
       - uses: actions/checkout@v3
