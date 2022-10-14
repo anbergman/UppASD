@@ -47,7 +47,7 @@ jobs:
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
         env:
-           MSYSTEM: MINGW64
+           msystem: mingw64
              
 
       - uses: actions/checkout@v3
@@ -57,7 +57,7 @@ jobs:
              cmake -S . -B build -G Ninja
              cmake --build build
         env:
-           FC: gfortran
+           msystem: mingw64
 
       - uses: actions/upload-artifact@v3
         with:
