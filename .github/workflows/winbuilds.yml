@@ -71,3 +71,7 @@ jobs:
       run: |
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
+        
+    - uses: actions/upload-artifact@v3
+      with:
+       path: ./bin/*.exe
