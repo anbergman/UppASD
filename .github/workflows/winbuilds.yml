@@ -29,7 +29,7 @@ jobs:
         fetch-depth: 0
 
     - name: '${{ matrix.icon }} Setup MSYS2 gcc'
-      if:  matrix.env ! 'clang-x86_64'
+      if: ${{ matrix.sys != 'clang64' }}
       uses: msys2/setup-msys2@v2
       with:
         msystem: ${{matrix.sys}}
@@ -48,7 +48,7 @@ jobs:
           ninja:p
           
     - name: '${{ matrix.icon }} Setup MSYS2 clang'
-      if:  matrix.env == 'clang-x86_64'
+      if: ${{ matrix.sys == 'clang64' }
       uses: msys2/setup-msys2@v2
       with:
         msystem: ${{matrix.sys}}
