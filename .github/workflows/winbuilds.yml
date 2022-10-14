@@ -36,12 +36,7 @@ jobs:
         install: >-
           git
           make
-          #mingw-w64-${{matrix.env}}-gcc
-          #mingw-w64-${{matrix.env}}-gcc-fortran
-          #mingw-w64-${{matrix.env}}-openblas64
-          #mingw-w64-${{matrix.env}}-fftw
-          #mingw-w64-${{matrix.env}}-cmake
-          #mingw-w64-${{matrix.env}}-ninja
+
         pacboy: >-
           toolchain:p
           fftw:p
