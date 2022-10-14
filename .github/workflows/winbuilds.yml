@@ -28,7 +28,8 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: '${{ matrix.icon }} Setup MSYS2'
+    - name: '${{ matrix.icon }} Setup MSYS2 gcc'
+      if:  ${{matrix.env}} ! 'clang-x86_64'
       uses: msys2/setup-msys2@v2
       with:
         msystem: ${{matrix.sys}}
@@ -39,31 +40,32 @@ jobs:
 
         pacboy: >-
           toolchain:p
+          gcc-fortran:p
+          openblas:p
+          lapack:p
+          fftw:p
+          cmake:p
+          ninja:p
+          
+    - name: '${{ matrix.icon }} Setup MSYS2 clang'
+      if:  ${{matrix.env}} == 'clang-x86_64'
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        install: >-
+          git
+          make
+
+        pacboy: >-
+          toolchain:p
+          flang:p
           openblas:p
           lapack:p
           fftw:p
           cmake:p
           ninja:p
 
-    - name: '${{ matrix.icon }} Setup Fortran'
-      if:  ${{matrix.env}} ! 'clang-x86_64'
-      uses: msys2/setup-msys2@v2
-      shell: msys2 {0}
-      with:
-        msystem: ${{matrix.sys}}
-        update: true
-        install: >-
-          mingw-w64-${{matrix.env}}-gcc-fortran
-          
-    - name: '${{ matrix.icon }} Setup Flang'
-      if:  ${{matrix.env}} == 'clang-x86_64'
-      uses: msys2/setup-msys2@v2
-      shell: msys2 {0}
-      with:
-        msystem: ${{matrix.sys}}
-        update: true
-        install: >-
-          mingw-w64-${{matrix.env}}-flang
           
     - name: '🚧 Build TOOL'
       run: |
