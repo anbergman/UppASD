@@ -38,7 +38,7 @@ jobs:
         if: runner.os == 'Windows'
         uses: msys2/setup-msys2@v2
         with: 
-           msystem: UCRT64
+           msystem: MINGW64
            install: >-
              git 
              mingw-w64-x86_64-gcc
@@ -48,7 +48,7 @@ jobs:
              mingw-w64-x86_64-cmake
              mingw-w64-x86_64-ninja
         env:
-           msystem: UCRT64
+           msystem: MINGW64
              
 
       - uses: actions/checkout@v3
@@ -58,7 +58,7 @@ jobs:
              cmake -S . -B build -G Ninja
              cmake --build build
         env:
-           msystem: UCRT64
+           msystem: MINGW64
 
       - uses: actions/upload-artifact@v3
         with:
