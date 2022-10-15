@@ -9,7 +9,10 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        os: [ ubuntu-latest,  macOS-latest]
+        include:
+          - { icon: '🟦', os: macOS-latest ,sys: macos, arch: x86_64 } 
+          - { icon: '⬛', os: ubuntu-latest,sys: linux, arch: x86_64 }
+        #os: [ ubuntu-latest,  macOS-latest]
         #os: [ubuntu-20.04, ubuntu-latest,  macOS-11, macOS-latest]
 
     steps:
@@ -43,9 +46,9 @@ jobs:
              mkdir ./dist
              uname -a
              echo ${{runner.name}}
-             cp ./bin/sd.* ./dist/uppasd.${{runner.os}}.${{runner.arch}}
+             cp ./bin/sd.* ./dist/uppasd.${{matrix.sys}}.${{matrix.arch}}
 
       - uses: actions/upload-artifact@v3
         with:
-          name: uppasd.${{runner.os}}.${{runner.arch}}
+          name: uppasd.${{matrix.sys}}.${{matrix.arch}}
           path: ./dist/
