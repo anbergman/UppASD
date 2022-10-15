@@ -39,8 +39,12 @@ jobs:
         run: |
              cmake -S . -B build 
              cmake --build build
-             ls ./bin
+             binary_name = `ls ./bin`
+             mkdir -f ./dist
+             uname -a
+             cp $binary_name ./dist/uppasd.{{$runner.os}}
 
       - uses: actions/upload-artifact@v3
         with:
-          path: ./bin/*
+          name: 'uppasd.{{$runner.os}}'
+          path: ./dist/
