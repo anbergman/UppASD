@@ -9,7 +9,8 @@ jobs:
     continue-on-error: true
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest,  macOS-11, macOS-latest]
+        os: [ ubuntu-latest,  macOS-latest]
+        #os: [ubuntu-20.04, ubuntu-latest,  macOS-11, macOS-latest]
 
     steps:
       - name: Provide gfortran (macOS)
@@ -41,9 +42,10 @@ jobs:
              cmake --build build
              mkdir ./dist
              uname -a
-             cp ./bin/sd.* ./dist/uppasd.${{runner.os}}
+             echo ${{runner.name}}
+             cp ./bin/sd.* ./dist/uppasd.${{runner.os}}.${{runner.arch}}
 
       - uses: actions/upload-artifact@v3
         with:
-          name: uppasd.${{runner.os}}
+          name: uppasd.${{runner.os}}.${{runner.arch}}
           path: ./dist/
