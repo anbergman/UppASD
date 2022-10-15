@@ -1,15 +1,15 @@
-name: Build
+name: Build binaries Linux, Macos
 
 on: [push, pull_request]
 
 jobs:
   build_wheels:
-    name: Build wheels on ${{ matrix.os }}
+    name: Build binary for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     continue-on-error: true
     strategy:
       matrix:
-        os: [ubuntu-20.04, ubuntu-latest, macOS-10, macOS-11, macOS-latest]
+        os: [ubuntu-20.04, ubuntu-latest,  macOS-11, macOS-latest]
 
     steps:
       - name: Provide gfortran (macOS)
@@ -39,6 +39,7 @@ jobs:
         run: |
              cmake -S . -B build 
              cmake --build build
+             ls ./bin
 
       - uses: actions/upload-artifact@v3
         with:
