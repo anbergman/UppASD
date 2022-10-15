@@ -42,9 +42,10 @@ jobs:
              binary_name = `ls ./bin`
              mkdir -f ./dist
              uname -a
-             cp $binary_name ./dist/uppasd.{{$runner.os}}
+             echo $binary_name
+             cp ./bin/sd.* ./dist/uppasd.{{$runner.os}}
 
       - uses: actions/upload-artifact@v3
         with:
-          name: 'uppasd.{{$runner.os}}'
+          name: uppasd.{$runner.os}
           path: ./dist/

@@ -78,5 +78,5 @@ jobs:
         
     - uses: actions/upload-artifact@v3
       with:
-       name: windows_binaries
+       name: windows_binaries.${{matrix.sys}}.${{matrix.env}}
        path: ./bin/uppasd*.exe
