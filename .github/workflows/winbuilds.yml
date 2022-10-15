@@ -1,4 +1,4 @@
-name: Example CMake
+name: Build binaries Windows
 
 on:
   push:
@@ -73,7 +73,10 @@ jobs:
         cmake --build build 
         ls ./bin
         cp ./bin/sd.gfortran.exe ./bin/sd.gfortran.${{matrix.sys}}.${{matrix.env}}.exe
+        cp ./bin/sd.gfortran.exe ./bin/uppasd.${{matrix.sys}}.${{matrix.env}}.exe
+        ls ./bin
         
     - uses: actions/upload-artifact@v3
       with:
-       path: ./bin/*.exe
+       name: windows_binaries
+       path: ./bin/uppasd*.exe
