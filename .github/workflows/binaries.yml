@@ -39,11 +39,11 @@ jobs:
         run: |
              cmake -S . -B build 
              cmake --build build
-             mkdir -f ./dist
+             mkdir ./dist
              uname -a
              cp ./bin/sd.* ./dist/uppasd.{{$runner.os}}
 
       - uses: actions/upload-artifact@v3
         with:
-          name: uppasd.{$runner.os}
+          name: uppasd.{{$runner.os}}
           path: ./dist/
