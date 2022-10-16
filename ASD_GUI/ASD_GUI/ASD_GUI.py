@@ -37,7 +37,7 @@ Jonathan Chico
 """
 import sys
 from PyQt5.QtWidgets import QApplication
-from UI.ASDUIDriver import UppASDVizMainWindow
+from ASD_GUI.UI.ASDUIDriver import UppASDVizMainWindow
 
 ################################################################################
 ## @brief Main executable class to run the ASD_Visualizer

@@ -10,7 +10,7 @@ Author
 ----------
 Jonathan Chico
 """
-import Input_Creator.ASDInputGen as ASDInputGen
+import ASD_GUI.Input_Creator.ASDInputGen as ASDInputGen
 from enum import Enum
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import Qt
@@ -37,12 +37,12 @@ class UppASDVizMainWindow(QMainWindow):
     # @author Jonathan Chico
     ############################################################################
     def __init__(self):
-        import PLOT.ASDPlots2D as ASDPlots2D
-        import UI.ASDInputWindows as ASDInputWindows
-        import VTK_Viz.ASDVTKReading as ASDVTKReading
-        import PLOT.ASDPlotsReading as ASDPlotsReading
-        import VTK_Viz.ASDVTKGenActors as ASDVTKGenActors
-        import VTK_Viz.ASDVTKVizOptions as ASDVTKVizOptions
+        from ASD_GUI.PLOT import ASDPlots2D 
+        from ASD_GUI.UI import ASDInputWindows 
+        from ASD_GUI.VTK_Viz import ASDVTKReading 
+        from ASD_GUI.PLOT import ASDPlotsReading 
+        from ASD_GUI.VTK_Viz import ASDVTKGenActors 
+        from ASD_GUI.VTK_Viz import ASDVTKVizOptions
         from matplotlib.figure import Figure
         from mpl_toolkits.mplot3d import Axes3D
         from vtk import vtkOpenGLRenderer,vtkInteractorStyleTrackballCamera
@@ -155,7 +155,7 @@ class UppASDVizMainWindow(QMainWindow):
         from PyQt5 import uic
         from PyQt5.QtGui import QIntValidator,QDoubleValidator
         from PyQt5.QtWidgets import QToolBar,QVBoxLayout
-        from UI.ASDMenuToolbar import VTK_Menu_and_Toolbar_Setup,Plot_Menu_and_Toolbar_Setup,Input_Toolbar_Setup
+        from ASD_GUI.UI.ASDMenuToolbar import VTK_Menu_and_Toolbar_Setup,Plot_Menu_and_Toolbar_Setup,Input_Toolbar_Setup
         self.VTKToolBar = QToolBar()
         self.MatPlotToolbar = QToolBar()
         self.InputToolbar = QToolBar()
@@ -398,7 +398,7 @@ class UppASDVizMainWindow(QMainWindow):
     # @author Jonathan Chico
     ############################################################################
     def check_for_restart(self):
-        import UI.ASDInputWindows as ASDInputWindows
+        import ASD_GUI.UI.ASDInputWindows as ASDInputWindows
 
         everything_okay=True
         self.ASDInputGen.ASDInputGatherer(self)
@@ -588,11 +588,11 @@ class UppASDVizMainWindow(QMainWindow):
     ############################################################################
     ############################################################################
     def ToggleInitPhase(self):
-        from UI.ASDMenuToolbar import UpdateUI
+        from ASD_GUI.UI.ASDMenuToolbar import UpdateUI
         UpdateUI(self)
         return
     def ToggleHessians(self):
-        from UI.ASDMenuToolbar import UpdateUI
+        from ASD_GUI.UI.ASDMenuToolbar import UpdateUI
         UpdateUI(self)
         return
     ############################################################################
@@ -638,8 +638,8 @@ class UppASDVizMainWindow(QMainWindow):
         ----------
         Jonathan Chico
         """
-        import PLOT.ASDPlots2D as ASDPlots2D
-        import UI.ASDInputWindows as ASDInputWindows
+        from ASD_GUI.PLOT import ASDPlots2D 
+        from ASD_GUI.UI import ASDInputWindows 
         #-----------------------------------------------------------------------
         # Plotting the spin-spin correlation function
         #-----------------------------------------------------------------------
@@ -823,9 +823,9 @@ class UppASDVizMainWindow(QMainWindow):
 
         """
         from PyQt5.QtWidgets import QLabel
-        import VTK_Viz.ASDVTKEneActors as ASDVTKEneActors
-        import VTK_Viz.ASDVTKMomActors as ASDVTKMomActors
-        import VTK_Viz.ASDVTKNeighActors as ASDVTKNeighActors
+        from ASD_GUI.VTK_Viz import ASDVTKEneActors 
+        from ASD_GUI.VTK_Viz import ASDVTKMomActors 
+        from ASD_GUI.VTK_Viz import ASDVTKNeighActors
         try:
             self.ASDGenActors.scalar_bar_widget
         except:
