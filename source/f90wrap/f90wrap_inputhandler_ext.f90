@@ -31,8 +31,8 @@ subroutine f90wrap_read_fixed_moments(landeg_global)
 end subroutine f90wrap_read_fixed_moments
 
 subroutine f90wrap_read_exchange(ham_inp)
-    use inputdatatype, only: ham_inp_t
     use inputhandler_ext, only: read_exchange
+    use inputdatatype, only: ham_inp_t
     implicit none
     
     type ham_inp_t_ptr_type
