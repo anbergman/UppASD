@@ -32,7 +32,7 @@ class cmake_build_ext(build_ext):
             cfg = 'Debug' if os.environ.get('DISPTOOLS_DEBUG','OFF') == 'ON' else 'Release'
 
             cmake_args = [
-                '-G Ninja,
+                '-G Ninja',
                 '-DCMAKE_BUILD_TYPE=%s' % cfg,
                 # Ask CMake to place the resulting library in the directory
                 # containing the extension
@@ -65,7 +65,7 @@ class cmake_build_ext(build_ext):
             #                      cwd=self.build_temp)
 
             # Build
-            subprocess.check_call(['cmake', '--build', '.','-j4', '--config', cfg],
+            subprocess.check_call(['cmake', '--build', '.','--parallel', '--config', cfg],
                                   cwd=self.build_temp)
 
             src_file=glob.glob(self.build_temp+'/_uppasd.*.so')
