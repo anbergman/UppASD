@@ -1,4 +1,4 @@
-! Module inputhandler_ext defined in file /Users/andersb/Jobb/UppASD_release/UppASD_release/source/Input/inputhandler_ext.f90
+! Module inputhandler_ext defined in file Input/inputhandler_ext.f90
 
 subroutine f90wrap_read_positions
     use inputhandler_ext, only: read_positions
@@ -183,5 +183,5 @@ subroutine f90wrap_read_barriers
     call read_barriers()
 end subroutine f90wrap_read_barriers
 
-! End of module inputhandler_ext defined in file /Users/andersb/Jobb/UppASD_release/UppASD_release/source/Input/inputhandler_ext.f90
+! End of module inputhandler_ext defined in file Input/inputhandler_ext.f90
 

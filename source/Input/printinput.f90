@@ -4,12 +4,21 @@
 module PrintInput
    use Parameters
    use Profiling
+   use JSON
    implicit none
    public
 
    real(dblprec), dimension(3) :: fdum
    integer, dimension(3) :: idum
    character, dimension(3) :: cdum
+
+   interface yes_no_print
+      module procedure yes_no_print_str, yes_no_print_int, yes_no_print_str_arr
+   end interface yes_no_print
+
+   interface yaml_print
+      module procedure yaml_print_str, yaml_print_int, yaml_print_real
+   end interface yaml_print
 
 contains
 
@@ -202,7 +211,7 @@ contains
 
 
       subroutine print_demag()
-        
+
          call json_key(file_id,'demag')
          call json_char(file_id,(/demag/),1)
          call json_key(file_id,'demagfield')
@@ -254,7 +263,7 @@ contains
 
 
       subroutine print_initialphase()
-         
+
          call json_key(file_id,'ip_mode')
          call json_string(file_id,ipmode)
 
@@ -338,6 +347,9 @@ contains
             call json_key(file_id,'mcnstep')
             call json_int(file_id,(/mcnstep/),1)
          end if
+
+         call json_key(file_id,'real_time_measure')
+         call json_char(file_id,(/real_time_measure/),1)
 
          call json_key(file_id,'do_avrg')
          call json_char(file_id,(/do_avrg/),1)
@@ -480,144 +492,191 @@ contains
 
    end subroutine prninp
 
-         subroutine json_key(fileno,key)
-            implicit none
-            integer, intent(in) :: fileno
-            character(*), intent(in) :: key
-            !
-            write(fileno,'(a20,a)',advance='no') '"'//trim(key)//'"','  :  '
-         end subroutine json_key
+   !> Print yaml summary file for compatibility with GUI
+   subroutine print_yaml()
+      !
+      use InputData
+      use prn_averages
+      use prn_trajectories
+      use Correlation
+      use AMS, only : do_ams
+      use diamag, only: do_diamag
 
-         subroutine json_string(fileno,val)
-            implicit none
-            integer, intent(in) :: fileno
-            character(*), intent(in) :: val
-            !
-            write(fileno,'(1x,a,a,a)') ' "',val,'" ,'
-         end subroutine json_string
 
-         subroutine json_char(fileno,val,nel,contflag,indflag)
-            implicit none
-            integer, intent(in) :: fileno
-            integer, intent(in) :: nel
-            character, dimension(nel), intent(in) :: val
-            logical, intent(in), optional :: contflag
-            logical, intent(in), optional :: indflag
-            !
-            integer :: iel
-            logical :: cont 
-            logical :: ind 
 
-            !
-            cont = .false.
-            if (present(contflag)) cont=contflag
-            ind = .false.
-            if (present(indflag)) ind=indflag
-            !
-            if(nel==1) then
-               write(fileno,'(a,a,a)') ' "',val(1),'" ,'
-            else
-               if(ind) then
-                  write(fileno,'(26x,a)',advance='no') ' [ '
-               else
-                  write(fileno,'(1x,a)',advance='no') ' [ '
-               end if
-               do iel=1,nel-1
-                  write(fileno,'(a,a,a)',advance='no') '"',val(iel),'" , '
-               end do
-               if (cont) then 
-                  write(fileno,'(a,a,a)') '"',val(iel),'" ] '
-               else
-                  write(fileno,'(a,a,a)') '"',val(iel),'" ] , '
-               end if
-            end if
-         end subroutine json_char
+      !.. Implicit declarations
+      implicit none
 
-         subroutine json_float(fileno,val,nel,contflag,indflag)
-            implicit none
-            integer, intent(in) :: fileno
-            integer, intent(in) :: nel
-            real(dblprec), dimension(nel), intent(in) :: val
-            logical, intent(in), optional :: contflag
-            logical, intent(in), optional :: indflag
-            !
-            integer :: iel
-            logical :: cont
-            logical :: ind
-            !
-            cont = .false.
-            if(present(contflag)) cont=contflag
-            ind = .false.
-            if(present(indflag)) ind=indflag
+      !.. Local scalars
+      integer :: file_id
+      character(len=20) :: filn
+      integer, dimension(8) :: times
 
-            if(nel==1) then
-               write(fileno,'(g14.6,a)') val(1),' ,'
-            else
-               if(ind) then
-                  write(fileno,'(26x,a)',advance='no') ' [ '
-               else 
-                  write(fileno,'(1x,a)',advance='no') ' [ '
-               end if
-               do iel=1,nel-1
-                  write(fileno,'(g14.6,a)',advance='no') val(iel),' , '
-               end do
-               if(cont) then
-                  write(fileno,'(g14.6,a)') val(iel),' ]  '
-               else
-                  write(fileno,'(g14.6,a)') val(iel),' ] , '
-               end if
-            end if
-         end subroutine json_float
+      call date_and_time(VALUES=times)
 
-         subroutine json_int(fileno,val,nel,contflag,indflag)
-            implicit none
-            integer, intent(in) :: fileno
-            integer, intent(in) :: nel
-            integer, dimension(nel), intent(in) :: val
-            logical, intent(in), optional :: contflag
-            logical, intent(in), optional :: indflag
-            !
-            integer :: iel
-            logical :: cont
-            logical :: ind
+      ! Open outputfile and print starting brackets
+      write (filn,'(''uppasd.'',a,''.yaml'')') trim(simid)
+      file_id=ofileno
+      open(file_id, file=filn)
+      write(file_id,'(a,a)') "simid: ", simid
 
-            cont = .false.
-            if(present(contflag)) cont=contflag
-            ind = .false.
-            if(present(indflag)) ind=indflag
-            !
-            if(nel==1) then
-               write(fileno,'(i8,a)') val(1),' ,'
-            else
-               if(ind) then
-                  write(fileno,'(26x,a)',advance='no') ' [ '
-               else
-                  write(fileno,'(1x,a)',advance='no') ' [ '
-               end if
-               do iel=1,nel-1
-                  write(fileno,'(i8,a)',advance='no') val(iel),' , '
-               end do
-               if(cont) then
-                   write(fileno,'(i8,a)') val(iel),' ]  '
-               else
-                   write(fileno,'(i8,a)') val(iel),' ] , '
-                end if
-            end if
-         end subroutine json_int
+      write(file_id,'(a,i4,a,i0.2,a,i0.2)') "date: ", times(1),"-",times(2),"-",times(3)
+#if defined(VERSION)
+      write (file_id,'(a,a)')  "git_revision: ", VERSION
+#endif
 
-!!!          subroutine json_vector(fileno,val,nel)
-!!!             implicit none
-!!!             integer, intent(in) :: fileno
-!!!             integer, intent(in) :: nel
-!!!             real(dblprec), dimension(nel), intent(in) :: val
-!!!             !
-!!!             integer :: iel
-!!!             !
-!!!             write(fileno,'(a)',advance='no') ' [ '
-!!!             do iel=1,nel-1
-!!!                write(fileno,'(f12.6,a)',advance='no') val(iel),' , '
-!!!             end do
-!!!             write(fileno,'(f12.6,a)') val(iel),' ] '
-!!!          end subroutine json_vector
+      write(file_id,'(a)') "siminfo:"
 
+      call yaml_print("temperature:",temp,file_id)
+      call yaml_print("timestep:",delta_t,file_id)
+      call yaml_print("damping:",mplambda1,file_id)
+      call yaml_print("nstep:",nstep,file_id)
+
+      if (mode .eq. 'S') then
+         call yaml_print("mode:",'LLG',file_id)
+      else if (mode .eq. 'R') then
+         call yaml_print("mode:",'SLD',file_id)
+      else if (mode .eq. 'M') then
+         call yaml_print("mode:",'M-MC',file_id)
+      else if (mode .eq. 'M') then
+         call yaml_print("mode:",'H-MC',file_id)
+      end if
+
+      call yaml_print("alat:",alat,file_id)
+
+      if (do_sc .eq. 'Y' .or. do_sc .eq. 'Q') then
+         call yaml_print("sc_step:",sc%sc_step,file_id)
+         call yaml_print("sc_nstep:",sc%sc_nstep,file_id)
+      end if
+      if (do_sc .eq. 'Y' .or. do_sc .eq. 'C') then
+         call yaml_print("sc_sep:",sc%sc_sep,file_id)
+      end if
+
+      write(file_id,'(a)') "measurables:"
+      ! Averages
+      call yes_no_print(do_avrg,"averages: ",'Y',file_id)
+      ! Trajectories
+      call yes_no_print(ntraj,"trajectories: ",0,file_id)
+      ! Moments
+      call yes_no_print(do_tottraj,"moments: ",'Y',file_id)
+      ! S(q,w)
+      call yes_no_print(do_sc,"sqw: ",(/'Y','Q'/),file_id)
+      ! AMS
+      call yes_no_print(do_ams,"ams: ",'Y',file_id)
+      ! nc-AMS
+      call yes_no_print(do_diamag,"nc-ams: ",'Y',file_id)
+      ! Energies
+      call yes_no_print(plotenergy,"totenergy: ",0,file_id)
+      ! Cumulants
+      call yes_no_print(do_cumu,"cumulants:",'Y',file_id)
+
+      close(file_id)
+
+   end subroutine print_yaml
+
+   subroutine yes_no_print_str(variable,label,val,file_id)
+      implicit none
+
+      character*1, intent(in) :: variable
+      character(*), intent(in) :: label
+      character*1, intent(in) :: val
+      integer, intent(in) :: file_id
+
+      character*20 :: tlabel
+      tlabel=label
+
+      if (variable .eq. val) then
+         write(file_id, 10001) adjustl(tlabel), "Yes"
+      else
+         write(file_id, 10001) adjustl(tlabel), "No "
+      end if
+
+      10001 format(4x,a16,a3)
+   end subroutine yes_no_print_str
+
+   subroutine yes_no_print_str_arr(variable,label,val,file_id)
+      implicit none
+
+      character*1, intent(in) :: variable
+      character(*), intent(in) :: label
+      character*1,dimension(:), intent(in) :: val
+      integer, intent(in) :: file_id
+
+      character*20 :: tlabel
+      tlabel=label
+
+      if (any(variable .eq. val)) then
+         write(file_id, 10001) adjustl(tlabel), "Yes"
+      else
+         write(file_id, 10001) adjustl(tlabel), "No "
+      end if
+
+      10001 format(4x,a16,a3)
+   end subroutine yes_no_print_str_arr
+
+   subroutine yes_no_print_int(variable,label,val,file_id)
+      implicit none
+
+      integer, intent(in) :: variable
+      character(*), intent(in) :: label
+      integer, intent(in) :: val
+      integer, intent(in) :: file_id
+      
+      character*20 :: tlabel
+      tlabel=label
+
+      if (variable > val) then
+         write(file_id, 10001) adjustl(tlabel), "Yes"
+      else
+         write(file_id, 10001) adjustl(tlabel), "No "
+      end if
+
+      10001 format(4x,a16,a3)
+   end subroutine yes_no_print_int
+
+   subroutine yaml_print_real(key,val,file_id)
+      implicit none
+
+      character(*), intent(in) :: key
+      real(dblprec), intent(in) :: val
+      integer, intent(in) :: file_id
+
+      character*16 :: tkey
+      character*18 :: tval
+      tkey=key
+      write(tval,'(g14.8)') val
+
+      write(file_id,'(4x,a,a)') adjustl(tkey), adjustl(tval)
+
+   end subroutine yaml_print_real
+
+   subroutine yaml_print_int(key,val,file_id)
+      implicit none
+
+      character(*), intent(in) :: key
+      integer, intent(in) :: val
+      integer, intent(in) :: file_id
+
+      character*16 :: tkey
+      character*8 :: tval
+      tkey=key
+      write(tval,'(i8)') val
+
+      write(file_id,'(4x,a,a)') adjustl(tkey), adjustl(tval)
+
+   end subroutine yaml_print_int
+
+   subroutine yaml_print_str(key,val,file_id)
+      implicit none
+
+      character(*), intent(in) :: key
+      character(*), intent(in) :: val
+      integer, intent(in) :: file_id
+
+      character*16 :: tkey
+      tkey=key
+
+      write(file_id,'(4x,a,a)') adjustl(tkey), val
+
+   end subroutine yaml_print_str
 end module PrintInput
