@@ -26,11 +26,11 @@ jobs:
           which gcc
           which gfortran
 
-      - name: Provide fftw  (macOS)
+      - name: Provide fftw and ninja (macOS)
         if: runner.os == 'macOS'
         run: |
           # fftw3 
-          brew install fftw
+          brew install fftw ninja
           fftw-wisdom -V
 
       - name: Provide gfortran (Windows)

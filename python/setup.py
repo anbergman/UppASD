@@ -32,6 +32,7 @@ class cmake_build_ext(build_ext):
             cfg = 'Debug' if os.environ.get('DISPTOOLS_DEBUG','OFF') == 'ON' else 'Release'
 
             cmake_args = [
+                '-G Ninja,
                 '-DCMAKE_BUILD_TYPE=%s' % cfg,
                 # Ask CMake to place the resulting library in the directory
                 # containing the extension

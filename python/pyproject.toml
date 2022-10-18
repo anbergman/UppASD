@@ -29,4 +29,4 @@ before-build ='pip install --upgrade setuptools wheel numpy>1.19'
 
 [tool.cibuildwheel.linux]
 #test-requires = ["pip","setuptools", "wheel", "numpy", "f90wrap","build"]
-before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static"
+before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static ninja-build"
