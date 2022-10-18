@@ -393,8 +393,8 @@ ADD_CUSTOM_TARGET(distclean
 if(BUILD_PYTHON)
    # check if Python is installed
    include(FindPython)
-   find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
-   #find_package(Python)
+   #find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
+   find_package(Python)
    #message(STATUS "Python_STDLIB ${Python_STDLIB}.")
    #message(STATUS "Python_SITELIB ${Python_SITELIB}")
    #message(STATUS "Python_LIBRARIES ${Python_LIBRARIES}.")
