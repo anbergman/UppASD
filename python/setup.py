@@ -30,9 +30,12 @@ class cmake_build_ext(build_ext):
 
             extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
             cfg = 'Debug' if os.environ.get('DISPTOOLS_DEBUG','OFF') == 'ON' else 'Release'
+            python_inc_dir = sysconfig.get_path('include')
+            python_lib_dir = sysconfig.get_config_var('LIBDIR')
+
 
             cmake_args = [
-                '-G Ninja',
+                #'-G Ninja',
                 '-DCMAKE_BUILD_TYPE=%s' % cfg,
                 # Ask CMake to place the resulting library in the directory
                 # containing the extension
@@ -47,6 +50,8 @@ class cmake_build_ext(build_ext):
                 '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
                 #'-DCMAKE_Fortran_COMPILER=gfortran',
                 '-DBUILD_PYTHON=ON',
+                #'-DPYTHON_INCLUDE_DIR={}'.format(python_inc_dir),
+                #'-DPYTHON_LIBRARY={}'.format(python_lib_dir),
                 #'-DMKL_INTERFACE_FULL=gf_lp64',
                 #'-DMKL_THREADING=gnu_thread',
                 #'-DLAPACK="-framework Accelerate"',
@@ -68,7 +73,7 @@ class cmake_build_ext(build_ext):
             subprocess.check_call(['cmake', '--build', '.','--parallel', '--config', cfg],
                                   cwd=self.build_temp)
 
-            src_file=glob.glob(self.build_temp+'/_uppasd.*.so')
+            src_file=glob.glob(self.build_temp+'/_uppasd.*.*')
             lib_path=self.build_temp.replace('temp','lib')+'/uppasd/'
             shutil.copy2(src_file[0],'uppasd/')
             shutil.copy2(src_file[0],lib_path)

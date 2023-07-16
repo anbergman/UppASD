@@ -276,7 +276,7 @@ endif()
 #   find_package(BLAS)
 #   find_package(LAPACK REQUIRED)
 #endif()
-set(BLA_STATIC ON)
+#set(BLA_STATIC ON)
 find_package(BLAS REQUIRED)
 find_package(LAPACK REQUIRED)
 message(STATUS "Math libs: 
@@ -311,12 +311,27 @@ INCLUDE(${CMAKE_MODULE_PATH}/git-watcher.cmake)
 ##############################################################################################
 if (USE_CUDA) 
    ENABLE_LANGUAGE(C CUDA CXX)
-   find_package(CUDA)
+   find_package(CUDAToolkit)
    target_sources(${UppASD_LIB} PRIVATE ${SRC}/chelper.f90)
-   add_subdirectory(gpu_files)
+   add_subdirectory(${SRC}/gpu_files)
    add_compile_definitions(CUDA)
    set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -I${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}")
    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -I${CUDAToolkit_MATH_INCLUDE_DIR}")
+
+   # Set preprocessing flags indicating compiler
+   string(TOUPPER ${current_compiler} PP_CUDA_COMPILER_FLAG)
+   set(CMAKE_CUDA_FLAGS "${CMAKE_CUDA_FLAGS} -D__${PP_CUDA_COMPILER_FLAG}__")
+   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D__${PP_CUDA_COMPILER_FLAG}__")
+
+   # Find CUDA arch on local machine
+   include(FindCUDA/select_compute_arch)
+   CUDA_DETECT_INSTALLED_GPUS(INSTALLED_GPU_CCS_1)
+   string(STRIP "${INSTALLED_GPU_CCS_1}" INSTALLED_GPU_CCS_2)
+   string(REPLACE " " ";" INSTALLED_GPU_CCS_3 "${INSTALLED_GPU_CCS_2}")
+   string(REPLACE "." "" CUDA_ARCH_LIST "${INSTALLED_GPU_CCS_3}")
+   SET(CMAKE_CUDA_ARCHITECTURES ${CUDA_ARCH_LIST})
+   SET_TARGET_PROPERTIES(${UppASD_LIB} PROPERTIES CUDA_ARCHITECTURES "${CUDA_ARCH_LIST}")
 
    message(STATUS "Matched compiler:${current_compiler}.  ${CMAKE_Fortran_COMPILER}")
 else ()
@@ -393,8 +408,14 @@ ADD_CUSTOM_TARGET(distclean
 if(BUILD_PYTHON)
    # check if Python is installed
    include(FindPython)
-   #find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
-   find_package(Python)
+
+   # Fix since FindPython is a bit flawed
+   # https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
+   set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+   set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
+   set(Python_LIBRARY "${PYTHON_LIBRARY}")
+   find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
+   #find_package(Python)
    #message(STATUS "Python_STDLIB ${Python_STDLIB}.")
    #message(STATUS "Python_SITELIB ${Python_SITELIB}")
    #message(STATUS "Python_LIBRARIES ${Python_LIBRARIES}.")
@@ -464,24 +485,34 @@ if(BUILD_PYTHON)
          list(APPEND F2PY_libs ${elem})
       endforeach()
       list(APPEND F2PY_libs "-lgfortran")
+      if(OpenMP_Fortran_FOUND AND ${current_compiler} MATCHES "gfortran")
+         list(APPEND F2PY_libs "-lgomp")
+      endif()
       list(REMOVE_DUPLICATES F2PY_libs)
       foreach (elem ${F2PY_libs})
          message(STATUS "------------------ ${elem}")
       endforeach()
 
 
-      if(current_compiler MATCHES "gfortran" OR current_compiler MATCHES "g95" OR current_compiler MATCHES "g95")
-         set(F2PY_compiler --fcompiler=gnu95)
-         set(F2PY_f90flags "--f90flags='${fflags}'")
-      elseif (current_compiler MATCHES "ifort")
+      message(STATUS " COMPILER NAME :: ====================>" ${current_compiler})
+      string(STRIP ${CMAKE_Fortran_FLAGS} fflags)
+      if (current_compiler MATCHES "ifort")
          set(F2PY_compiler --fcompiler=intelem)
          string(STRIP ${CMAKE_Fortran_FLAGS} fflags)
-         set(F2PY_f90flags "--f90flags='${fflags}'")
+         set(F2PY_f90flags '--f90flags="${fflags}"')
       elseif (current_compiler MATCHES "nv")
          set(F2PY_compiler --fcompiler=nv)
+      else()
+         # Assuming GNU compiler if not intel/nvidia
+         #if(current_compiler MATCHES "gfortran" OR current_compiler MATCHES "g95" OR current_compiler MATCHES "g95" OR current_compiler MATCHES "gfortran.exe")
+         set(F2PY_compiler --fcompiler=gnu95)
+         set(F2PY_f90flags "--f90flags='${fflags}'")
+         message(STATUS " COMPILER NAME :: ==================>" ${current_compiler} " - " ${fflags} "|")
       endif()
+      #string(REPLACE ffree-line-length-0 std=legacy F2PY_f90flags ${F2PY_f90flags})
       #message(STATUS "FORTRAN FLAGS= ${CMAKE_Fortran_FLAGS}")
       #message(STATUS "F2PY_compiler= ${F2PY_compiler}")
+      #message(STATUS "F2PY_libs    = ${F2PY_libs}")
       #message(STATUS "F2PY_flags   = ${F2PY_f90flags}")
       #message(STATUS "F2PY_flags   = --f90flags='${F2PY_f90flags} -O2'")
 
@@ -491,32 +522,34 @@ if(BUILD_PYTHON)
          # Uncomment if f90wrap needs to be invoked
          #DEPENDS ${UppASD_LIB} ${F2PY_sources}
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-         COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt
+         COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt 
          COMMENT "Generating Python modules"
          VERBATIM 
          )
 
       # Not used by default (invoke only if new header files need to be generated)
-      add_custom_command( 
-         OUTPUT ${F2PY_sources}
-         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-         COMMAND f90wrap  -P -k ${F90wrap_kind} -m ${f2py_module_name}  ${F90wrap_sources}
-         COMMENT "Writing F90wrappers for F2PY"
-         DEPENDS ${F90wrap_sources}
-         )
+      #add_custom_command( 
+      #   OUTPUT ${F2PY_sources}
+      #   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+      #   COMMAND f90wrap  -P -k ${F90wrap_kind} -m ${f2py_module_name}  ${F90wrap_sources}
+      #   COMMENT "Writing F90wrappers for F2PY"
+      #   DEPENDS ${F90wrap_sources}
+      #   )
 
       add_dependencies(${UppASD_F90w} ${UppASD_LIB})
 
-      add_custom_command(
-         TARGET ${UppASD_F90w} POST_BUILD
-         COMMAND ${CMAKE_COMMAND} -E copy
-         ${CMAKE_BINARY_DIR}/_*.so
-         ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
-         )
+      ###add_custom_command(
+      ###   TARGET ${UppASD_F90w} POST_BUILD
+      ###   COMMAND ${CMAKE_COMMAND} -E 
+      ###   #${CMAKE_BINARY_DIR}/_*.so
+      ###   copy -t ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
+      ###   ${CMAKE_BINARY_DIR}/_*.*
+      ###   )
+      #message(STATUS "COPY:::" ${CMAKE_BINARY_DIR} )
 
-      else (Python_FOUND)
+   else (Python_FOUND)
       message("A proper Python environment needs to be installed to generate the python libraries")
-      endif (Python_FOUND)
+   endif (Python_FOUND)
 endif(BUILD_PYTHON)
 ##############################################################################################
 
@@ -527,7 +560,7 @@ mark_as_advanced( ENABLE_BLACS ENABLE_BLAS95 ENABLE_CDFT ENABLE_CPARDISO ENABLE_
 ##############################################################################################
 # Add the needed libraries and special compiler flags
 ##############################################################################################
-TARGET_LINK_LIBRARIES(${UppASD_LIB}
+TARGET_LINK_LIBRARIES(${UppASD_LIB} 
    -lgfortran
    ${BLAS_LIBRARIES}
    ${LAPACK_LIBRARIES}
@@ -596,16 +629,16 @@ include(CTest)
 set(TestBinary ${CMAKE_SOURCE_DIR}/bin/${UppASD_EXE})
 set(TestDIR ${CMAKE_SOURCE_DIR}/tests)
 if (RUN_REG_TESTS)
-add_test(NAME regression-test  COMMAND python3 -u bergtest.py --file regressionHisingen.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
+   add_test(NAME regression-test  COMMAND python3 -u bergtest.py --file regressionHisingen.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
 endif (RUN_REG_TESTS)
 if (RUN_ASD_TESTS)
-add_test(NAME asd-tests  COMMAND python3 -u bergtest.py --file regulartests.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
+   add_test(NAME asd-tests  COMMAND python3 -u bergtest.py --file regulartests.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
 endif (RUN_ASD_TESTS)
 if (RUN_SLD_TESTS)
-add_test(NAME sld-tests  COMMAND python3 -u ./bergtest.py --file sldtests.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
+   add_test(NAME sld-tests  COMMAND python3 -u ./bergtest.py --file sldtests.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
 endif (RUN_SLD_TESTS)
 if (RUN_GNEB_TESTS)
-add_test(NAME gneb-tests  COMMAND python3 -u ./bergtest.py --file regressionGNEB_15d7169b.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
+   add_test(NAME gneb-tests  COMMAND python3 -u ./bergtest.py --file regressionGNEB_15d7169b.yaml --binary ${TestBinary}  WORKING_DIRECTORY ${TestDIR})
 endif (RUN_GNEB_TESTS)
 message(STATUS "Output binary:  ${TestBinary}")
 ##############################################################################################
