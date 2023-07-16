@@ -7,6 +7,7 @@ import glob
 from setuptools import setup, find_packages
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
+import sysconfig
 
 
 
