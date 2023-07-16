@@ -27,6 +27,9 @@ requires = [
 #manylinux-ppc64le-image = "manylinux_2_28"
 #manylinux-s390x-image = "manylinux_2_28"
 
+[tool.cibuildwheel.windows]
+before-all = "choco install mingw"
+
 [tool.cibuildwheel.linux]
 #test-requires = ["pip","setuptools", "wheel", "numpy", "f90wrap","build"]
 before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static ninja-build"

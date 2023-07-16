@@ -52,12 +52,25 @@ jobs:
             cmake:p
             ninja:p
 
-      - uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       # Used to host cibuildwheel
-      - uses: actions/setup-python@v3
+      - name: Setup python
+        uses: actions/setup-python@v3
 
-      - name: Build wheels
+      - name: Build wheels (linux/macos)
+        if: runner.os != 'Windows'
+        uses: pypa/cibuildwheel@v2.11.1
+        # to supply options, put them in 'env', like:
+        env:
+          CIBW_SKIP: cp36*
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+        with: 
+            package-dir: python
+
+      - name: Build wheels (windows)
+        if: runner.os == 'Windows'
         uses: pypa/cibuildwheel@v2.11.1
         # to supply options, put them in 'env', like:
         env:
