@@ -60,8 +60,9 @@ jobs:
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.11.1
         # to supply options, put them in 'env', like:
-        # env:
-        #   CIBW_SOME_OPTION: value
+        env:
+          CIBW_SKIP: cp36*
+          CIBW_ENVIRONMENT_WINDOWS: FC=gfortran F90=gfortran
         with: 
             package-dir: python
 

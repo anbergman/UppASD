@@ -36,8 +36,8 @@ subroutine f90wrap_reshape_hamiltonianinput
 end subroutine f90wrap_reshape_hamiltonianinput
 
 subroutine f90wrap_allocate_hamiltonianinput(ham_inp, no_shells, flag)
-    use inputdata, only: allocate_hamiltonianinput
     use inputdatatype, only: ham_inp_t
+    use inputdata, only: allocate_hamiltonianinput
     implicit none
     
     type ham_inp_t_ptr_type

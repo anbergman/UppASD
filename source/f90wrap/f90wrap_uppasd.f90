@@ -1,4 +1,4 @@
-! Module uppasd defined in file /Users/andersb/Jobb/UppASD_release/UppASD_release/source/uppasd.f90
+! Module uppasd defined in file uppasd.f90
 
 subroutine f90wrap_main
     use uppasd, only: main
@@ -264,5 +264,5 @@ subroutine f90wrap_uppasd__set__nprocs(f90wrap_nprocs)
     uppasd_nprocs = f90wrap_nprocs
 end subroutine f90wrap_uppasd__set__nprocs
 
-! End of module uppasd defined in file /Users/andersb/Jobb/UppASD_release/UppASD_release/source/uppasd.f90
+! End of module uppasd defined in file uppasd.f90
 
