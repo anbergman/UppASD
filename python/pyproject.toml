@@ -18,7 +18,7 @@ requires = [
 [tool.cibuildwheel]
 # Install something required for the build
 # (you might want to use build-system.requires instead)
-before-build ='pip install --upgrade setuptools wheel numpy>1.19'
+#before-build ='pip install --upgrade setuptools wheel numpy>1.19'
 #before-build ='pip install --upgrade setuptools wheel numpy>1.19 f90wrap'
 #repair-wheel-command = ""
 #
