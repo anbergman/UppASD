@@ -89,7 +89,7 @@ jobs:
           ls ~/myenv/Scripts
           echo 'activate'
           which python
-          ~/myenv/Scripts/activate
+          ~/myenv/bin/activate
           echo 'test'
           which python
           python --version
@@ -99,7 +99,7 @@ jobs:
       - name: Run cibuildwheel in venv
         run: |
           echo 'Activate environment'
-          ~/myenv/Scripts/activate
+          ~/myenv/bin/activate
           echo 'run it'
           python -m cibuildwheel --platform windows
           #/c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows
