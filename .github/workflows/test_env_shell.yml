@@ -68,3 +68,11 @@ jobs:
           echo $PYTHONPATH
           python --version
           gfortran --version
+
+      - name: Setup venv
+        run: |
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install virtualenv
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv ~/myenv
+          ~/myenv/bin/activate
+          python --version
