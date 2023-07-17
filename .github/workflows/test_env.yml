@@ -44,6 +44,32 @@ jobs:
             python-version: '3.9'
 
       - name: Check invironments
+        env: 
+          msystem: MINGW64
+        run: |
+          echo 'Looking for gfortran'
+          which gfortran
+          where gfortran
+          where gfortran.exe
+          (get-command gfortran.exe).Path
+          echo 'Looking for gfortran'
+          where python
+          which python
+          (get-command Python.exe).Path
+          echo 'PATH:'
+          echo $Env:PATH
+          echo 'SHELL:'
+          echo $Env:SHELL
+          echo 'PYTHONHOME'
+          echo $Env:PYTHONHOME
+          echo 'PYTHONPATH'
+          echo $Env:PYTHONPATH
+          python --version
+          gfortran --version
+
+      - name: Check invironments vII
+        with: 
+          msystem: MINGW64
         run: |
           echo 'Looking for gfortran'
           which gfortran

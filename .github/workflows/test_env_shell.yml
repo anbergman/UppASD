@@ -69,15 +69,22 @@ jobs:
           python --version
           gfortran --version
 
+      - name: Initiate cibuildwheel
+        run: |
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel
 
       - name: Setup venv
         run: |
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
+          echo "Install virtualenv"
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install virtualenv
-          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv ~/myenv
+          echo "Create venv"
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv /myenv
           ls
-          ls ~/myenv
-          ls ~/myenv/bin
-          ~/myenv/bin/activate
+          ls /
+          ls /myenv
+          ls /myenv/bin
+          /myenv/bin/activate
           python --version
 
