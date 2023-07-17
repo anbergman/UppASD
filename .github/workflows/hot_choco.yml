@@ -65,20 +65,19 @@ jobs:
           ls /c/
           echo 'Looking in rtools43'
           ls /c/rtools43
-          echo 'C:\ProgramData\chocolatey'
-          ls /c/ProgramData/chocolatey
-          echo 'C:\ProgramData\chocolatey\bin'
-          ls /c/ProgramData/chocolatey/bin
-          echo 'C:\ProgramData\chocolatey\lib'
-          ls /c/ProgramData/chocolatey/lib
-          echo 'C:\ProgramData\chocolatey\lib\rtools'
-          ls /c/ProgramData/chocolatey/lib/rtools/tools
-          echo 'C:\ProgramData\chocolatey\lib\mingw'
-          ls /c/ProgramData/chocolatey/lib/mingw/tools
+          echo 'Looking in rtools43/usr/bin'
+          ls /c/rtools43/usr/bin
+          echo 'Looking in rtools43/ucrt64'
+          ls /c/rtools43/ucrt64
           echo "FC=gfortran" >> $env:GITHUB_ENV
           echo "PLAT=x86_64" >> $env:GITHUB_ENV
           echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
+          echo 'ENV'
           env
+          echo 'Find gfortran"
+          find /c/rtools43PATH/usr/bin -name "*gfortran*"
+          echo 'Find blas"
+          find /c/rtools43PATH/usr/bin -name "*blas*"
           #cmake -S . -B build
           #cmake --build build
           
