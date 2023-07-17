@@ -39,7 +39,7 @@ jobs:
 
       # Used to host cibuildwheel
       - name: Setup python
-      - uses: actions/setup-python@v4
+        uses: actions/setup-python@v4
         with:
             python-version: '3.9'
 
