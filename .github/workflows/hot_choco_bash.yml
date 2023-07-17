@@ -83,6 +83,10 @@ jobs:
           export CMAKE_PREFIX_PATH=/c/msys64/ucrt64
           export FC=gfortran
           export CC=gcc
+          echo 'ls /'
+          ls /
+          echo 'ls /msys64'
+          ls /msys64
           env
           #cmake -S . -B build
           #cmake --build build
