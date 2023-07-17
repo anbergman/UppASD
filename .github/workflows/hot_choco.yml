@@ -57,7 +57,10 @@ jobs:
         env: 
           FC: gfortran
         run: |
+          echo 'which gfortran'
           which gfortran
+          echo 'which cmake'
+          which cmake
           echo 'C:\ProgramData\chocolatey'
           ls /c/ProgramData/chocolatey
           echo 'C:\ProgramData\chocolatey\bin'
@@ -65,11 +68,9 @@ jobs:
           echo 'C:\ProgramData\chocolatey\lib'
           ls /c/ProgramData/chocolatey/lib
           echo 'C:\ProgramData\chocolatey\lib\rtools'
-          ls /c/ProgramData/chocolatey/lib/rtools
+          ls /c/ProgramData/chocolatey/lib/rtools/tools
           echo 'C:\ProgramData\chocolatey\lib\mingw'
-          ls /c/ProgramData/chocolatey/lib/mingw
-          echo 'C:\ProgramData\chocolatey\tools'
-          ls /c/ProgramData/chocolatey/tools
+          ls /c/ProgramData/chocolatey/lib/mingw/tools
 
           #cmake -S . -B build
           #cmake --build build
