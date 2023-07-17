@@ -83,6 +83,7 @@ jobs:
           export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
           export FC=gfortran
           export CC=gcc
+          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH
           cmake -S . -B build
           cmake --build build
           
