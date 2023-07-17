@@ -68,8 +68,6 @@ jobs:
           gfortran --version
 
       - name: Check invironments vII
-        with: 
-          msystem: MINGW64
         run: |
           echo 'Looking for gfortran'
           which gfortran
@@ -90,3 +88,5 @@ jobs:
           echo $Env:PYTHONPATH
           python --version
           gfortran --version
+        with: 
+          msystem: MINGW64
