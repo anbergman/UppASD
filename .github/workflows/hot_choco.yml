@@ -1,4 +1,4 @@
-name: build
+name: Powershell build
 
 on:
   push:
@@ -42,7 +42,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.10
+          python-version: 3.9
 
       - name: Install rtools 
         if: ${{ runner.os == 'Windows' }}
@@ -55,20 +55,25 @@ jobs:
           FC: gfortran
         run: |
           which gfortran
-          cmake -S . -B build
-          cmake --build build
+          echo 'C:\ProgramData\chocolatey'
+          ls C:\ProgramData\chocolatey
+          echo 'C:\ProgramData\chocolatey\lib'
+          ls C:\ProgramData\chocolatey\lib
+
+          #cmake -S . -B build
+          #cmake --build build
           
-      - name: Test cmake with python
-        env: 
-          FC: gfortran
-        run: |
-          cmake -S . -B build -DBUILD_PYTHON=ON
-          cmake --build build
-          
-      - name: Build and test wheels
-        uses: pypa/cibuildwheel@v2.14.0
-        env:
-          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
+      #- name: Test cmake with python
+      #  env: 
+      #    FC: gfortran
+      #  run: |
+      #    cmake -S . -B build -DBUILD_PYTHON=ON
+      #    cmake --build build
+      #    
+      #- name: Build and test wheels
+      #  uses: pypa/cibuildwheel@v2.14.0
+      #  env:
+      #    CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3
