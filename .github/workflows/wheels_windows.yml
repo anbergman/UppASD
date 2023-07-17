@@ -90,7 +90,7 @@ jobs:
           python -m pip install cibuildwheel==2.10.1
 
       - name: Build wheels
-        run: 
+        run: |
           $Env:PATH += ';C:\msys64\mingw64\bin'
           $Env:PATH += ';C:\msys64\mingw64\lib'
           $Env:PATH += ';C:\msys64\mingw64\include'
