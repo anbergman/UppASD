@@ -13,6 +13,9 @@ jobs:
   build_wheels:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
+    default:
+      run:
+        shell: bash
 
     strategy:
       fail-fast: false
@@ -36,19 +39,19 @@ jobs:
           #  platform: win_amd64
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      #- name: Checkout repository
+      #  uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
+      #- name: Setup Python
+      #  uses: actions/setup-python@v4
+      #  with:
+      #    python-version: 3.9
 
-      - name: Install rtools 
-        if: ${{ runner.os == 'Windows' }}
-        run: |
-          choco install -y rtools
-          choco install -y pkgconfiglite
+      #- name: Install rtools 
+      #  if: ${{ runner.os == 'Windows' }}
+      #  run: |
+      #    choco install -y rtools
+      #    choco install -y pkgconfiglite
 
       - name: Test cmake without python
         env: 
@@ -56,9 +59,17 @@ jobs:
         run: |
           which gfortran
           echo 'C:\ProgramData\chocolatey'
-          ls C:\ProgramData\chocolatey
+          ls /c/ProgramData/chocolatey
+          echo 'C:\ProgramData\chocolatey\bin'
+          ls /c/ProgramData/chocolatey/bin
           echo 'C:\ProgramData\chocolatey\lib'
-          ls C:\ProgramData\chocolatey\lib
+          ls /c/ProgramData/chocolatey/lib
+          echo 'C:\ProgramData\chocolatey\lib\rtools'
+          ls /c/ProgramData/chocolatey/lib/rtools
+          echo 'C:\ProgramData\chocolatey\lib\mingw'
+          ls /c/ProgramData/chocolatey/lib/mingw
+          echo 'C:\ProgramData\chocolatey\tools'
+          ls /c/ProgramData/chocolatey/tools
 
           #cmake -S . -B build
           #cmake --build build
