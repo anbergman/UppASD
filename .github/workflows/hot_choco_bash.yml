@@ -97,7 +97,7 @@ jobs:
       - name: Test environments after python
         run: |
           echo 'which python'
-          which python'
+          which python
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
