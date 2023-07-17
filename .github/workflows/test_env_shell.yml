@@ -99,6 +99,6 @@ jobs:
           echo 'activate'
           ~/myenv/Scripts/activate
           echo 'install cibuildwheel & pipx'
-          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel pipx
+          python -m pip install cibuildwheel pipx
           echo 'run it'
           pipx run cibuildwheel --platform windows
