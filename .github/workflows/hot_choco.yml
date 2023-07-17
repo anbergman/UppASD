@@ -91,7 +91,7 @@ jobs:
           #./setup_UppASD.sh
           #make deps 
           #make gfortran-win64
-          #cmake -S . -B build
+          cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
           #cmake --build build
           
       #- name: Test cmake with python

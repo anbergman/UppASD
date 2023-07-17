@@ -90,6 +90,12 @@ jobs:
           ls /
           echo 'ls /c/'
           ls /c/
+          echo 'ls /c/msys64'
+          ls /c/msys64
+          echo 'ls /c/msys64/ucrt64'
+          ls /c/msys64/ucrt64
+          echo 'ls /c/msys64/ucrt64/bin'
+          ls /c/msys64/ucrt64/bin
           echo 'ls /mingw64'
           ls /mingw64
           echo 'ls /mingw64/bin'
