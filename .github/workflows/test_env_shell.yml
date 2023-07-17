@@ -49,16 +49,14 @@ jobs:
           which gfortran
           where gfortran
           where gfortran.exe
-          (get-command gfortran.exe).Path
           echo 'Looking for gfortran'
           where python
           which python
-          (get-command Python.exe).Path
           echo 'PATH:'
-          echo $Env:PATH
+          echo $PATH
           echo 'SHELL:'
-          echo $Env:SHELL
+          echo $SHELL
           echo 'PYTHONHOME'
-          echo $Env:PYTHONHOME
+          echo $PYTHONHOME
           echo 'PYTHONPATH'
-          echo $Env:PYTHONPATH
+          echo $PYTHONPATH
