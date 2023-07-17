@@ -119,6 +119,7 @@ jobs:
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python --version
           echo 'ENV'
           env
+          echo -e "[build]\ncompiler=mingw32"
 
 
       - name: Run cibuildwheel in venv
