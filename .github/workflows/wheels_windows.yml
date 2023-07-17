@@ -91,9 +91,10 @@ jobs:
 
       - name: Build wheels
         run: 
-          Add-Content $env:PATH "$PATH;C:\msys64\mingw64\bin"
-          Add-Content $env:PATH "$PATH;C:\msys64\mingw64\lib"
-          Add-Content $env:PATH "$PATH;C:\msys64\mingw64\include"
+          echo $env:PATH
+          $env:PATH += "$PATH;C://msys64//mingw64//bin"
+          $env:PATH += "$PATH;C://msys64//mingw64//lib"
+          $env:PATH += "$PATH;C://msys64//mingw64//include"
           python -m cibuildwheel --output-dir wheelhouse
         # to supply options, put them in 'env', like:
         # env:
