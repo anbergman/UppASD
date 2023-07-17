@@ -55,8 +55,10 @@ class cmake_build_ext(build_ext):
                 #'-DPYTHON_LIBRARY={}'.format(python_lib_dir),
                 #'-DMKL_INTERFACE_FULL=gf_lp64',
                 #'-DMKL_THREADING=gnu_thread',
-                #'-DLAPACK="-framework Accelerate"',
-                #'-DBLAS="-framework Accelerate"',
+                '-DBLAS_DIR="c:\msys64\mingw64\lib"',
+                '-DLAPACK_DIR="c:\msys64\mingw64\lib"',
+                '-DLAPACK="-framework Accelerate"',
+                '-DBLAS="-framework Accelerate"',
             ]
 
             if not os.path.exists(self.build_temp):
