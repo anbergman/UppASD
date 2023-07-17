@@ -1,6 +1,7 @@
 name: Build wheels on windows
 
-on: [push, pull_request]
+on: [release]
+  #on: [push, pull_request]
 
 jobs:
   build_wheels:
@@ -42,7 +43,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: MINGW64
-          update: true
+          update: false
           path-type: inherit
           install: >-
             mingw-w64-x86_64-gcc-fortran
@@ -107,7 +108,7 @@ jobs:
           #CIBW_ENVIRONMENT_WINDOWS: >
           #  PATH="$PATH;C:\\\\msys64\\mingw64\\bin"
           CIBW_ENVIRONMENT_WINDOWS: >
-           CMAKE_PREFIX_PATH="C:\\msys64\\mingw64" CC=gcc CXX=g++ FC=gfortran 
+           CMAKE_PREFIX_PATH="C:\msys64\mingw64" CC=gcc CXX=g++ FC=gfortran 
           #CMAKE_PREFIX_PATH="C:\\\\msys64\\mingw64" CC=gcc CXX=g++ FC=gfortran 
           #CIBW_ENVIRONMENT_WINDOWS: CC=gcc CXX=g++ FC=gfortran
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
