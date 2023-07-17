@@ -63,19 +63,19 @@ jobs:
 
       - name: Test environments before python
         run: |
-          echo 'which python'
-          which python
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
           which cmake
+          echo 'which python'
+          which python
           export PATH=/c/msys64/ucrt64:$PATH
-          echo 'which python'
-          which python
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
           which cmake
+          echo 'which python'
+          which python
           #echo 'Find gfortran'
           #find /c/rtools43 -name "*gfortran*"
           #echo 'Find blas'
