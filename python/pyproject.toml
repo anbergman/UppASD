@@ -27,8 +27,8 @@ requires = [
 #manylinux-ppc64le-image = "manylinux_2_28"
 #manylinux-s390x-image = "manylinux_2_28"
 
-[tool.cibuildwheel.windows]
-before-all = "choco install mingw"
+#[tool.cibuildwheel.windows]
+#before-all = "choco install mingw"
 
 [tool.cibuildwheel.linux]
 #test-requires = ["pip","setuptools", "wheel", "numpy", "f90wrap","build"]

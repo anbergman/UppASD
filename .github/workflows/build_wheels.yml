@@ -1,6 +1,6 @@
 name: Build wheels across platforms
 
-on: [push, pull_request]
+on: [release]
 
 jobs:
   build_wheels:
@@ -64,7 +64,7 @@ jobs:
         uses: pypa/cibuildwheel@v2.11.1
         # to supply options, put them in 'env', like:
         env:
-          CIBW_SKIP: cp36*
+          CIBW_SKIP: cp36* pp*-macosx*
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
         with: 
             package-dir: python
