@@ -61,6 +61,8 @@ jobs:
           which gfortran
           echo 'which cmake'
           which cmake
+          echo 'which python'
+          which python
           echo 'Looking for R-tools'
           ls /c/
           echo 'Looking in rtools43'
@@ -81,6 +83,12 @@ jobs:
           #echo 'Find blas'
           #find /c/rtools43 -name "*blas*"
           export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          echo 'which gfortran'
+          which gfortran
+          echo 'which cmake'
+          which cmake
+          echo 'which python'
+          which python
           export FC=gfortran
           export CC=gcc
           export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH

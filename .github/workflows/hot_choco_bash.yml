@@ -79,10 +79,6 @@ jobs:
           which cmake
           echo 'which python'
           which python
-          #echo 'Find gfortran'
-          #find /c/rtools43 -name "*gfortran*"
-          #echo 'Find blas'
-          #find /c/rtools43 -name "*blas*"
           export CMAKE_PREFIX_PATH=/mingw64
           export FC=gfortran
           export CC=gcc
@@ -101,7 +97,15 @@ jobs:
           echo 'ls /mingw64/bin'
           ls /mingw64/bin
           env
-          cmake -S . -B build -DCMAKE_PREFIX_PATH=/mingw64
+          echo 'Find gfortran in msys'
+          find /c/msys64 -name "*gfortran*"
+          echo 'Find blas in msys'
+          find /c/msys64 -name "*blas*"
+          echo 'Find gfortran in mingw'
+          find /mingw64 -name "*gfortran*"
+          echo 'Find blas in mingw'
+          find /mingw64 -name "*blas*"
+          #cmake -S . -B build -DCMAKE_PREFIX_PATH=/mingw64
           #cmake --build build
           
 
