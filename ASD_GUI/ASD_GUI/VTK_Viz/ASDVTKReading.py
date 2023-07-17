@@ -67,12 +67,12 @@ class ASDReading():
     #   - clus_info.*.out
     ############################################################################
     def getFileName(self,window):
-        from PyQt5 import QtWidgets
+        from PyQt6 import QtWidgets
 
         dlg = QtWidgets.QFileDialog()
-        dlg.setFileMode(QtWidgets.QFileDialog.AnyFile)
+        dlg.setFileMode(QtWidgets.QFileDialog.FileMode.ExistingFile)
         dlg.setDirectory('.')
-        if dlg.exec_():
+        if dlg.exec():
             if window.sender()==window.actionCoordinate_File:
                 ASDReading.posfiles=dlg.selectedFiles()[0]
                 ASDReading.not_read_pos=True
@@ -99,7 +99,7 @@ class ASDReading():
     #--------------------------------------------------------------------------------
     def ReadingWrapper(self,mode,viz_type,file_names,window):
         import glob
-        import UI.ASDInputWindows
+        from ASD_GUI.UI import ASDInputWindows
 
         ASDReading.posfiles      = file_names[0]
         ASDReading.magnetization = file_names[1]
@@ -121,13 +121,22 @@ class ASDReading():
             if len(ASDReading.magnetization)>0:
                 ASDReading.MagFile = open(ASDReading.magnetization)
             else:
-                window.Res_Error_Window=UI.ASDInputWindows.Error_Window()
-                window.Res_Error_Window.FunMsg.setText("I'm sorry, Dave. I'm afraid I can't do that.")
-                window.Res_Error_Window.ErrorMsg.setText("Error: No magnetic configuration file found!")
-                window.Res_Error_Window.show()
-                ASDReading.error_trap=True
-                print("Error: No magnetic configuration file selected!")
-                print("I'm sorry, Dave. I'm afraid I can't do that.")
+                print("No file name selected from menu. Trying to find a 'localenergy.*.out' file")
+                ASDReading.MagFiles=glob.glob("restart.*.out")
+                if len(ASDReading.MagFiles)>0:
+                    ASDReading.MagFile= open(ASDReading.MagFiles[0])
+                    window.Res_Info_Window=ASDInputWindows.Info_Window()
+                    window.Res_Info_Window.FunMsg.setText("Information: no magnetic configuration given")
+                    window.Res_Info_Window.InfoMsg.setText("File "+str(ASDReading.MagFiles[0])+" chosen as default.")
+                    window.Res_Info_Window.show()
+                else:
+                    window.Res_Error_Window=ASDInputWindows.Error_Window()
+                    window.Res_Error_Window.FunMsg.setText("I'm sorry, Dave. I'm afraid I can't do that.")
+                    window.Res_Error_Window.ErrorMsg.setText("Error: No magnetic configuration file found!")
+                    window.Res_Error_Window.show()
+                    ASDReading.error_trap=True
+                    print("Error: No magnetic configuration file selected!")
+                    print("I'm sorry, Dave. I'm afraid I can't do that.")
         #----------------------------------------------------------------------------
         # Neighbour type of visualization
         #----------------------------------------------------------------------------
@@ -145,7 +154,7 @@ class ASDReading():
                         ASDReading.structfiles=ASDReading.structfiles[0]
                         ASDReading.structFile= ASDReading.structfiles
                     else:
-                        window.Neigh_Error_Window=UI.ASDInputWindows.Error_Window()
+                        window.Neigh_Error_Window=ASDInputWindows.Error_Window()
                         window.Neigh_Error_Window.FunMsg.setText("I'm sorry, Dave. I'm afraid I can't do that.")
                         window.Neigh_Error_Window.ErrorMsg.setText("Error: No 'struct.*.out' file found!")
                         window.Neigh_Error_Window.show()
@@ -165,7 +174,7 @@ class ASDReading():
                         ASDReading.dmdatafiles=ASDReading.dmdatafiles[0]
                         ASDReading.DMFile= ASDReading.dmdatafiles
                     else:
-                        window.DMNeigh_Error_Window=UI.ASDInputWindows.Error_Window()
+                        window.DMNeigh_Error_Window=ASDInputWindows.Error_Window()
                         window.DMNeigh_Error_Window.FunMsg.setText("I'm sorry, Dave. I'm afraid I can't do that.")
                         window.DMNeigh_Error_Window.ErrorMsg.setText("Error: No 'dmdata.*.out' file found!")
                         window.DMNeigh_Error_Window.show()
@@ -188,7 +197,7 @@ class ASDReading():
                     ASDReading.enefiles=ASDReading.enefiles[0]
                     ASDReading.eneFile= ASDReading.enefiles
                 else:
-                    window.Ene_Error_Window=UI.ASDInputWindows.Error_Window()
+                    window.Ene_Error_Window=ASDInputWindows.Error_Window()
                     window.Ene_Error_Window.FunMsg.setText("I'm sorry, Dave. I'm afraid I can't do that.")
                     window.Ene_Error_Window.ErrorMsg.setText("Error: No 'localenergy.*.out' file found!")
                     window.Ene_Error_Window.show()
@@ -207,7 +216,7 @@ class ASDReading():
                 ASDReading.posfiles=ASDReading.posfiles[0]
                 atomsFile = ASDReading.posfiles
             else:
-                window.Coord_Error_Window=UI.ASDInputWindows.Error_Window()
+                window.Coord_Error_Window=ASDInputWindows.Error_Window()
                 window.Coord_Error_Window.FunMsg.setText("Sorry But Our Princess is in Another Castle.")
                 window.Coord_Error_Window.ErrorMsg.setText("Error: No 'coord.*.out' file found!")
                 window.Coord_Error_Window.show()
@@ -330,6 +339,7 @@ class ASDReading():
     ############################################################################
     def readAtoms(self,file_coord):
         from vtk import vtkPoints
+        from vtk.util import numpy_support
         import numpy as np
         import pandas as pd
         #-----------------------------------------------------------------------
@@ -344,8 +354,7 @@ class ASDReading():
         #-----------------------------------------------------------------------
         # Read the data with pandas
         #-----------------------------------------------------------------------
-        coord=pd.read_csv(file_coord,header=None,delim_whitespace=True,             \
-        usecols=[1,2,3]).values
+        coord=np.genfromtxt(fname=file_coord,usecols=[1,2,3])
         #-----------------------------------------------------------------------
         # Define the number of atoms in the system
         #-----------------------------------------------------------------------
@@ -353,8 +362,7 @@ class ASDReading():
         #-----------------------------------------------------------------------
         # Pass the numpy type arrays to vtk objects
         #-----------------------------------------------------------------------
-        for ii in range(0,ASDReading.nrAtoms):
-            points.InsertPoint(ii,coord[ii,0],coord[ii,1],coord[ii,2])
+        points.SetData(numpy_support.numpy_to_vtk(coord))
         #-----------------------------------------------------------------------
         # Data to check if one should consider the data to be rendered in 2D or 3D
         #-----------------------------------------------------------------------
@@ -468,6 +476,7 @@ class ASDReading():
     #--------------------------------------------------------------------------------
     def readVectorsData(self,file_mom,time,nrAtoms,temp_count):
         from vtk import vtkFloatArray
+        from vtk.util import numpy_support
         import numpy as np
         import pandas as pd
         #----------------------------------------------------------------------------
@@ -496,8 +505,9 @@ class ASDReading():
             # Check if the file is in the new format
             #------------------------------------------------------------------------
             if type_fmt=='new':
-                ASDReading.full_mom=pd.read_csv(file_mom,header=None,               \
-                delim_whitespace=True,skiprows=7,usecols=[4,5,6]).values
+                #ASDReading.full_mom=pd.read_csv(file_mom,header=None,               \
+                #delim_whitespace=True,skiprows=7,usecols=[4,5,6]).values
+                ASDReading.full_mom=np.genfromtxt(fname=file_mom,usecols=[4,5,6])
                 file_mom.seek(0)
                 # Find how many different "times" there are
                 ASDReading.number_time_steps=len(ASDReading.full_mom)/nrAtoms
@@ -506,16 +516,18 @@ class ASDReading():
                 #--------------------------------------------------------------------
                 if ASDReading.number_time_steps>1:
                     # Read the times
-                    ASDReading.time_sep=pd.read_csv(file_mom,header=None,skiprows=7,\
-                    delim_whitespace=True,usecols=[0]).values
+                    ASDReading.time_sep=np.genfromtxt(file_mom,usecols=[0])
+                    #ASDReading.time_sep=pd.read_csv(file_mom,header=None,skiprows=7,\
+                    #delim_whitespace=True,usecols=[0]).values
                     # Find the separations between different times
                     ASDReading.time_sep=np.unique(ASDReading.time_sep)
                     # If there is only one time check if there are several ensembles
                     if len(ASDReading.time_sep)==1:
                         # Read the ensembles
                         file_mom.seek(0)
-                        ASDReading.time_sep=pd.read_csv(file_mom,header=None,       \
-                        skiprows=7,delim_whitespace=True,usecols=[1]).values
+                        ASDReading.time_sep=np.genfromtxt(file_mom,usecols=[1])
+                        #ASDReading.time_sep=pd.read_csv(file_mom,header=None,       \
+                        #skiprows=7,delim_whitespace=True,usecols=[1]).values
                         # Find how many different ensembles there are
                         ASDReading.time_sep=np.unique(ASDReading.time_sep)
                 elif ASDReading.number_time_steps==1:
@@ -529,15 +541,18 @@ class ASDReading():
                 #--------------------------------------------------------------------
                 if file_type=='restart':
                     # Read the restartfile
-                    ASDReading.full_mom=pd.read_csv(file_mom,header=None,skiprows=1,\
-                    delim_whitespace=True,usecols=[3,4,5]).values
+                    ASDReading.full_mom=np.genfromtxt(file_mom,skip_header=1, \
+                                                      usecols=[3,4,5])
+                    #ASDReading.full_mom=pd.read_csv(file_mom,header=None,skiprows=1,\
+                    #delim_whitespace=True,usecols=[3,4,5]).values
                     file_mom.seek(0)
                     # Find how many different "times" there are
                     ASDReading.number_time_steps=len(ASDReading.full_mom)/nrAtoms
                     if ASDReading.number_time_steps>1:
                         # Read the ensembles
-                        ASDReading.time_sep=pd.read_csv(file_mom,header=None,       \
-                        delim_whitespace=True,usecols=[0]).values
+                        ASDReading.time_sep=np.genfromtxt(file_mom,usecols=[0])
+                        #ASDReading.time_sep=pd.read_csv(file_mom,header=None,       \
+                        #delim_whitespace=True,usecols=[0]).values
                         # Find how many different ensembles there are
                         ASDReading.time_sep=np.unique(ASDReading.time_sep)
                     elif ASDReading.number_time_steps==1:
@@ -574,21 +589,30 @@ class ASDReading():
         #----------------------------------------------------------------------------
         # Loop over all the atoms
         #----------------------------------------------------------------------------
-        for ii in range(0,nrAtoms):
-            #------------------------------------------------------------------------
-            # Pass the data from the numpy arrays to vtk data structures
-            #------------------------------------------------------------------------
-            vectors.InsertTuple3(ii,ASDReading.full_mom[time*(nrAtoms)+ii,0],\
-                ASDReading.full_mom[time*(nrAtoms)+ii,1],\
-                ASDReading.full_mom[time*(nrAtoms)+ii,2])
-            if ASDReading.flag2D:
-                colors_x.InsertValue(ii,ASDReading.full_mom[time*(nrAtoms)+ii,0])
-                colors_y.InsertValue(ii,ASDReading.full_mom[time*(nrAtoms)+ii,1])
-                colors_z.InsertValue(ii,ASDReading.full_mom[time*(nrAtoms)+ii,2])
-            else:
-                colors_x.InsertValue(ii,(ASDReading.full_mom[time*(nrAtoms)+ii,0]-min_x)/(max_x-min_x))
-                colors_y.InsertValue(ii,(ASDReading.full_mom[time*(nrAtoms)+ii,1]-min_y)/(max_y-min_y))
-                colors_z.InsertValue(ii,(ASDReading.full_mom[time*(nrAtoms)+ii,2]-min_z)/(max_z-min_z))
+        print('Setting up vtk moment arrays')
+        vectors = numpy_support.numpy_to_vtk(ASDReading.full_mom)
+        colors_x = (ASDReading.full_mom[:,0] - min_x) / ( max_x - min_x)
+        colors_y = (ASDReading.full_mom[:,1] - min_y) / ( max_y - min_y)
+        colors_z = (ASDReading.full_mom[:,2] - min_z) / ( max_z - min_z)
+        colors_x = numpy_support.numpy_to_vtk(colors_x)
+        colors_y = numpy_support.numpy_to_vtk(colors_y)
+        colors_z = numpy_support.numpy_to_vtk(colors_z)
+        #for ii in range(0,nrAtoms):
+        #    #------------------------------------------------------------------------
+        #    # Pass the data from the numpy arrays to vtk data structures
+        #    #------------------------------------------------------------------------
+        #    #vectors.InsertTuple3(ii,ASDReading.full_mom[time*(nrAtoms)+ii,0],\
+        #    #    ASDReading.full_mom[time*(nrAtoms)+ii,1],\
+        #    #    ASDReading.full_mom[time*(nrAtoms)+ii,2])
+        #    if ASDReading.flag2D:
+        #        colors_x.InsertValue(ii,ASDReading.full_mom[time*(nrAtoms)+ii,0])
+        #        colors_y.InsertValue(ii,ASDReading.full_mom[time*(nrAtoms)+ii,1])
+        #        #colors_z.InsertValue(ii,ASDReading.full_mom[time*(nrAtoms)+ii,2])
+        #    else:
+        #        colors_x.InsertValue(ii,(ASDReading.full_mom[time*(nrAtoms)+ii,0]-min_x)/(max_x-min_x))
+        #        colors_y.InsertValue(ii,(ASDReading.full_mom[time*(nrAtoms)+ii,1]-min_y)/(max_y-min_y))
+        #        #colors_z.InsertValue(ii,(ASDReading.full_mom[time*(nrAtoms)+ii,2]-min_z)/(max_z-min_z))
+        print('     done.')
         #-----------------------------------------------------------------------
         # Pass the colors to an array
         #-----------------------------------------------------------------------

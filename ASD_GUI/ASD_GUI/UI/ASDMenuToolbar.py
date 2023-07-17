@@ -28,8 +28,8 @@ def VTK_Menu_and_Toolbar_Setup(window):
     ----------
     Jonathan Chico
     """
-    from PyQt5.QtGui import QDoubleValidator
-    from PyQt5.QtWidgets import QProgressBar,QLabel,QStyle,QToolButton
+    from PyQt6.QtGui import QDoubleValidator
+    from PyQt6.QtWidgets import QProgressBar,QLabel,QStyle,QToolButton
     window.VTKToolBar.setFixedHeight(24)
     window.ASD_VTK_Layout.insertWidget(0,window.VTKToolBar)
     #---------------------------------------------------------------------------
@@ -96,7 +96,7 @@ def VTK_Menu_and_Toolbar_Setup(window):
     window.PlayButton.setCheckable(True)
     window.PlayButton.setChecked(False)
     window.PlayButton.setEnabled(False)
-    window.PlayButton.setIcon(window.style().standardIcon(QStyle.SP_MediaPlay))
+    window.PlayButton.setIcon(window.style().standardIcon(QStyle.StandardPixmap.SP_MediaPlay))
     window.PlayButton.setToolTip('Start/Pause the visualization of animations')
     window.PlayButton.setWhatsThis('Start/Pause the visualization of animations')
     window.PlayButton.setStatusTip('Start/Pause the visualization of animations')
@@ -106,7 +106,7 @@ def VTK_Menu_and_Toolbar_Setup(window):
     #---------------------------------------------------------------------------
     window.PauseButton = QToolButton()
     window.PauseButton.setEnabled(False)
-    window.PauseButton.setIcon(window.style().standardIcon(QStyle.SP_MediaPause))
+    window.PauseButton.setIcon(window.style().standardIcon(QStyle.StandardPixmap.SP_MediaPause))
     window.PauseButton.setToolTip('Pause the visualization of animations')
     window.PauseButton.setWhatsThis('Pause the visualization of animations')
     window.PauseButton.setStatusTip('Pause the visualization of animations')
@@ -116,7 +116,7 @@ def VTK_Menu_and_Toolbar_Setup(window):
     #---------------------------------------------------------------------------
     window.previousButton = QToolButton()
     window.previousButton.setEnabled(False)
-    window.previousButton.setIcon(window.style().standardIcon(QStyle.SP_MediaSkipBackward))
+    window.previousButton.setIcon(window.style().standardIcon(QStyle.StandardPixmap.SP_MediaSkipBackward))
     window.previousButton.setToolTip('Go to the previous image')
     window.previousButton.setWhatsThis('Go to the previous image')
     window.previousButton.setStatusTip('Go to the previous image')
@@ -126,7 +126,7 @@ def VTK_Menu_and_Toolbar_Setup(window):
     #---------------------------------------------------------------------------
     window.nextButton = QToolButton()
     window.nextButton.setEnabled(False)
-    window.nextButton.setIcon(window.style().standardIcon(QStyle.SP_MediaSkipForward))
+    window.nextButton.setIcon(window.style().standardIcon(QStyle.StandardPixmap.SP_MediaSkipForward))
     window.nextButton.setToolTip('Go to the next image')
     window.nextButton.setWhatsThis('Go to the next image')
     window.nextButton.setStatusTip('Go to the next image')
@@ -182,12 +182,27 @@ def VTK_Menu_and_Toolbar_Setup(window):
     #---------------------------------------------------------------------------
     # Adding the actions to the colormaps
     #---------------------------------------------------------------------------
-    window.ColorMapCM.toggled.connect(window.set_lut)
-    window.ColorMapBB.toggled.connect(window.set_lut)
-    window.ColorMapRdGy.toggled.connect(window.set_lut)
-    window.ColorMapSpectral.toggled.connect(window.set_lut)
+    window.ColorMapBox.activated.connect(window.set_lut_db)
+    window.SingleColorBox.toggled.connect(window.toggle_singlecolor)
+    window.RGBRedColorSlider.valueChanged.connect(window.set_singlecolor)
+    window.RGBRedColorSlider.valueChanged.connect(window.UpdateRenderer)
+    window.RGBGreenColorSlider.valueChanged.connect(window.set_singlecolor)
+    window.RGBGreenColorSlider.valueChanged.connect(window.UpdateRenderer)
+    window.RGBBlueColorSlider.valueChanged.connect(window.set_singlecolor)
+    window.RGBBlueColorSlider.valueChanged.connect(window.UpdateRenderer)
+    window.BWSinglecolorCheck.clicked.connect(window.toggle_bwSinglecolor)
     window.LinearScale.toggled.connect(window.set_lut)
     window.LogScale.toggled.connect(window.set_lut)
+    #---------------------------------------------------------------------------
+    # Adding the actions to the background
+    #---------------------------------------------------------------------------
+    window.RGBRedBackgroundSlider.valueChanged.connect(window.set_background)
+    window.RGBRedBackgroundSlider.valueChanged.connect(window.UpdateRenderer)
+    window.RGBGreenBackgroundSlider.valueChanged.connect(window.set_background)
+    window.RGBGreenBackgroundSlider.valueChanged.connect(window.UpdateRenderer)
+    window.RGBBlueBackgroundSlider.valueChanged.connect(window.set_background)
+    window.RGBBlueBackgroundSlider.valueChanged.connect(window.UpdateRenderer)
+    window.BWBackgroundCheck.clicked.connect(window.toggle_bwBackground)
     #---------------------------------------------------------------------------
     # Adding the actions to the moment options
     #---------------------------------------------------------------------------
@@ -215,10 +230,28 @@ def VTK_Menu_and_Toolbar_Setup(window):
     window.SpinsBox.toggled.connect(window.UpdateRenderer)
     window.SpinArrowButton.toggled.connect(window.ChangeGlyphs)
     window.SpinCubeButton.toggled.connect(window.ChangeGlyphs)
+    window.SpinBarButton.toggled.connect(window.ChangeGlyphs)
     window.SpinSphereButton.toggled.connect(window.ChangeGlyphs)
     window.SpinConeButton.toggled.connect(window.ChangeGlyphs)
     window.SpinSize.valueChanged.connect(window.ASDVizOpt.ChangeSpinsSize)
     window.SpinSize.valueChanged.connect(window.UpdateRenderer)
+    window.SpinCenterCheck.toggled.connect(window.ChangeGlyphs)
+    #---------------------------------------------------------------------------
+    # Adding shading actions to the spins
+    #---------------------------------------------------------------------------
+    window.FlatShadeButton.toggled.connect(window.ChangeShading)
+    window.GouraudShadeButton.toggled.connect(window.ChangeShading)
+    window.PhongShadeButton.toggled.connect(window.ChangeShading)
+    window.PBRShadeButton.toggled.connect(window.ChangeShading)
+    #---------------------------------------------------------------------------
+    # Adding the actions to the atoms
+    #---------------------------------------------------------------------------
+    window.AtomsBox.toggled.connect(window.ASDVizOpt.toggle_atoms)
+    window.AtomsBox.toggled.connect(window.UpdateRenderer)
+    window.AtomSize.valueChanged.connect(window.ASDVizOpt.ChangeAtomsSize)
+    window.AtomSize.valueChanged.connect(window.UpdateRenderer)
+    window.AtomOpaq.valueChanged.connect(window.ASDVizOpt.ChangeAtomsOpaq)
+    window.AtomOpaq.valueChanged.connect(window.UpdateRenderer)
     #---------------------------------------------------------------------------
     # Adding the actions to the neighbours
     #---------------------------------------------------------------------------
@@ -255,8 +288,47 @@ def VTK_Menu_and_Toolbar_Setup(window):
     window.ClippPlaneXCheck.toggled.connect(window.clipperHandler)
     window.ClippPlaneYCheck.toggled.connect(window.clipperHandler)
     window.ClippPlaneZCheck.toggled.connect(window.clipperHandler)
+
+    #---------------------------------------------------------------------------
+    # Actions for advanced visualization options
+    #---------------------------------------------------------------------------
     window.ClippingPlaneSlider.valueChanged.connect(window.clipperHandler)
     window.GlyphQualitySlider.valueChanged.connect(window.Quality_control)
+    window.FocusBox.toggled.connect(window.toggle_focus)
+    window.AutoFocusCheck.toggled.connect(window.toggle_autofocus)
+    window.FocusSlider.valueChanged.connect(window.FocalDisk_control)
+    window.FXAACheck.toggled.connect(window.FXAA_control)
+    window.FXAACheck.toggled.connect(window.UpdateRenderer)
+    window.SSAOCheck.toggled.connect(window.SSAO_control)
+    window.SSAOCheck.toggled.connect(window.UpdateRenderer)
+    window.HDRICheck.toggled.connect(window.HDRI_control)
+    window.HDRICheck.toggled.connect(window.UpdateRenderer)
+    window.HDRIButtonSelect.clicked.connect(window.getHDRIFile)
+    window.SkyBoxCheck.toggled.connect(window.SkyBox_control)
+    window.SkyBoxCheck.toggled.connect(window.UpdateRenderer)
+    #window.ShadowCheck.toggled.connect(window.Shadow_control)
+    #window.ShadowCheck.toggled.connect(window.UpdateRenderer)
+    # Texture controls
+    window.TextureSelect.clicked.connect(window.getTextureFile)
+    window.ORMTextureSelect.clicked.connect(window.getORMTextureFile)
+    window.NTextureSelect.clicked.connect(window.getNTextureFile)
+    window.ATextureSelect.clicked.connect(window.getATextureFile)
+    window.ETextureSelect.clicked.connect(window.getETextureFile)
+    #
+    window.TextureCheck.toggled.connect(window.Texture_control)
+    window.ORMTextureCheck.toggled.connect(window.ORMTexture_control)
+    window.NTextureCheck.toggled.connect(window.NTexture_control)
+    window.ATextureCheck.toggled.connect(window.ATexture_control)
+    window.ETextureCheck.toggled.connect(window.ETexture_control)
+    #
+    window.RenDiffuseSlider.valueChanged.connect(window.RenDiffuse_control)
+    window.RenAmbientSlider.valueChanged.connect(window.RenAmbient_control)
+    window.RenSpecularSlider.valueChanged.connect(window.RenSpecular_control)
+    window.RenSpecularPowerSlider.valueChanged.connect(window.RenSpecularPower_control)
+    window.PBREmissionSlider.valueChanged.connect(window.PBREmission_control)
+    window.PBROcclusionSlider.valueChanged.connect(window.PBROcclusion_control)
+    window.PBRRoughnessSlider.valueChanged.connect(window.PBRRoughness_control)
+    window.PBRMetallicSlider.valueChanged.connect(window.PBRMetallic_control)
     #---------------------------------------------------------------------------
     # Adding the action to display the time step labels
     #---------------------------------------------------------------------------
@@ -312,7 +384,7 @@ def Plot_Menu_and_Toolbar_Setup(window):
     ----------
     Jonathan Chico
     """
-    from PyQt5.QtWidgets import QToolButton
+    from PyQt6.QtWidgets import QToolButton
     window.MatPlotToolbar.setFixedHeight(24)
     window.ASD_PY_Layout.insertWidget(0,window.MatPlotToolbar)
     #---------------------------------------------------------------------------
@@ -395,10 +467,17 @@ def Plot_Menu_and_Toolbar_Setup(window):
     window.Sqw_2.toggled.connect(window.SQW_Proj_Select)
     window.AMSDispCheckBox.toggled.connect(window.PlottingWrapper)
     window.SqwDispCheckBox.toggled.connect(window.PlottingWrapper)
+    window.ABCorrWidth.sliderMoved.connect(window.SqwWidthChanger)
     window.Plot_M_x.toggled.connect(window.PlotMagDirSelector)
     window.Plot_M_y.toggled.connect(window.PlotMagDirSelector)
     window.Plot_M_z.toggled.connect(window.PlotMagDirSelector)
     window.Plot_M_tot.toggled.connect(window.PlotMagDirSelector)
+    window.ABLineWidth.valueChanged.connect(window.PlotLineChanger)
+    window.ABMarkerSize.valueChanged.connect(window.PlotMarkerChanger)
+    window.ABXMajGrid.toggled.connect(window.PlotXGridToggle)
+    window.ABYMajGrid.toggled.connect(window.PlotYGridToggle)
+    window.ABAMSGrid.toggled.connect(window.PlotSQWGridToggle)
+    window.ABAMSGrid.toggled.connect(window.PlotAMSGridToggle)
     #--------------------------------------------------------------------------------
     # Setting energy actions
     #--------------------------------------------------------------------------------
@@ -439,7 +518,7 @@ def Input_Toolbar_Setup(window):
     ----------
     Jonathan Chico
     """
-    from PyQt5.QtWidgets import QToolButton
+    from PyQt6.QtWidgets import QToolButton
     window.InputToolbar.setFixedHeight(24)
     window.ASDInp_Layout.insertWidget(0,window.InputToolbar)
     #--------------------------------------------------------------------------------
@@ -457,8 +536,7 @@ def Input_Toolbar_Setup(window):
     # Set actions
     #--------------------------------------------------------------------------------
     window.InpDoneButton.clicked.connect(window.WriteInputFile)
-    window.InpXCCheck.toggled.connect(window.getInpFile)
-    window.InpDMCheck.toggled.connect(window.getInpFile)
+    # window.InpDMCheck.toggled.connect(window.getInpFile)
     window.InpMAECheck.toggled.connect(window.getInpFile)
     window.InpPseudoCheck.toggled.connect(window.getInpFile)
     window.InpBqCheck.toggled.connect(window.getInpFile)
@@ -490,7 +568,44 @@ def Input_Toolbar_Setup(window):
     window.InpInitMag6Check.clicked.connect(window.ToggleHessians)
     window.InpInitMag4Check.clicked.connect(window.ToggleHessians)
     window.InpInitmag7Check.clicked.connect(window.ToggleHessians)
+    window.InpCancelButton.clicked.connect(window.ResetInputs)          # Reset all inputs
+    window.InpRunSimButton.clicked.connect(window.RunSimulation)        # Run simulation
+    window.InpJfileButtonSelect.clicked.connect(window.getInpFile)      # Select jfile
+    window.InpJfileButtonCreate.clicked.connect(window.OpenWindow)      # Jfile creation
+    window.InpSqQpoints.clicked.connect(window.getInpFile)              # Qpoint file select
+    window.InpMagnonQuickButton.clicked.connect(window.MagnonQuickSetup)# MagnonQuickSetup
+    window.InpDMButtonSelect.clicked.connect(window.getInpFile)      # Select DMfile
+    window.InpDMButtonCreate.clicked.connect(window.OpenWindow)      # DM-file creation
+    window.InpImportCIFButton.clicked.connect(window.ImportSystem)
+    window.InpImportSPRKKRButton.clicked.connect(window.ImportSystem)
+
+    # Structure Templates
+    window.InpTemplateSCButton.clicked.connect(lambda: window.SetStructureTemplate('sc'))
+    window.InpTemplateBCCButton.clicked.connect(lambda: window.SetStructureTemplate('bcc'))
+    window.InpTemplateBCC2TypesButton.clicked.connect(lambda: window.SetStructureTemplate('bcc2'))
+    window.InpTemplateFCCButton.clicked.connect(lambda: window.SetStructureTemplate('fcc'))
+    window.InpTemplateHCPButton.clicked.connect(lambda: window.SetStructureTemplate('hcp'))
+
     return
+
+def InteractiveDock_Setup(window):
+    """
+    Interface for buttons related to the interactive simulations.
+
+    Inputs:
+            window  :   QMainWindow
+    """
+    window.IntSStepButton.clicked.connect(window.IntButtons)
+    window.IntResetButton.clicked.connect(window.IntButtons)
+    window.IntMCSimButton.clicked.connect(window.IntButtons)
+    window.IntSDSlider.valueChanged.connect(window.SetSDSliderValue)
+    window.IntMCSlider.valueChanged.connect(window.SetMCSliderValue)
+    window.IntTempLine.editingFinished.connect(window.UpdateInteractiveVtk)
+    window.IntB_xLine.editingFinished.connect(window.UpdateInteractiveVtk)
+    window.IntB_yLine.editingFinished.connect(window.UpdateInteractiveVtk)
+    window.IntB_zLine.editingFinished.connect(window.UpdateInteractiveVtk)
+    window.IntScreenshot.clicked.connect(window.InteractiveScreenshot)
+   
 #------------------------------------------------------------------------------------
 # @brief Function to update the UI objects.
 # @details Function to update the UI objects. Namely used to deal with the update between
@@ -513,7 +628,7 @@ def UpdateUI(window):
     ----------
     Jonathan Chico
     """
-    from PyQt5.QtCore import QSignalBlocker
+    from PyQt6.QtCore import QSignalBlocker
 
     if window.sender()==window.InpInitBox:
         if window.InpInitBox.isChecked():

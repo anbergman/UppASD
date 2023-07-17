@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [6.0.1] - 2022-10-08
  
 ### Added
 - Added **major new feature**, multiscale (muASD) functionalities. [[Nikolaos Ntallis](nikos.ntallis@physics.uu.se), [Manuel Pereiro](manuel.pereiro@physics.uu.se)]
@@ -12,6 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - Added electron-only mode for 3TM. [[Anders Bergman](anders.bergman@physics.uu.se)]
     - Added variable specific heats for 3TM. [[Anders Bergman](anders.bergman@physics.uu.se)]
     - Added 3TM example: `./SLDexamples/bccFe3TM`. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added weights to cumulants to improve convergence. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added new function for real-space and time correlations. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added triangulation routine for skyrmion number calculation. `skyno T`. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added JSON output for cumulant data (for aiida-uppasd parsing). [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added ASD functionality to ip_mode SX. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added minimal driver routines for ASD and MC for external use. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added support for (C)ycloidal and (H)elical spirals in qminimizer. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added topological center of mass as a measurement. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added symmetric anisotropic exchange as individual interaction. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added pypi installation support for ASD_GUI. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Added support for angular frequency printing for S(q,w) outputs. [[Anders Bergman](anders.bergman@physics.uu.se)] 
+- Added test functionality to Cmake compilation (ctest).  [[Anders Bergman](anders.bergman@physics.uu.se)]
 - Added Quantum Heath Bath Method [[Anders Bergman](anders.bergman@physics.uu.se), [Lars Bergqvist](lbergqv@kth.se)]
     - Added gradient of temperature rescaling parameter required for Cv in QHB. [[Lars Bergqvist](lbergqv@kth.se)]
 - [Addition of a changelog](https://gitlab.com/UppASD/UppASD/-/issues/34). [[Jonathan Chico](jonathanpchico@gmail.com), [Anders Bergman](anders.bergman@physics.uu.se)]
@@ -97,7 +109,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Made AMS working for reduced Hamiltonian. [[Anders Bergman](anders.bergman@physics.uu.se)]
 - Added average energy in output file. [[Lars Bergqvist](lbergqv@kth.se)]
 - Added new coordinate wrapping routines for stiffy and AMS. Works ok for ra_AMS. [[Anders Bergman](anders.bergman@physics.uu.se)]
+
 ### Changed
+- Improved m=z handling for MC HB. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Improved support for non-tensor interactions (anisotropy+SA) in nc-AMS. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Changed logfile format from YAML to json. [[Anders Bergman](anders.bergman@physics.uu.se)]
+- Cmake now builds library and executable. [[Anders Bergman](anders.bergman@physics.uu.se)]
 - Unified I/O for magnetic configurations. Now **all** magnetic configurations (moments, restartfile) have the same structure. [[Jonathan Chico](jonathanpchico@gmail.com)]
 - [Renaming the examples and tests folders](https://gitlab.com/UppASD/UppASD/-/issues/32) so that they follow the current standards. [[Jonathan Chico](jonathanpchico@gmail.com)]
 - Removed symmetrization of K in NC-LSWT routines. [[Anders Bergman](anders.bergman@physics.uu.se)]
@@ -185,6 +202,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Deprecated
 
 ### Removed
+- Removed default resetting of u and p in sld_driver. [[Anders Bergman](anders.bergman@physics.uu.se)]
 - Removed old (`UppASD < 5.0`) neighbour list output format.  [[Jonathan Chico](jonathanpchico@gmail.com)]
 - Removed quasibls functionality and test. [[Anders Bergman](anders.bergman@physics.uu.se)]
 

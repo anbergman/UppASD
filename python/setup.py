@@ -7,12 +7,12 @@ import glob
 from setuptools import setup, find_packages
 from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
-import sysconfig
 
 
 
 class CMakeExtension(Extension):
-    def __init__(self, name, cmake_lists_dir='..', **kwa):
+    #def __init__(self, name, cmake_lists_dir='../', **kwa):
+    def __init__(self, name, cmake_lists_dir='./', **kwa):
         Extension.__init__(self, name, sources=[], **kwa)
         self.cmake_lists_dir = os.path.abspath(cmake_lists_dir)
 
@@ -31,12 +31,8 @@ class cmake_build_ext(build_ext):
 
             extdir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
             cfg = 'Debug' if os.environ.get('DISPTOOLS_DEBUG','OFF') == 'ON' else 'Release'
-            python_inc_dir = sysconfig.get_path('include')
-            python_lib_dir = sysconfig.get_config_var('LIBDIR')
-
 
             cmake_args = [
-                #'-G Ninja',
                 '-DCMAKE_BUILD_TYPE=%s' % cfg,
                 # Ask CMake to place the resulting library in the directory
                 # containing the extension
@@ -51,8 +47,6 @@ class cmake_build_ext(build_ext):
                 '-DPYTHON_EXECUTABLE={}'.format(sys.executable),
                 #'-DCMAKE_Fortran_COMPILER=gfortran',
                 '-DBUILD_PYTHON=ON',
-                #'-DPYTHON_INCLUDE_DIR={}'.format(python_inc_dir),
-                #'-DPYTHON_LIBRARY={}'.format(python_lib_dir),
                 #'-DMKL_INTERFACE_FULL=gf_lp64',
                 #'-DMKL_THREADING=gnu_thread',
                 #'-DLAPACK="-framework Accelerate"',
@@ -66,20 +60,18 @@ class cmake_build_ext(build_ext):
             subprocess.check_call(['cmake', ext.cmake_lists_dir] + cmake_args,
                                   cwd=self.build_temp)
 
-            ## Config
-            #subprocess.check_call(['cmake', ext.cmake_lists_dir] + cmake_args,
-            #                      cwd=self.build_temp)
-
             # Build
-            subprocess.check_call(['cmake', '--build', '.','--parallel', '--config', cfg],
+            subprocess.check_call(['cmake', '--build', '.','-j4', '--config', cfg],
                                   cwd=self.build_temp)
 
-            src_file=glob.glob(self.build_temp+'/_uppasd.*.*')
-            lib_path=self.build_temp.replace('temp','lib')+'/uppasd/'
+            src_file=glob.glob('./'+self.build_temp+'/_uppasd.*.so')
+            lib_path=self.build_temp.replace('temp','lib') #+'/uppasd/'
+            if not os.path.exists(lib_path):
+                os.makedirs(lib_path)
+            
             shutil.copy2(src_file[0],'uppasd/')
             shutil.copy2(src_file[0],lib_path)
-            #src_file=glob.glob(self.build_temp+'/asd.py')
-            #shutil.copy2(src_file[0],'asd/')
+            
 
 
 #### Environment flag needed for appending library flags to f2py
@@ -89,8 +81,6 @@ if (platform.system()=='Darwin'):
     os.environ['LDFLAGS'] = "-framework Accelerate"
 elif (platform.system()=='Linux'):
     os.environ['LDFLAGS'] = "-fopenmp"
-###os.environ['FC'] = "gfortran"
-####os.environ['CC'] = "gcc"
 
 setup(
         name = 'uppasd',
@@ -104,7 +94,6 @@ setup(
         include_package_data = True, 
         packages=['uppasd'],
         package_dir={'uppasd': 'uppasd'},
-#        package_data={'uppasd': ['uppasd/_uppasd.cpython-39-x86_64-linux-gnu.so']},
         ext_modules=[CMakeExtension(name='_uppasd')],
         scripts=['bin/uppasd','bin/uppasd_interactive']
         )

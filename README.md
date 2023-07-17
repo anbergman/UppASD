@@ -37,7 +37,7 @@ Quick-start:
 make <profile>
 ```
 
-Where `<profile>` is a suitable compiler profile, i.e. `ifort`, `gfortran`, `gfortran-osx` and so on.   
+Where `<profile>` is a suitable compiler profile, i.e. `ifort`, `gfortran`, `gfortran-osx`, `gfortran-ftn`, `aocc-ftn` and so on.   
 
 ---
 Quick-start alternative (using cmake):
@@ -51,7 +51,9 @@ The binary is compiled to the `./bin/` directory.
 
 Examples are provided in `./examples/`
 
-The manual is found at `./docs/UppASDmanual.pdf` 
+The code is documented in the [UppASD manual](https://uppasd.github.io/UppASD-manual/).
+
+A tutorial with examples and exercises on atomistic spin-dynamics are contained in the [UppASD tutorial](https://uppasd.github.io/UppASD-tutorial/).
 
 **Developers please look at the development guidelines in the `CONTRIBUTING.md` file, about how to make your contributions to UppASD.**
 
@@ -68,13 +70,13 @@ This allows for:
 - Automatic generation of input files for `UppASD`.
 
 ***Requirements***
-- `Qt5`.
+- `Qt6`.
 - `python3.6` or higher.
    - `pandas`
    - `numpy`
    - `PyYaml`
    - `matplotlib`
-- `VTK7.0` or higher.
+- `VTK8.0` or higher.
 
 ***Installation Guide (pip)***
 
@@ -86,9 +88,17 @@ After installing `virtualenv` one can create virtual environment where to host t
 pip install virtualenv
 virtualenv ASD_GUI_env 
 source ASD_GUI_env/bin/activate
-pip install numpy scipy matplotlib pandas pyqt5 vtk
+pip install numpy matplotlib pyyaml pandas pyqt6 vtk
 ```
-This will generate a virtual environment named `ASD_GUI_env` which can be activated or deactivated to run the GUI.
+This will generate a virtual environment named `ASD_GUI_env` which can be activated or deactivated to run the GUI. The following steps are also recommended (starting from the base directory of the repo):
+
+```
+cd ASD_GUI
+pip install .
+```
+
+This will install the GUI as a proper Python module and you can then start the GUI from any point in your file system by issuing the 
+`asd_gui` command at the command prompt.
 
 
 ***Installation Guide (anaconda)***
@@ -103,8 +113,10 @@ source activate ASD_GUI_env
 ```
 This will generate a conda environment named `ASD_GUI_env` which can be activated or deactivated to run the GUI.
 
+_Note: The anaconda approach might not work untill the conda repositories update `pyqt` to support `Qt6`._ 
+
 ---
-(C) 2008-2022 [UppASD group][2]
+(C) 2008-2023 [UppASD group][2]
 
 [1]:https://global.oup.com/academic/product/atomistic-spin-dynamics-9780198788669
 [2]:http://www.physics.uu.se/research/materials-theory/ongoing-research/uppasd/

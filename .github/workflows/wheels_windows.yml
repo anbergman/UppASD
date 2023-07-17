@@ -1,0 +1,112 @@
+name: Build wheels on windows
+
+on: [push, pull_request]
+
+jobs:
+  build_wheels:
+    name: Build wheels on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    #defaults:
+    #  run:
+    #    shell: msys2 {0}
+    continue-on-error: true
+    strategy:
+      matrix:
+        os: [ windows-2019 ]
+        #os: [ubuntu-20.04, windows-2019, macOS-11]
+
+    steps:
+      - name: Provide gfortran (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          # https://github.com/actions/virtual-environments/issues/2524
+          # https://github.com/cbg-ethz/dce/blob/master/.github/workflows/pkgdown.yaml
+          sudo ln -s /usr/local/bin/gfortran-12 /usr/local/bin/gfortran
+          sudo ln -s /usr/local/bin/gcc-12 /usr/local/bin/gcc
+          sudo mkdir /usr/local/gfortran
+          sudo ln -s /usr/local/Cellar/gcc@12/*/lib/gcc/12 /usr/local/gfortran/lib
+          gfortran --version
+          gcc --version
+          which gcc
+          which gfortran
+
+      - name: Provide fftw  (macOS)
+        if: runner.os == 'macOS'
+        run: |
+          # fftw3 
+          brew install fftw
+          fftw-wisdom -V
+
+      - name: Provide gfortran (Windows)
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          path-type: inherit
+          install: >-
+            mingw-w64-x86_64-gcc-fortran
+            mingw-w64-x86_64-openblas
+            mingw-w64-x86_64-lapack
+            mingw-w64-x86_64-fftw
+          #git
+          #make
+
+      - name: Update Github path for mingw64
+        if: runner.os == 'Windows'
+        run: |
+          Add-Content $env:GITHUB_PATH "C:\msys64\mingw64\bin"
+          Add-Content $env:GITHUB_PATH "C:\msys64\mingw64\lib"
+          Add-Content $env:GITHUB_PATH "C:\msys64\mingw64\include"
+          #pacboy: >-
+          #  #toolchain:p
+          #  #gcc-fortran:p
+          #  openblas:p
+          #  lapack:p
+          #  fftw:p
+          #  #cmake:p
+          #  #ninja:p
+
+      - name: Tell distutils to use mingw (Windows)
+        if: runner.os == 'Windows'
+        #run: |
+        #  $pydistutilsConfig = @"
+        #  [build]
+        #   compiler = mingw32"@
+        #  $pydistutilsConfig | Out-File "$env:USERPROFILE\pydistutils.cfg" -Encoding UTF8
+        run: |
+           echo "[build]\ncompiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg
+           #echo "[build]`ncompiler=mingw32" 
+
+      - uses: actions/checkout@v3
+
+      # Used to host cibuildwheel
+      - uses: actions/setup-python@v3
+
+      - name: Install cibuildwheel
+        run: |
+          python -m ensurepip 
+          python -m pip install cibuildwheel==2.10.1
+
+      - name: Build wheels
+        run: 
+          python -m cibuildwheel --output-dir wheelhouse
+        # to supply options, put them in 'env', like:
+        # env:
+        #   CIBW_SOME_OPTION: value
+        env:
+          #CIBW_SKIP: pp38-manylinux*
+          #CIBW_SKIP: pp39* pp31*
+          #CIBW_ENVIRONMENT_WINDOWS: >
+          #  PATH="$PATH;C:\\\\msys64\\mingw64\\bin"
+          CIBW_ENVIRONMENT_WINDOWS: >
+           CMAKE_PREFIX_PATH="C:\msys64\mingw64" CC=gcc CXX=g++ FC=gfortran 
+          #CMAKE_PREFIX_PATH="C:\\\\msys64\\mingw64" CC=gcc CXX=g++ FC=gfortran 
+          #CIBW_ENVIRONMENT_WINDOWS: CC=gcc CXX=g++ FC=gfortran
+          CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
+
+
+
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ./wheelhouse/*.whl
