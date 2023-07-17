@@ -1,4 +1,4 @@
-name: Build wheels across platforms
+name: Build wheels across platforms with msys II
 
 on: [push]
 
@@ -6,9 +6,9 @@ jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    #defaults:
-    #  run:
-    #    shell: msys2 {0}
+    defaults:
+      run:
+        shell: msys2 {0}
     continue-on-error: true
     strategy:
       matrix:
@@ -41,50 +41,94 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-            python-version: '3.11'
+            python-version: '3.9'
 
       - name: Check invironments
-        env: 
-          msystem: MINGW64
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
           echo 'Looking for gfortran'
           which gfortran
           where gfortran
           where gfortran.exe
-          (get-command gfortran.exe).Path
           echo 'Looking for gfortran'
           where python
           which python
-          (get-command Python.exe).Path
           echo 'PATH:'
-          echo $Env:PATH
+          echo $PATH
           echo 'SHELL:'
-          echo $Env:SHELL
+          echo $SHELL
           echo 'PYTHONHOME'
-          echo $Env:PYTHONHOME
+          echo $PYTHONHOME
           echo 'PYTHONPATH'
-          echo $Env:PYTHONPATH
+          echo $PYTHONPATH
           python --version
           gfortran --version
+          echo 'After path'
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          which python
+          python --version
 
-      - name: Check invironments vII
+      - name: Initiate cibuildwheel
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
-          echo 'Looking for gfortran'
-          which gfortran
-          where gfortran
-          where gfortran.exe
-          (get-command gfortran.exe).Path
-          echo 'Looking for gfortran'
-          where python
-          which python
-          (get-command Python.exe).Path
-          echo 'PATH:'
-          echo $Env:PATH
-          echo 'SHELL:'
-          echo $Env:SHELL
-          echo 'PYTHONHOME'
-          echo $Env:PYTHONHOME
-          echo 'PYTHONPATH'
-          echo $Env:PYTHONPATH
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel pipx
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx ensurepath
+
+      - name: Setup venv
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+        run: |
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
+          echo "Install virtualenv"
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install virtualenv
+          echo "Create venv"
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv ~/myenv
+          echo 'ls'
+          ls
+          echo 'ls ~/'
+          ls ~/
+          echo 'ls ~/myenv'
+          ls ~/myenv
+          echo 'ls ~/myenv/Scripts'
+          ls ~/myenv/Scripts
+          echo 'activate'
+          ~/myenv/Scripts/activate
+          echo 'test'
           python --version
-          gfortran --version
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python --version
+
+      - name: Run cibuildwheel in venv
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PYTHONPATH: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PYTHONHOME: /c/hostedtoolcache/windows/Python/3.9.13/x64
+        run: |
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          echo 'Activate environment'
+          ~/myenv/Scripts/activate
+          echo 'Install packages'
+          python -m pip install cibuildwheel pipx numpy wheel build
+          echo 'run it'
+          python -m cibuildwheel --platform windows
+          #/c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows

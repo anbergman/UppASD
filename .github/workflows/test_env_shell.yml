@@ -125,5 +125,10 @@ jobs:
           PYTHONHOME: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
           export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          echo 'Activate environment'
+          ~/myenv/Scripts/activate
+          echo 'Install packages'
+          python -m pip install cibuildwheel pipx numpy wheel build
           echo 'run it'
-          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows
+          python -m pipx run cibuildwheel --platform windows
+          #/c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows
