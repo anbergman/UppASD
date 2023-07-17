@@ -52,6 +52,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
+          path-type: inherit
           pacboy: >-
             toolchain:p
             gcc-fortran:p
@@ -80,7 +81,7 @@ jobs:
           #find /c/rtools43 -name "*gfortran*"
           #echo 'Find blas'
           #find /c/rtools43 -name "*blas*"
-          export CMAKE_PREFIX_PATH=/c/msys64/ucrt64
+          export CMAKE_PREFIX_PATH=/mingw64
           export FC=gfortran
           export CC=gcc
           echo 'ls /'
@@ -88,7 +89,7 @@ jobs:
           echo 'ls /mingw64'
           ls /mingw64
           env
-          #cmake -S . -B build
+          cmake -S . -B build -DCMAKE_PREFIX_PATH=/mingw64
           #cmake --build build
           
 
