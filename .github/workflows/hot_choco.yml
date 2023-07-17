@@ -1,4 +1,4 @@
-name: Powershell build
+name: Bash with rtools
 
 on:
   push:

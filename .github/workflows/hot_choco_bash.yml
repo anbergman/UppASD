@@ -1,4 +1,4 @@
-name: winBash build
+name: Bash with msys2
 
 on:
   push:
@@ -16,6 +16,7 @@ jobs:
     defaults:
       run:
         shell: bash
+
     strategy:
       fail-fast: false
       matrix:
@@ -41,28 +42,51 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: 3.9
+      #- name: Setup Python
+      #  uses: actions/setup-python@v4
+      #  with:
+      #    python-version: 3.9
 
-      - name: Install rtools 
-        if: ${{ runner.os == 'Windows' }}
-        run: |
-          choco install -y rtools
-          choco install -y pkgconfiglite
+      #- name: Install rtools 
+      #  if: ${{ runner.os == 'Windows' }}
+      #  run: |
+      #    choco install -y rtools
+      #    choco install -y pkgconfiglite
+
+      - name: Setup MSYS
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          pacboy: >-
+            toolchain:p
+            gcc-fortran:p
+            openblas:p
+            lapack:p
+            fftw:p
+            cmake:p
+            ninja:p
 
       - name: Test cmake without python
-        env: 
-          FC: gfortran
         run: |
+          echo 'which gfortran'
           which gfortran
-          echo 'C:\ProgramData\chocolatey'
-          ls C:\ProgramData\chocolatey
-          echo 'C:\ProgramData\chocolatey\lib'
-          ls C:\ProgramData\chocolatey\lib
-          #cmake -S . -B build
-          #cmake --build build
+          echo 'which cmake'
+          which cmake
+          export PATH=/c/msys64/ucrt64:$PATH
+          echo 'which gfortran'
+          which gfortran
+          echo 'which cmake'
+          which cmake
+          #echo 'Find gfortran'
+          #find /c/rtools43 -name "*gfortran*"
+          #echo 'Find blas'
+          #find /c/rtools43 -name "*blas*"
+          export CMAKE_PREFIX_PATH=/c/msys64/ucrt64
+          export FC=gfortran
+          export CC=gcc
+          env
+          cmake -S . -B build
+          cmake --build build
           
       #- name: Test cmake with python
       #  env: 
