@@ -133,7 +133,9 @@ jobs:
           echo 'Activate environment'
           ~/myenv/Scripts/activate
           echo 'Install packages'
-          python -m pip install cibuildwheel pipx wheel build ninja meson
+          #python -m pip install cibuildwheel pipx wheel build ninja meson
           echo 'run it'
-          python -m cibuildwheel --platform windows
+          python -m pip wheel . -v
+          ls *.whl
+          #python -m cibuildwheel --platform windows
           #/c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows
