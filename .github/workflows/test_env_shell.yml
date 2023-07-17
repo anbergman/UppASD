@@ -36,6 +36,7 @@ jobs:
             meson:p
             python-pip:p
             python-numpy:p
+            python-setuptools:p
 
       - name: Checkout repository
         uses: actions/checkout@v3

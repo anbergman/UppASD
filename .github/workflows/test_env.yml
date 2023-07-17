@@ -23,9 +23,9 @@ jobs:
           update: true
           install: >-
             git
-            make
 
           pacboy: >-
+            make:p
             toolchain:p
             gcc-fortran:p
             openblas:p
@@ -33,6 +33,13 @@ jobs:
             fftw:p
             cmake:p
             ninja:p
+            ninja:p
+            meson:p
+            python-pip:p
+            python-numpy:p
+            python-setuptools:p
+            python-wheel:p
+            python-build:p
 
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -69,9 +76,9 @@ jobs:
 
       - name: Initiate cibuildwheel
         run: |
-          python -m ensurepip
+          #python -m ensurepip
           python -m pip install cibuildwheel pipx
-          python -m pipx ensurepath
+          #python -m pipx ensurepath
 
       - name: Setup venv
         run: |
@@ -94,7 +101,7 @@ jobs:
           which python
           python --version
           echo 'Install packages'
-          python -m pip install cibuildwheel pipx numpy wheel build
+          #python -m pip install cibuildwheel pipx numpy wheel 
           env
 
       - name: Run cibuildwheel in venv
