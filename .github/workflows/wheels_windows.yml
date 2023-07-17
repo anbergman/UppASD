@@ -96,7 +96,7 @@ jobs:
           $Env:PATH += ';C:\msys64\mingw64\lib'
           $Env:PATH += ';C:\msys64\mingw64\include'
           which cmake
-          cmake -S . -B build -DBLAS_DIR="c:\msys64\mingw64\lib"' -DLAPACK_DIR="c:\msys64\mingw64\lib" -DBUILD_PYTHON=ON
+          cmake -S . -B build -DBLAS_DIR="c:\msys64\mingw64\lib" -DLAPACK_DIR="c:\msys64\mingw64\lib" -DBUILD_PYTHON=ON
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
         # env:
