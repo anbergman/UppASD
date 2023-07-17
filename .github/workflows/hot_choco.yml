@@ -61,6 +61,8 @@ jobs:
           which gfortran
           echo 'which cmake'
           which cmake
+          echo 'Looking for R-tools'
+          ls /c/
           echo 'C:\ProgramData\chocolatey'
           ls /c/ProgramData/chocolatey
           echo 'C:\ProgramData\chocolatey\bin'
@@ -71,7 +73,9 @@ jobs:
           ls /c/ProgramData/chocolatey/lib/rtools/tools
           echo 'C:\ProgramData\chocolatey\lib\mingw'
           ls /c/ProgramData/chocolatey/lib/mingw/tools
-
+          echo "FC=gfortran" >> $env:GITHUB_ENV
+          echo "PLAT=x86_64" >> $env:GITHUB_ENV
+          echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
           #cmake -S . -B build
           #cmake --build build
           
