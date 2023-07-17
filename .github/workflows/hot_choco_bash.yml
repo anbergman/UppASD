@@ -63,6 +63,8 @@ jobs:
             ninja:p
 
       - name: Test environments before python
+        env:
+          MSYSTEM: UCRT64
         run: |
           echo 'which gfortran'
           which gfortran
