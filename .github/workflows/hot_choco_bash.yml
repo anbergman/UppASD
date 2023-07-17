@@ -71,7 +71,7 @@ jobs:
           which cmake
           export PATH=/c/msys64/ucrt64:$PATH
           echo 'which python'
-          which python'
+          which python
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
