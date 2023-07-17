@@ -72,7 +72,7 @@ jobs:
       - name: Initiate cibuildwheel
         run: |
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
-          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel pipx
 
       - name: Setup venv
         run: |
@@ -80,11 +80,17 @@ jobs:
           echo "Install virtualenv"
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install virtualenv
           echo "Create venv"
-          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv /myenv
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv ~/myenv
+          echo 'ls'
           ls
-          ls /
-          ls /myenv
-          ls /myenv/bin
-          /myenv/bin/activate
+          echo 'ls ~/'
+          ls ~/
+          echo 'ls ~/myenv'
+          ls ~/myenv
+          echo 'ls ~/myenv/Scripts'
+          ls ~/myenv/Scripts
+          echo 'activate'
+          ~/myenv/Scripts/activate
+          echo 'test'
           python --version
 
