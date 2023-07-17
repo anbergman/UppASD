@@ -86,7 +86,7 @@ jobs:
           echo 'ls ~/myenv'
           ls ~/myenv
           echo 'ls ~/myenv/Scripts'
-          ls ~/myenv/Scripts
+          ls ~/myenv/bin
           echo 'activate'
           which python
           ~/myenv/bin/activate
