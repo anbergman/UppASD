@@ -77,9 +77,9 @@ jobs:
           echo 'ENV'
           env
           echo 'Find gfortran'
-          find /c/rtools43PATH/usr/bin -name "*gfortran*"
+          find /c/rtools43 -name "*gfortran*"
           echo 'Find blas'
-          find /c/rtools43PATH/usr/bin -name "*blas*"
+          find /c/rtools43 -name "*blas*"
           #cmake -S . -B build
           #cmake --build build
           
