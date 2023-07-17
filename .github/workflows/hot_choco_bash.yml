@@ -54,7 +54,7 @@ jobs:
 
       - name: Test cmake without python
         env: 
-          FC=gfortran
+          FC: gfortran
         run: |
           which gfortran
           cmake -S . -B build
@@ -62,7 +62,7 @@ jobs:
           
       - name: Test cmake with python
         env: 
-          FC=gfortran
+          FC: gfortran
         run: |
           cmake -S . -B build -DBUILD_PYTHON=ON
           cmake --build build
