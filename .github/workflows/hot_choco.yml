@@ -76,12 +76,15 @@ jobs:
           echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
           echo 'ENV'
           env
-          echo 'Find gfortran'
-          find /c/rtools43 -name "*gfortran*"
-          echo 'Find blas'
-          find /c/rtools43 -name "*blas*"
-          #cmake -S . -B build
-          #cmake --build build
+          #echo 'Find gfortran'
+          #find /c/rtools43 -name "*gfortran*"
+          #echo 'Find blas'
+          #find /c/rtools43 -name "*blas*"
+          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          export FC=gfortran
+          export CC=gcc
+          cmake -S . -B build
+          cmake --build build
           
       #- name: Test cmake with python
       #  env: 
