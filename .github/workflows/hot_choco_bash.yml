@@ -14,8 +14,8 @@ jobs:
     name: Build wheel for cp${{ matrix.python }}-${{ matrix.platform }}
     runs-on: ${{ matrix.os }}
     defaults:
-    run:
-      shell: bash
+      run:
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
