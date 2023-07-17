@@ -64,7 +64,7 @@ jobs:
       - name: Test environments before python
         run: |
           echo 'which python'
-          which python'
+          which python
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
