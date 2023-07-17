@@ -1,4 +1,4 @@
-name: Build wheels across platforms
+name: Build wheels across platforms with msys
 
 on: [push]
 
@@ -69,10 +69,40 @@ jobs:
           python --version
           gfortran --version
 
+
       - name: Setup venv
         run: |
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install virtualenv
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m venv ~/myenv
+          ls
+          ls ~/myenv
+          ls ~/myenv/bin
           ~/myenv/bin/activate
           python --version
+
+      - name: Build wheels (windows)
+        if: runner.os == 'Windows'
+        uses: pypa/cibuildwheel@v2.11.1
+        # to supply options, put them in 'env', like:
+        env:
+          CIBW_SKIP: cp36*
+          CIBW_ENVIRONMENT_WINDOWS: FC=gfortran F90=gfortran
+        run: |
+          echo 'Looking for gfortran'
+          which gfortran
+          where gfortran
+          where gfortran.exe
+          echo 'Looking for gfortran'
+          where python
+          which python
+          echo 'PATH:'
+          echo $PATH
+          echo 'SHELL:'
+          echo $SHELL
+          echo 'PYTHONHOME'
+          echo $PYTHONHOME
+          echo 'PYTHONPATH'
+          echo $PYTHONPATH
+          python --version
+          gfortran --version
