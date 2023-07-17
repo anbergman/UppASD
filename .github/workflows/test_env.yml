@@ -95,6 +95,7 @@ jobs:
           python --version
           echo 'Install packages'
           python -m pip install cibuildwheel pipx numpy wheel build
+          env
 
       - name: Run cibuildwheel in venv
         run: |
