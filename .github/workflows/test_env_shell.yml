@@ -96,9 +96,11 @@ jobs:
 
       - name: Run cibuildwheel in venv
         run: |
-          echo 'activate'
-          ~/myenv/Scripts/activate
-          echo 'install cibuildwheel & pipx'
-          python -m pip install cibuildwheel pipx
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          #echo 'activate'
+          #~/myenv/Scripts/activate
+          #echo 'install cibuildwheel & pipx'
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel pipx
           echo 'run it'
+          which pipx
           pipx run cibuildwheel --platform windows
