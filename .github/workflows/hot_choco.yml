@@ -63,6 +63,8 @@ jobs:
           which cmake
           echo 'Looking for R-tools'
           ls /c/
+          echo 'Looking in rtools43'
+          ls /c/rtools43
           echo 'C:\ProgramData\chocolatey'
           ls /c/ProgramData/chocolatey
           echo 'C:\ProgramData\chocolatey\bin'
@@ -76,6 +78,7 @@ jobs:
           echo "FC=gfortran" >> $env:GITHUB_ENV
           echo "PLAT=x86_64" >> $env:GITHUB_ENV
           echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
+          env
           #cmake -S . -B build
           #cmake --build build
           
