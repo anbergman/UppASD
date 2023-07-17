@@ -88,5 +88,3 @@ jobs:
           echo $Env:PYTHONPATH
           python --version
           gfortran --version
-        with: 
-          msystem: MINGW64
