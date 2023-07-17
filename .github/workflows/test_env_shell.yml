@@ -125,6 +125,5 @@ jobs:
           PYTHONHOME: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
           export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
-          which pipx
           echo 'run it'
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows
