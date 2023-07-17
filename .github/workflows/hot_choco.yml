@@ -84,9 +84,13 @@ jobs:
           export FC=gfortran
           export CC=gcc
           export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH
-          ./setup_UppASD.sh
-          make deps 
-          make gfortran-win64
+          echo 'ls /'
+          ls /
+          echo 'ls /mingw64'
+          ls /mingw64
+          #./setup_UppASD.sh
+          #make deps 
+          #make gfortran-win64
           #cmake -S . -B build
           #cmake --build build
           

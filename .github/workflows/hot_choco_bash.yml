@@ -85,8 +85,8 @@ jobs:
           export CC=gcc
           echo 'ls /'
           ls /
-          echo 'ls /msys64'
-          ls /msys64
+          echo 'ls /mingw64'
+          ls /mingw64
           env
           #cmake -S . -B build
           #cmake --build build
