@@ -68,14 +68,33 @@ jobs:
           echo $PYTHONPATH
           python --version
           gfortran --version
+          echo 'After path'
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
+          which python
+          python --version
 
       - name: Initiate cibuildwheel
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel pipx
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx ensurepath
 
       - name: Setup venv
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
+          export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m ensurepip
           echo "Install virtualenv"
           /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install virtualenv
@@ -93,14 +112,19 @@ jobs:
           ~/myenv/Scripts/activate
           echo 'test'
           python --version
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python --version
 
       - name: Run cibuildwheel in venv
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PYTHONPATH: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PYTHONHOME: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
           export PATH=/c/hostedtoolcache/windows/Python/3.9.13/x64/:$PATH
-          #echo 'activate'
-          #~/myenv/Scripts/activate
-          #echo 'install cibuildwheel & pipx'
-          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pip install cibuildwheel pipx
           echo 'run it'
           which pipx
-          pipx run cibuildwheel --platform windows
+          /c/hostedtoolcache/windows/Python/3.9.13/x64/python -m pipx run cibuildwheel --platform windows
