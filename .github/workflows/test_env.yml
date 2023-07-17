@@ -62,3 +62,5 @@ jobs:
           echo $Env:PYTHONHOME
           echo 'PYTHONPATH'
           echo $Env:PYTHONPATH
+          python --version
+          gfortran --version

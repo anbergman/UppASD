@@ -44,6 +44,12 @@ jobs:
             python-version: '3.9'
 
       - name: Check invironments
+        env:
+          pythonLocation: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          PKG_CONFIG_PATH: /c/hostedtoolcache/windows/Python/3.9.13/x64/lib/pkgconfig
+          Python_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python2_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
+          Python3_ROOT_DIR: /c/hostedtoolcache/windows/Python/3.9.13/x64
         run: |
           echo 'Looking for gfortran'
           which gfortran
@@ -60,3 +66,5 @@ jobs:
           echo $PYTHONHOME
           echo 'PYTHONPATH'
           echo $PYTHONPATH
+          python --version
+          gfortran --version
