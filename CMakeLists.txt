@@ -523,7 +523,8 @@ if(BUILD_PYTHON)
          # Uncomment if f90wrap needs to be invoked
          #DEPENDS ${UppASD_LIB} ${F2PY_sources}
          WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-         COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt 
+         #COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
+         COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
          COMMENT "Generating Python modules"
          VERBATIM 
          )
