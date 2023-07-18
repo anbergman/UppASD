@@ -128,12 +128,13 @@ jobs:
           env
           echo '========================================='
           pip install setuptools wheel numpy>1.19 f90wrap
-          cmake -S . -B build -DBUILD_PYTHON=ON
-          #cmake --build build
+          cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
+          cmake --build build
           
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.14.0
         env:
+          CIBW_ENVIRONMENT_WINDOWS: PATH="/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH" CMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix" FC="gfortran" CC="gcc"
           CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
 
       - name: Store artifacts
