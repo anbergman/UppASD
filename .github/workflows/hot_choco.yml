@@ -61,11 +61,11 @@ jobs:
       #      cmake:p
       #      ninja:p
 
-      #- name: Install rtools 
-      #  if: ${{ runner.os == 'Windows' }}
-      #  run: |
-      #    choco install -y rtools
-      #    choco install -y pkgconfiglite
+      - name: Install rtools 
+        if: ${{ runner.os == 'Windows' }}
+        run: |
+          choco install -y pkgconfiglite
+          #    choco install -y rtools
 
       - name: Test cmake without python
         env: 
@@ -125,7 +125,7 @@ jobs:
           echo '========================================='
           env
           echo '========================================='
-          pip install setuptools wheel numpy>1.19
+          pip install setuptools wheel numpy>1.19 f90wrap
           cmake -S . -B build -DBUILD_PYTHON=ON
           cmake --build build
           
