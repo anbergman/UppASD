@@ -51,7 +51,7 @@ jobs:
       - name: Setup MSYS
         uses: msys2/setup-msys2@v2
         with:
-          msystem: UCRT64
+          msystem: MINGW64
           path-type: inherit
           pacboy: >-
             toolchain:p
@@ -64,7 +64,7 @@ jobs:
 
       - name: Test environments before python
         env:
-          MSYSTEM: UCRT64
+          MSYSTEM: MINGW64
         run: |
           echo 'which gfortran'
           which gfortran
@@ -72,7 +72,7 @@ jobs:
           which cmake
           echo 'which python'
           which python
-          export PATH=/c/msys64/ucrt64:$PATH
+          export PATH=/c/msys64/mingw64/bin:$PATH
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
@@ -82,29 +82,32 @@ jobs:
           export CMAKE_PREFIX_PATH=/mingw64
           export FC=gfortran
           export CC=gcc
-          echo 'ls /'
+          echo '=============== ls /'
           ls /
-          echo 'ls /c/'
+          echo '=============== ls /c/'
           ls /c/
-          echo 'ls /c/msys64'
+          echo '=============== ls /c/msys64'
           ls /c/msys64
-          echo 'ls /c/msys64/ucrt64'
-          ls /c/msys64/ucrt64
-          echo 'ls /c/msys64/ucrt64/bin'
-          ls /c/msys64/ucrt64/bin
-          echo 'ls /mingw64'
+          echo '=============== ls /c/msys64/mingw64'
+          ls /c/msys64/mingw64
+          echo '=============== ls /c/msys64/mingw64/bin'
+          ls /c/msys64/mingw64/bin
+          echo '=============== ls /mingw64'
           ls /mingw64
           echo 'ls /mingw64/bin'
           ls /mingw64/bin
+          echo '=============== tree /c/msys64'
+          tree /c/msys64
+          echo '=================================='
           env
           echo 'Find gfortran in msys'
           find /c/msys64 -name "*gfortran*"
           echo 'Find blas in msys'
           find /c/msys64 -name "*blas*"
-          echo 'Find gfortran in mingw'
-          find /mingw64 -name "*gfortran*"
-          echo 'Find blas in mingw'
-          find /mingw64 -name "*blas*"
+          #echo 'Find gfortran in mingw'
+          #find /mingw64 -name "*gfortran*"
+          #echo 'Find blas in mingw'
+          #find /mingw64 -name "*blas*"
           #cmake -S . -B build -DCMAKE_PREFIX_PATH=/mingw64
           #cmake --build build
           

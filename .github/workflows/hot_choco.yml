@@ -92,12 +92,14 @@ jobs:
           echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
           echo 'ENV'
           env
-          #echo 'Find gfortran'
-          #find /c/rtools43 -name "*gfortran*"
-          #echo 'Find blas'
-          #find /c/rtools43 -name "*blas*"
+          echo '=================================='
+          echo 'Find gfortran'
+          find /c/rtools43 -name "*gfortran*"
+          echo 'Find blas'
+          find /c/rtools43 -name "*blas*"
+          echo '=================================='
           export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH
+          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
