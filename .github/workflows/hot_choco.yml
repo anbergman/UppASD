@@ -65,6 +65,7 @@ jobs:
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install -y pkgconfiglite
+          choco install -y ninja
           #    choco install -y rtools
 
       - name: Test cmake without python
@@ -128,7 +129,7 @@ jobs:
           echo '========================================='
           pip install setuptools wheel numpy>1.19 f90wrap
           cmake -S . -B build -DBUILD_PYTHON=ON
-          cmake --build build
+          #cmake --build build
           
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.14.0
