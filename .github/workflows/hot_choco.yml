@@ -47,6 +47,20 @@ jobs:
       #  with:
       #    python-version: 3.9
 
+      #- name: Setup MSYS
+      #  uses: msys2/setup-msys2@v2
+      #  with:
+      #    msystem: UCRT64
+      #    path-type: inherit
+      #    pacboy: >-
+      #      toolchain:p
+      #      gcc-fortran:p
+      #      openblas:p
+      #      lapack:p
+      #      fftw:p
+      #      cmake:p
+      #      ninja:p
+
       #- name: Install rtools 
       #  if: ${{ runner.os == 'Windows' }}
       #  run: |
@@ -83,6 +97,7 @@ jobs:
           #echo 'Find blas'
           #find /c/rtools43 -name "*blas*"
           export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
@@ -91,7 +106,6 @@ jobs:
           which python
           export FC=gfortran
           export CC=gcc
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH
           echo 'ls /'
           ls /
           echo 'ls /mingw64'
