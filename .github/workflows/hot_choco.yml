@@ -42,10 +42,10 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      #- name: Setup Python
-      #  uses: actions/setup-python@v4
-      #  with:
-      #    python-version: 3.9
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
 
       #- name: Setup MSYS
       #  uses: msys2/setup-msys2@v2
@@ -115,8 +115,8 @@ jobs:
           ### echo 'ls /mingw64'
           ### ls /mingw64
           echo '=================================='
-          cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          cmake --build build
+          #cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          #cmake --build build
           
       - name: Test cmake with python
         run: |
@@ -125,13 +125,14 @@ jobs:
           echo '========================================='
           env
           echo '========================================='
+          pip install setuptools wheel numpy>1.19
           cmake -S . -B build -DBUILD_PYTHON=ON
           cmake --build build
           
-      #- name: Build and test wheels
-      #  uses: pypa/cibuildwheel@v2.14.0
-      #  env:
-      #    CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
+      - name: Build and test wheels
+        uses: pypa/cibuildwheel@v2.14.0
+        env:
+          CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
 
       - name: Store artifacts
         uses: actions/upload-artifact@v3

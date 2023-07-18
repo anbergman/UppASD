@@ -32,3 +32,9 @@ manylinux-x86_64-image = "manylinux_2_28"
 [tool.cibuildwheel.linux]
 #test-requires = ["pip","setuptools", "wheel", "numpy", "f90wrap","build"]
 before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static"
+
+[tool.cibuildwheel.windows.environment]
+PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+FC=gfortran
+CC=gcc
