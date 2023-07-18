@@ -1,8 +1,8 @@
 name: Bash with msys2
 
 on:
-  push:
-  ##release
+  release
+  #push:
   #pull_request:
 
 concurrency:

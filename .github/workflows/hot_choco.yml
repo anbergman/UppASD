@@ -71,60 +71,63 @@ jobs:
         env: 
           FC: gfortran
         run: |
-          echo 'which gfortran'
-          which gfortran
-          echo 'which cmake'
-          which cmake
-          echo 'which python'
-          which python
-          echo 'Looking for R-tools'
-          ls /c/
-          echo 'Looking in rtools43'
-          ls /c/rtools43
-          echo 'Looking in rtools43/ucrt64'
-          ls /c/rtools43/ucrt64
-          echo 'Looking in rtools43/ucrt64/bin'
-          ls /c/rtools43/ucrt64/bin
-          echo 'Looking in rtools43/ucrt64/lib'
-          ls /c/rtools43/ucrt64/lib
-          echo "FC=gfortran" >> $env:GITHUB_ENV
-          echo "PLAT=x86_64" >> $env:GITHUB_ENV
-          echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
-          echo 'ENV'
-          env
-          echo '=================================='
-          echo 'Find gfortran'
-          find /c/rtools43 -name "*gfortran*"
-          echo 'Find blas'
-          find /c/rtools43 -name "*blas*"
-          echo '=================================='
+          ### echo 'which gfortran'
+          ### which gfortran
+          ### echo 'which cmake'
+          ### which cmake
+          ### echo 'which python'
+          ### which python
+          ### echo 'Looking for R-tools'
+          ### ls /c/
+          ### echo 'Looking in rtools43'
+          ### ls /c/rtools43
+          ### echo 'Looking in rtools43/ucrt64'
+          ### ls /c/rtools43/ucrt64
+          ### echo 'Looking in rtools43/ucrt64/bin'
+          ### ls /c/rtools43/ucrt64/bin
+          ### echo 'Looking in rtools43/ucrt64/lib'
+          ### ls /c/rtools43/ucrt64/lib
+          ### echo "FC=gfortran" >> $env:GITHUB_ENV
+          ### echo "PLAT=x86_64" >> $env:GITHUB_ENV
+          ### echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
+          ### echo 'ENV'
+          ### env
+          ### echo '=================================='
+          ### echo 'Find gfortran'
+          ### find /c/rtools43 -name "*gfortran*"
+          ### echo 'Find blas'
+          ### find /c/rtools43 -name "*blas*"
+          ### echo '=================================='
+          echo '=============== ls /c/rtools43/x86_64-w64-mingw32.static.posix
+          ls /c/rtools43/x86_64-w64-mingw32.static.posix 
           export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
           export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          echo 'which gfortran'
-          which gfortran
-          echo 'which cmake'
-          which cmake
-          echo 'which python'
-          which python
+          ### echo 'which gfortran'
+          ### which gfortran
+          ### echo 'which cmake'
+          ### which cmake
+          ### echo 'which python'
+          ### which python
           export FC=gfortran
           export CC=gcc
-          echo 'ls /'
-          ls /
-          echo 'ls /mingw64'
-          ls /mingw64
-          #./setup_UppASD.sh
-          #make deps 
-          #make gfortran-win64
+          ### echo 'ls /'
+          ### ls /
+          ### echo 'ls /mingw64'
+          ### ls /mingw64
+          echo '=================================='
           cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          #cmake --build build
+          cmake --build build
           
-      #- name: Test cmake with python
-      #  env: 
-      #    FC: gfortran
-      #  run: |
-      #    cmake -S . -B build -DBUILD_PYTHON=ON
-      #    cmake --build build
-      #    
+      - name: Test cmake with python
+        run: |
+          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          echo '========================================='
+          env
+          echo '========================================='
+          cmake -S . -B build -DBUILD_PYTHON=ON
+          cmake --build build
+          
       #- name: Build and test wheels
       #  uses: pypa/cibuildwheel@v2.14.0
       #  env:
