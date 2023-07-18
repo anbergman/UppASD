@@ -71,6 +71,10 @@ jobs:
         env: 
           FC: gfortran
         run: |
+          echo '=============== ls /c/rtools43/x86_64-w64-mingw32.static.posix'
+          ls /c/rtools43/x86_64-w64-mingw32.static.posix 
+          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           ### echo 'which gfortran'
           ### which gfortran
           ### echo 'which cmake'
@@ -98,10 +102,6 @@ jobs:
           ### echo 'Find blas'
           ### find /c/rtools43 -name "*blas*"
           ### echo '=================================='
-          echo '=============== ls /c/rtools43/x86_64-w64-mingw32.static.posix
-          ls /c/rtools43/x86_64-w64-mingw32.static.posix 
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           ### echo 'which gfortran'
           ### which gfortran
           ### echo 'which cmake'
