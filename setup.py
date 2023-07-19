@@ -38,7 +38,7 @@ class cmake_build_ext(build_ext):
 
             cmake_args = [
                 '-DCMAKE_BUILD_TYPE=%s' % cfg,
-                '-G Ninja',
+                #'-G Ninja',
                 # Ask CMake to place the resulting library in the directory
                 # containing the extension
                 '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY_{}={}'.format(cfg.upper(), extdir),

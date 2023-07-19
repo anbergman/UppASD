@@ -463,7 +463,7 @@ if(BUILD_PYTHON)
          )
 
       # Bild library list for f2py
-      foreach ( elem ${OpenMP_Fortran_LIBRARIES} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY})
+      foreach ( elem ${OpenMP_Fortran_LIBRARIES} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} )
          message(STATUS "Element ${elem}")
          string(SUBSTRING ${elem} 0 2 head)
          if(${head} MATCHES "/")
