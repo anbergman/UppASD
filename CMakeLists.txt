@@ -29,6 +29,8 @@ SET(VERSION 5.1.0)
 message(STATUS "Operating system= ${CMAKE_SYSTEM_NAME}")
 include(CMakeDetermineFortranCompiler)
 message(STATUS "CMAKE_Fortran_COMPILER_ID ${CMAKE_Fortran_COMPILER_ID} ${CMAKE_Fortran_COMPILER}.")
+message(STATUS "CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES ${CMAKE_Fortran_IMPLICIT_LINK_LIBRARIES}.")
+message(STATUS "CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES ${CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES}.")
 include(CMakeDetermineCCompiler)
 message(STATUS "CMAKE_C_COMPILER_ID ${CMAKE_C_COMPILER_ID} ${CMAKE_C_COMPILER}.")
 enable_language(C)
@@ -468,7 +470,7 @@ if(BUILD_PYTHON)
          )
 
       # Bild library list for f2py
-      foreach ( elem ${OpenMP_Fortran_LIBRARIES} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
+      foreach ( elem ${OpenMP_Fortran_LIBRARIES} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_Fortran_IMPLICIT_LINK_DIRECTORIES})
          message(STATUS "Element ${elem}")
          string(SUBSTRING ${elem} 0 2 head)
          if(${head} MATCHES "/")
@@ -534,8 +536,8 @@ if(BUILD_PYTHON)
           # Uncomment if f90wrap needs to be invoked
           #DEPENDS ${UppASD_LIB} ${F2PY_sources}
           #WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-          COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
-          #COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt
+          #COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
+          COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
           #COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
           COMMENT "Generating Python modules f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS}"
           VERBATIM 

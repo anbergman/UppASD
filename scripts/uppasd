@@ -2,7 +2,7 @@
 
 # -*- coding: utf-8 -*-
 import sys
-from uppasd.pyasd import runuppasd()
+from uppasd.pyasd import runuppasd
 
 if __name__ == '__main__':
     runuppasd()

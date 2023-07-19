@@ -1,12 +1,12 @@
 from __future__ import print_function, absolute_import, division
-from . import _uppasd
-import f90wrap.runtime
-import logging
-import pyasd
-import simulationdata
+import _uppasd
 #import uppasd
-import momentdata
-import inputdatatype
-import inputdata
-import inputhandler_ext
-import inputhandler
+from . import f90wrap.runtime
+from . import logging
+from . import pyasd
+from . import simulationdata
+from . import momentdata
+from . import inputdatatype
+from . import inputdata
+from . import inputhandler_ext
+from . import inputhandler
