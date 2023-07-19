@@ -22,6 +22,7 @@ build-backend = "setuptools.build_meta"
 # (you might want to use build-system.requires instead)
 before-build ='pip install --upgrade setuptools wheel numpy>1.19'
 #before-build ='pip install --upgrade setuptools wheel numpy>1.19 f90wrap'
+skip = ["*-musllinux.*", "pp*-macosx-*"]
 #repair-wheel-command = ""
 #
 manylinux-x86_64-image = "manylinux_2_28"
