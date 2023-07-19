@@ -463,7 +463,7 @@ if(BUILD_PYTHON)
          )
 
       # Bild library list for f2py
-      foreach ( elem ${OpenMP_Fortran_LIBRARIES} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} )
+      foreach ( elem ${OpenMP_Fortran_LIBRARIES} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY} ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
          message(STATUS "Element ${elem}")
          string(SUBSTRING ${elem} 0 2 head)
          if(${head} MATCHES "/")
@@ -508,7 +508,7 @@ if(BUILD_PYTHON)
          set(F2PY_compiler --fcompiler=gnu95)
          set(F2PY_f90flags "--f90flags='${fflags}'")
       endif()
-      #string(REPLACE ffree-line-length-0 std=legacy F2PY_f90flags ${F2PY_f90flags})
+      
       message(STATUS "===========================================")
       message(STATUS "FORTRAN FLAGS= ${CMAKE_Fortran_FLAGS}")
       message(STATUS "F2PY_compiler= ${F2PY_compiler}")

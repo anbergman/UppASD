@@ -2,9 +2,9 @@
 requires = [
     "setuptools",
     "wheel",
-#    "numpy>1.19", 
-#    "f90wrap"]
-    "numpy>1.19"]
+    "numpy>1.19", 
+    "f90wrap"]
+#    "numpy>1.19"]
 #    "f90wrap"]
 
 build-backend = "setuptools.build_meta"
@@ -31,7 +31,8 @@ manylinux-x86_64-image = "manylinux_2_28"
 
 [tool.cibuildwheel.linux]
 #test-requires = ["pip","setuptools", "wheel", "numpy", "f90wrap","build"]
-before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static"
+#before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static"
+before-all = "yum install -y openblas-static blas-devel lapack-static fftw-static || yum install -y  blas-devel lapack-static fftw-static openblas-static atlas-devel || yum install -y  blas-static lapack-static fftw-static atlas-static || apk add --upgrade py3-pip blas-dev lapack-dev fftw-dev openblas-static || apt-get install -y blas-static lapack-static fftw-static"
 
 #[tool.cibuildwheel.windows.environment]
 #PATH = "/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH"
