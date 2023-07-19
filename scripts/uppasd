@@ -2,8 +2,8 @@
 
 # -*- coding: utf-8 -*-
 import sys
-from uppasd import pyasd 
+from uppasd.pyasd import runuppasd()
 
 if __name__ == '__main__':
-    pyasd.runuppasd()
+    runuppasd()
     sys.exit()

@@ -6,7 +6,7 @@ Defined at /home/andersb/CrossPlatform/UppASD/source/pyasd.f90 lines 41-248
 
 """
 from __future__ import print_function, absolute_import, division
-from uppasd import _uppasd
+from . import _uppasd
 import f90wrap.runtime
 import logging
 

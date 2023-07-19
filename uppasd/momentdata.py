@@ -7,7 +7,7 @@ Defined at /home/andersb/CrossPlatform/UppASD/source/System/momentdata.f90 lines
 
 """
 from __future__ import print_function, absolute_import, division
-from uppasd import _uppasd
+import _uppasd
 import f90wrap.runtime
 import logging
 

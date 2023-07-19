@@ -56,10 +56,10 @@ class cmake_build_ext(build_ext):
                 #'-DPYTHON_LIBRARY={}'.format(python_lib_dir),
                 #'-DMKL_INTERFACE_FULL=gf_lp64',
                 #'-DMKL_THREADING=gnu_thread',
-                '-DBLAS_DIR="c:\msys64\mingw64\lib"',
-                '-DLAPACK_DIR="c:\msys64\mingw64\lib"',
-                '-DLAPACK="-framework Accelerate"',
-                '-DBLAS="-framework Accelerate"',
+                #'-DBLAS_DIR="c:\msys64\mingw64\lib"',
+                #'-DLAPACK_DIR="c:\msys64\mingw64\lib"',
+                #'-DLAPACK="-framework Accelerate"',
+                #'-DBLAS="-framework Accelerate"',
             ]
 
             if not os.path.exists(self.build_temp):
@@ -74,10 +74,11 @@ class cmake_build_ext(build_ext):
                                   cwd=self.build_temp)
 
             src_file=glob.glob('./'+self.build_temp+'/_uppasd.*.*')
+            #src_file=glob.glob('./'+lib_path+'/uppasd.*.*')
             lib_path=self.build_temp.replace('temp','lib') #+'/uppasd/'
             if not os.path.exists(lib_path):
                 os.makedirs(lib_path)
-            
+
             shutil.copy2(src_file[0],'uppasd/')
             shutil.copy2(src_file[0],lib_path)
             

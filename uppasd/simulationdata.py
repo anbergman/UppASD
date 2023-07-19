@@ -7,7 +7,7 @@ Defined at /home/andersb/CrossPlatform/UppASD/source/System/simulationdata.f90 \
 
 """
 from __future__ import print_function, absolute_import, division
-from uppasd import _uppasd
+import _uppasd
 import f90wrap.runtime
 import logging
 

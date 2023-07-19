@@ -17,7 +17,8 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.13)
 CMAKE_POLICY(VERSION 3.13)
 
-PROJECT(UppASD Fortran)
+PROJECT(uppasd
+   LANGUAGES Fortran)
 # Set the project version
 SET(VERSION 5.1.0)
 ##############################################################################################
@@ -117,8 +118,7 @@ ADD_EXECUTABLE(${UppASD_EXE} ${SRC}/0sd.f90 )
 ##############################################################################################
 # Define the library name
 ##############################################################################################
-set(ASD_library asdlib)
-SET(UppASD_LIB ${ASD_library})
+SET(UppASD_LIB asdlib)
 ##############################################################################################
 
 
@@ -434,22 +434,23 @@ if(BUILD_PYTHON)
 
       # Common variables
       set(f2py_module_name "uppasd")
-      SET(UppASD_F90w f90_wraps)
+      set(f2py_module_c "_${f2py_module_name}module.c")
+      set(UppASD_F90w f90_wraps)
       set(F90wrap_kind
          ${CMAKE_SOURCE_DIR}/cmake/.f2py_f2cmap
          )
 
       # Uncomment if f90wrap needs to be invoked
-      #set(F90wrap_sources 
-      #   ${SRC}/pyasd.f90 
-      #   ${SRC}/uppasd.f90 
-      #   ${SRC}/Input/inputdatatype.f90
-      #   ${SRC}/Input/inputdata.f90
-      #   ${SRC}/Input/inputhandler.f90
-      #   ${SRC}/Input/inputhandler_ext.f90
-      #   ${SRC}/System/momentdata.f90 
-      #   ${SRC}/System/simulationdata.f90
-      #   )
+      set(F90wrap_sources 
+         ${SRC}/pyasd.f90 
+         ${SRC}/uppasd.f90 
+         ${SRC}/Input/inputdatatype.f90
+         ${SRC}/Input/inputdata.f90
+         ${SRC}/Input/inputhandler.f90
+         ${SRC}/Input/inputhandler_ext.f90
+         ${SRC}/System/momentdata.f90 
+         ${SRC}/System/simulationdata.f90
+         )
       set(F2PY_sources 
          ${SRC}/f90wrap/f90wrap_pyasd.f90
          ${SRC}/f90wrap/f90wrap_uppasd.f90
@@ -517,17 +518,52 @@ if(BUILD_PYTHON)
       message(STATUS "UppASD_LIB   = ${UppASD_LIB}")
       message(STATUS "===========================================")
 
-
-      add_custom_target ( ${UppASD_F90w}  ALL
-         DEPENDS ${UppASD_LIB} 
-         # Uncomment if f90wrap needs to be invoked
-         #DEPENDS ${UppASD_LIB} ${F2PY_sources}
-         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-         #COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
-         COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
-         COMMENT "Generating Python modules"
-         VERBATIM 
-         )
+##############################################################################################
+# Old Python generation
+##############################################################################################
+       add_custom_target ( ${UppASD_F90w}  ALL
+          DEPENDS ${UppASD_LIB} 
+          # Uncomment if f90wrap needs to be invoked
+          #DEPENDS ${UppASD_LIB} ${F2PY_sources}
+          #WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+          COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt 
+          #COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
+          COMMENT "Generating Python modules f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs}"
+          VERBATIM 
+          )
+##############################################################################################
+# New Python generation (not stable)
+##############################################################################################
+#      add_custom_target ( ${UppASD_F90w}
+#         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
+#         VERBATIM 
+#         )
+#
+#      add_custom_command(
+#         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
+#         #COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name} 
+#         COMMAND f2py  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
+#         COMMENT "Generating Python modules"
+#         DEPENDS ${UppASD_LIB}  ${F2PY_sources}
+#         VERBATIM 
+#         )
+#
+#      message(STATUS "Python_INCLUDE_DIRS" ${Python_INCLUDE_DIRS})
+#      message(STATUS "F2PY_INCLUDE_DIR" ${F2PY_INCLUDE_DIR})
+#      message(STATUS "Python_NumPy_INCLUDE_DIRS" ${Python_NumPy_INCLUDE_DIRS})
+#
+#      # Set up target
+#      Python_add_library(_${CMAKE_PROJECT_NAME} MODULE WITH_SOABI
+#         "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
+#         "${F2PY_sources}"
+#         "${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
+#         )
+#
+#      #target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python::NumPy ${UppASD_LIB})
+#      target_link_libraries(_${CMAKE_PROJECT_NAME}  PRIVATE Python::NumPy ${UppASD_LIB})
+#      add_dependencies(_${CMAKE_PROJECT_NAME} ${UppASD_F90w})
+#      target_include_directories(_${CMAKE_PROJECT_NAME} PRIVATE "${F2PY_INCLUDE_DIR}" )
+##############################################################################################
 
       # Not used by default (invoke only if new header files need to be generated)
       #add_custom_command( 
@@ -538,7 +574,7 @@ if(BUILD_PYTHON)
       #   DEPENDS ${F90wrap_sources}
       #   )
 
-      add_dependencies(${UppASD_F90w} ${UppASD_LIB})
+      #add_dependencies(${UppASD_F90w} ${UppASD_LIB})
 
       ###add_custom_command(
       ###   TARGET ${UppASD_F90w} POST_BUILD
