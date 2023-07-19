@@ -116,7 +116,7 @@ jobs:
           ### echo 'ls /mingw64'
           ### ls /mingw64
           echo '=================================='
-          #cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
+          #cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix 
           #cmake --build build
           
       - name: Test cmake with python
@@ -129,7 +129,7 @@ jobs:
           echo '========================================='
           pip install setuptools wheel numpy>1.19 f90wrap
           cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
-          cmake --build build
+          cmake --build build -v
           
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.14.0
