@@ -126,6 +126,7 @@ jobs:
           export LD_LIBRARY_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=. -Wl,-lasdlib"
           export NPY_DISTUTILS_APPEND_FLAGS=1
+          export NPY_WINDOWS_GIT_ACTION_FIX=1
           echo '========================================='
           env
           echo '========================================='

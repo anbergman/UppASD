@@ -56,6 +56,7 @@ file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
 
 ##############################################################################################
 # Defines the directories for source, modules and object filed
+##############################################################################################
 SET(SRC ${CMAKE_SOURCE_DIR}/source)
 SET(MOD ${CMAKE_SOURCE_DIR}/source/mod)
 #SET(MOD ${CMAKE_BINARY_DIR}/mod)
@@ -136,6 +137,8 @@ ADD_LIBRARY(${UppASD_LIB} ${lib_type})
 ##############################################################################################
 
 
+##############################################################################################
+# MKL / FFTW actions
 ##############################################################################################
 set(MKL_LINK static)
 find_package(MKL CONFIG)
@@ -530,20 +533,40 @@ if(BUILD_PYTHON)
       message(STATUS "===========================================")
 
 ##############################################################################################
+# Shenanigans for f2py on Windows
+##############################################################################################
+message(STATUS "LDFLAGS pre: $ENV{LDFLAGS}")
+if($ENV{NPY_WINDOWS_GIT_ACTION_FIX})
+   message(STATUS "=========NPY_WINDOWS_GIT_ACTION_FIX=====")
+   set(myLDFLAGS "$ENV{LDFLAGS} -lasdlib")
+else()
+   set(myLDFLAGS="$ENV{LDFLAGS}")
+endif()
+message(STATUS "LDFLAGS aft: $ENV{LDFLAGS}")
+message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
+
+
+
+
+
+##############################################################################################
 # Old Python generation
 ##############################################################################################
-       add_custom_target ( ${UppASD_F90w}  ALL
-          DEPENDS ${UppASD_LIB} 
-          # Uncomment if f90wrap needs to be invoked
-          #DEPENDS ${UppASD_LIB} ${F2PY_sources}
-          #WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-          #COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
-          #COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -L. -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
-          COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} ./lib${UppASD_LIB}.a ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
-          #COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
-          COMMENT "Generating Python modules f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS}"
-          VERBATIM 
-          )
+#if (${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+add_custom_target ( ${UppASD_F90w}  ALL
+   DEPENDS ${UppASD_LIB}
+   # Uncomment if f90wrap needs to be invoked
+   #DEPENDS ${UppASD_LIB} ${F2PY_sources}
+   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+   COMMAND ${CMAKE_COMMAND} -E env "LDFLAGS=${myLDFLAGS}" f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} lib${UppASD_LIB}.a ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
+   ### Old versions
+   ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
+   ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -L. -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
+   ### COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
+   COMMENT "Generating Python modules f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS}"
+   VERBATIM
+   )
+#endif()
 ##############################################################################################
 # New Python generation (not stable)
 ##############################################################################################
