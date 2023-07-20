@@ -131,7 +131,7 @@ jobs:
           env
           echo '========================================='
           pip install setuptools wheel numpy>1.19 f90wrap
-          cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
           cmake --build build -v
           
       - name: Build and test wheels
