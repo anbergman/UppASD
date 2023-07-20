@@ -124,7 +124,7 @@ jobs:
           export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
           export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LD_LIBRARY_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
-          export LDFLAGS="-Wl,-rpath=. -lasdlib"
+          export LDFLAGS="-Wl,-rpath=. -Wl,-lasdlib"
           export NPY_DISTUTILS_APPEND_FLAGS=1
           echo '========================================='
           env
