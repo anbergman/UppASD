@@ -559,7 +559,7 @@ add_custom_target ( ${UppASD_F90w}  ALL
    # Uncomment if f90wrap needs to be invoked
    #DEPENDS ${UppASD_LIB} ${F2PY_sources}
    WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-   COMMAND ${CMAKE_COMMAND} -E env "LDFLAGS=${myLDFLAGS}" f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} lib${UppASD_LIB}.a ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
+   COMMAND ${CMAKE_COMMAND} -E env "LDFLAGS=${myLDFLAGS}" f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -lasdlib ${F2PY_libs} -I${Python_INCLUDE_DIRS}  --link-blas_opt --link-lapack_opt --verbose
    ### Old versions
    ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
    ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -L. -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
