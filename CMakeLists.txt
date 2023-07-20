@@ -122,6 +122,7 @@ ADD_EXECUTABLE(${UppASD_EXE} ${SRC}/0sd.f90 )
 # Define the library name
 ##############################################################################################
 SET(UppASD_LIB asdlib)
+#SET(UppASD_pyLIB pyasdlib)
 ##############################################################################################
 
 
@@ -131,6 +132,7 @@ SET(UppASD_LIB asdlib)
 set(lib_type STATIC)
 if (BUILD_PYTHON)
    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+   #   ADD_LIBRARY(${UppASD_pyLIB} SHARED)
 endif(BUILD_PYTHON)
 message(STATUS " LIB INFO: ${UppASD_LIB} ${lib_type} ${SRC}")
 ADD_LIBRARY(${UppASD_LIB} ${lib_type})
@@ -445,6 +447,8 @@ if(BUILD_PYTHON)
       # Common variables
       set(f2py_module_name "uppasd")
       set(f2py_module_c "_${f2py_module_name}module.c")
+      set(f2py_wrapper_f "_${f2py_module_name}-f2pywrappers2.f90")
+      set(f2py_wrapper_o "_${f2py_module_name}-f2pywrappers2.o")
       set(UppASD_F90w f90_wraps)
       set(F90wrap_kind
          ${CMAKE_SOURCE_DIR}/cmake/.f2py_f2cmap
@@ -462,14 +466,15 @@ if(BUILD_PYTHON)
          ${SRC}/System/simulationdata.f90
          )
       set(F2PY_sources 
-         ${SRC}/f90wrap/f90wrap_pyasd.f90
-         ${SRC}/f90wrap/f90wrap_uppasd.f90
-         ${SRC}/f90wrap/f90wrap_inputdatatype.f90
-         ${SRC}/f90wrap/f90wrap_inputdata.f90
-         ${SRC}/f90wrap/f90wrap_inputhandler.f90
-         ${SRC}/f90wrap/f90wrap_inputhandler_ext.f90
-         ${SRC}/f90wrap/f90wrap_simulationdata.f90
-         ${SRC}/f90wrap/f90wrap_momentdata.f90
+         ${SRC}/pyasd.f90
+         #${SRC}/f90wrap/f90wrap_pyasd.f90
+         #${SRC}/f90wrap/f90wrap_uppasd.f90
+         #${SRC}/f90wrap/f90wrap_inputdatatype.f90
+         #${SRC}/f90wrap/f90wrap_inputdata.f90
+         #${SRC}/f90wrap/f90wrap_inputhandler.f90
+         #${SRC}/f90wrap/f90wrap_inputhandler_ext.f90
+         #${SRC}/f90wrap/f90wrap_simulationdata.f90
+         #${SRC}/f90wrap/f90wrap_momentdata.f90
          )
 
       # Bild library list for f2py
@@ -549,6 +554,24 @@ if(BUILD_PYTHON)
 
 
 
+##############################################################################################
+# Transform F2PY include-string to acceptable slash convention (thanks ChatGPT..)
+##############################################################################################
+# Input file name string (with double backslashes)
+message(STATUS "Original F2PY-include: ${F2PY_INCLUDE_DIR}")
+# Convert backslashes to slashes and replace drive letter (case-insensitive)
+string(REGEX REPLACE "([Cc])(:)" "/\\1" t_string "${F2PY_INCLUDE_DIR}")
+# Use string(SUBSTRING ...) and string(TOLOWER ...) to convert the first character of the drive letter to lowercase
+string(SUBSTRING "${t_string}" 0 3 t_string_a)
+string(SUBSTRING "${t_string}" 3 -1 t_string_b)
+string(TOLOWER "${t_string_a}" t_string_a)
+set(t_string "${t_string_a}${t_string_b}")
+# Replace remaining backslashes with slashes
+string(REPLACE "\\" "/" ${F2PY_INCLUDE_DIR}  "${t_string}")
+# Output the transformed string
+message(STATUS "Transformed F2PY-include: ${F2PY_INCLUDE_DIR}")
+##############################################################################################
+
 
 ##############################################################################################
 # Old Python generation
@@ -574,8 +597,15 @@ if(BUILD_PYTHON)
          VERBATIM
          )
 
+      #add_custom_command( 
+      #   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_o}"
+      #   COMMAND ${CMAKE_Fortran_COMPILER} -c  ${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}  -I${MOD}
+      #   COMMENT "Writing F90wrappers for F2PY"
+      #   DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
+      #   )
+
       add_custom_command(
-         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
+         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}" "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
          #COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name} 
          COMMAND f2py  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
          COMMENT "Generating Python modules"
@@ -590,10 +620,13 @@ if(BUILD_PYTHON)
       # Set up target
       message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
       message(STATUS "F2PY_INCLUDE_DIR:        ${F2PY_INCLUDE_DIR}")
+      message(STATUS "=============>  ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
+
       Python_add_library(_${CMAKE_PROJECT_NAME} MODULE WITH_SOABI
          "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
          "${F2PY_sources}"
-         #"${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
+         "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
+         "${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
          )
 
       #target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python::NumPy ${UppASD_LIB})
@@ -629,6 +662,7 @@ endif(BUILD_PYTHON)
 ##############################################################################################
 
 
+
 ##############################################################################################
 mark_as_advanced( ENABLE_BLACS ENABLE_BLAS95 ENABLE_CDFT ENABLE_CPARDISO ENABLE_LAPACK95 ENABLE_OMP_OFFLOAD ENABLE_SCALAPACK MKL_DIR MKL_H MKL_LINK MKL_MPI mkl_gf_ilp64_file mkl_intel_thread_file mkl_core_file mkl_intel_ilp64_file mkl_gnu_thread_file mkl_intel_lp64_file mkl_gf_lp64_file OMP_LIBRARY)
 
@@ -645,6 +679,18 @@ TARGET_LINK_LIBRARIES(${UppASD_LIB}
    ${CUDA_curand_LIBRARY}
    ${OpenMP_Fortran_LIBRARIES}
    )
+
+#TARGET_LINK_LIBRARIES(${UppASD_pyLIB} 
+#   -lgfortran
+#   ${UppASD_LIB}
+#   ${BLAS_LIBRARIES}
+#   ${LAPACK_LIBRARIES}
+#   ${CMAKE_THREAD_LIBS_INIT} 
+#   ${OVF_LIB} 
+#   ${FFTW_LIB}  
+#   ${CUDA_curand_LIBRARY}
+#   ${OpenMP_Fortran_LIBRARIES}
+#   )
 
 TARGET_LINK_LIBRARIES(${UppASD_EXE}
    -lgfortran
@@ -674,6 +720,9 @@ if (NOT BUILD_PYTHON)
    INSTALL(TARGETS ${UppASD_EXE} RUNTIME DESTINATION bin)
    INSTALL(TARGETS ${UppASD_LIB} RUNTIME DESTINATION lib)
    #INSTALL(TARGETS UppASD_F90w RUNTIME DESTINATION bin)
+else()
+   #   INSTALL(TARGETS ${UppASD_pyLIB} RUNTIME DESTINATION lib)
+   INSTALL(TARGETS ${UppASD_LIB} RUNTIME DESTINATION lib)
 endif(NOT BUILD_PYTHON)
 ##############################################################################################
 

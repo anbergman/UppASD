@@ -57,7 +57,7 @@ module pyasd
 
 contains
 
-   subroutine RunUppASD()
+   subroutine RunUppASD() !bind(c, name='runnewasd')
       implicit none
 
       call main()
@@ -290,24 +290,37 @@ contains
    function TotalEnergy() result(energy)
       implicit none
 
-      real(dblprec) :: energy
+      real(8) :: energy
 
       call calculate_energy(energy)
       return
 
    end function totalenergy
 
-   !!! function getMoments() result(moments)
-   !!!    use MomentData
-   !!!    use InputData, only : Natom, Mensemble
-   !!!    implicit none
-   !!!
-   !!!    !f2py integer, parameter : Natom
-   !!!    !f2py integer, parameter : Mensemble
-   !!!    real(dblprec), dimension(3,Natom,Mensemble) :: moments
-   !!!
-   !!!    moments=emom
-   !!!    return 
-   !!! end function getMoments
+   !function moments() result(moms)
+   !   use MomentData, only : emom
+   !   use InputData, only : natom, mensemble
+   !   implicit none
+   !
+   !   !!!f2py integer, parameter : natom
+   !   !!!f2py integer, parameter : mensemble
+   !   real(kind=C_DOUBLE), dimension(3,natom,mensemble) :: moms
+   !
+   !   moms=emom
+   !   return 
+   !end function moments
+
+   !function fields() result(flds)
+   !   use FieldData, only : beff
+   !   use InputData, only : natom, mensemble
+   !   implicit none
+   !
+   !   !!!f2py integer, parameter : natom
+   !   !!!f2py integer, parameter : mensemble
+   !   real(kind=C_DOUBLE), dimension(3,natom,mensemble) :: flds
+   !
+   !   flds=beff
+   !   return 
+   !end function moments
 
 end module pyasd

@@ -9,7 +9,9 @@
 # 
 ##############################################################################################
 
-target_sources(${UppASD_LIB} PRIVATE	gneb_driver.f90	mc_driver.f90	pt_driver.f90	sd_driver.f90	wl_driver.f90 sld_driver.f90 sx_driver.f90  ms_driver.f90 pyasd.f90 uppasd.f90)
+#target_sources(${UppASD_LIB} PRIVATE	gneb_driver.f90	mc_driver.f90	pt_driver.f90	sd_driver.f90	wl_driver.f90 sld_driver.f90 sx_driver.f90  ms_driver.f90 pyasd.f90 uppasd.f90)
+target_sources(${UppASD_LIB} PRIVATE	gneb_driver.f90	mc_driver.f90	pt_driver.f90	sd_driver.f90	wl_driver.f90 sld_driver.f90 sx_driver.f90  ms_driver.f90 uppasd.f90 )
+#target_sources(${UppASD_pyLIB} PRIVATE	pyasd.f90)
 ###############################################################################################
 ## Add Sources in sub-directories
 ###############################################################################################
