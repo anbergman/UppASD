@@ -559,17 +559,19 @@ if(BUILD_PYTHON)
 ##############################################################################################
 # Input file name string (with double backslashes)
 message(STATUS "Original F2PY-include: ${F2PY_INCLUDE_DIR}")
-# Convert backslashes to slashes and replace drive letter (case-insensitive)
-string(REGEX REPLACE "([Cc])(:)" "/\\1" t_string "${F2PY_INCLUDE_DIR}")
-# Use string(SUBSTRING ...) and string(TOLOWER ...) to convert the first character of the drive letter to lowercase
-string(SUBSTRING "${t_string}" 0 3 t_string_a)
-string(SUBSTRING "${t_string}" 3 -1 t_string_b)
-string(TOLOWER "${t_string_a}" t_string_a)
-set(t_string "${t_string_a}${t_string_b}")
-# Replace remaining backslashes with slashes
-string(REPLACE "\\" "/" ${F2PY_INCLUDE_DIR}  "${t_string}")
-# Output the transformed string
+## Convert backslashes to slashes and replace drive letter (case-insensitive)
+#string(REGEX REPLACE "([Cc])(:)" "/\\1" t_string "${F2PY_INCLUDE_DIR}")
+## Use string(SUBSTRING ...) and string(TOLOWER ...) to convert the first character of the drive letter to lowercase
+#string(SUBSTRING "${t_string}" 0 3 t_string_a)
+#string(SUBSTRING "${t_string}" 3 -1 t_string_b)
+#string(TOLOWER "${t_string_a}" t_string_a)
+#set(t_string "${t_string_a}${t_string_b}")
+## Replace remaining backslashes with slashes
+#string(REPLACE "\\" "/" ${F2PY_INCLUDE_DIR}  "${t_string}")
+## Output the transformed string
+file(TO_CMAKE_PATH ${F2PY_INCLUDE_DIR} F2PY_INCLUDE_DIR)
 message(STATUS "Transformed F2PY-include: ${F2PY_INCLUDE_DIR}")
+
 ##############################################################################################
 
 
