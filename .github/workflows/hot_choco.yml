@@ -67,6 +67,18 @@ jobs:
           choco install -y pkgconfiglite
           choco install -y ninja
           #    choco install -y rtools
+          
+      - name: Tell distutils to use mingw (Windows)
+        if: runner.os == 'Windows'
+        #run: |
+        #  $pydistutilsConfig = @"
+        #  [build]
+        #   compiler = mingw32"@
+        #  $pydistutilsConfig | Out-File "$env:USERPROFILE\pydistutils.cfg" -Encoding UTF8
+        run: |
+           echo "[build]" | Out-File -Encoding ASCII ~/pydistutils.cfg
+           echo "compiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg -Append
+           #echo "[build]`ncompiler=mingw32"
 
       - name: Test cmake without python
         env: 

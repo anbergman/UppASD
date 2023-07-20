@@ -1,7 +1,7 @@
 name: Build wheels on linux and macos
 
-on: [release]
-#on: [push, pull_request]
+#on: [release]
+on: [push, pull_request]
 
 jobs:
   build_wheels:
@@ -77,7 +77,7 @@ jobs:
         # env:
         #   CIBW_SOME_OPTION: value
         env:
-          CIBW_SKIP: pp38-manylinux* pp39* pp31* pp*-macosx-* *-musllinux-*
+          CIBW_SKIP: pp38-manylinux* pp39* pp31* *-musllinux-* pp*-macosx-* 
           CIBW_ENVIRONMENT_WINDOWS: CC=gcc CXX=g++ FC=gfortran
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
