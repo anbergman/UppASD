@@ -76,8 +76,13 @@ jobs:
         #   compiler = mingw32"@
         #  $pydistutilsConfig | Out-File "$env:USERPROFILE\pydistutils.cfg" -Encoding UTF8
         run: |
-           echo "[build]" | Out-File -Encoding ASCII ~/pydistutils.cfg
-           echo "compiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg -Append
+           echo "[build]" > ~/pydistutils.cfg
+           echo "compiler = mingw32" >> ~/pydistutils.cfg -Append
+           echo "" >> ~/pydistutils.cfg -Append
+           echo "[build_ext]" > ~/pydistutils.cfg
+           echo "compiler = mingw32" >> ~/pydistutils.cfg -Append
+           #echo "[build]" | Out-File -Encoding ASCII ~/pydistutils.cfg
+           #echo "compiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg -Append
            #echo "[build]`ncompiler=mingw32"
 
       - name: Test cmake without python
