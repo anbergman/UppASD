@@ -1,8 +1,8 @@
 from __future__ import print_function, absolute_import, division
 import _uppasd
 #import uppasd
-from . import f90wrap.runtime
-from . import logging
+import f90wrap.runtime
+import logging
 from . import pyasd
 from . import simulationdata
 from . import momentdata

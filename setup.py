@@ -73,14 +73,14 @@ class cmake_build_ext(build_ext):
             subprocess.check_call(['cmake', '--build', '.','--parallel', '--config', cfg],
                                   cwd=self.build_temp)
 
-            src_file=glob.glob('./'+self.build_temp+'/_uppasd.*.*')
-            #src_file=glob.glob('./'+lib_path+'/uppasd.*.*')
+            #src_file=glob.glob('./'+self.build_temp+'/_uppasd.*.*')
             lib_path=self.build_temp.replace('temp','lib') #+'/uppasd/'
+            src_file=glob.glob('./'+lib_path+'/_uppasd.*.*')
             if not os.path.exists(lib_path):
                 os.makedirs(lib_path)
 
             shutil.copy2(src_file[0],'uppasd/')
-            shutil.copy2(src_file[0],lib_path)
+            #shutil.copy2(src_file[0],lib_path)
             
 
 
