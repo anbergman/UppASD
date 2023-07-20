@@ -588,10 +588,12 @@ if(BUILD_PYTHON)
       message(STATUS "Python_NumPy_INCLUDE_DIRS" ${Python_NumPy_INCLUDE_DIRS})
 
       # Set up target
+      message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
+      message(STATUS "F2PY_INCLUDE_DIR:        ${F2PY_INCLUDE_DIR}")
       Python_add_library(_${CMAKE_PROJECT_NAME} MODULE WITH_SOABI
          "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
          "${F2PY_sources}"
-         "${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
+         #"${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
          )
 
       #target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python::NumPy ${UppASD_LIB})
