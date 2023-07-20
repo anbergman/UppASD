@@ -535,16 +535,16 @@ if(BUILD_PYTHON)
 ##############################################################################################
 # Shenanigans for f2py on Windows
 ##############################################################################################
-message(STATUS "LDFLAGS pre: $ENV{LDFLAGS}")
-if($ENV{NPY_WINDOWS_GIT_ACTION_FIX})
-   message(STATUS "=========NPY_WINDOWS_GIT_ACTION_FIX=====")
-   set(myLDFLAGS "$ENV{LDFLAGS} -LD:/a/UppASD/UppASD/build -lasdlib -LC:/rtools43/x86_64-w64-mingw32.static.posix/lib -lopenblas -ID:/a/UppASD/UppASD/build/mod --fcompiler=gnu95")
-   #set(myLDFLAGS "$ENV{LDFLAGS} -LD:/a/UppASD/UppASD/build -lasdlib -LC:/rtools43/x86_64-w64-mingw32.static.posix/lib -lopenblas -Imod")
-else()
-   set(myLDFLAGS="$ENV{LDFLAGS}")
-endif()
-message(STATUS "LDFLAGS aft: $ENV{LDFLAGS}")
-message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
+#message(STATUS "LDFLAGS pre: $ENV{LDFLAGS}")
+#if($ENV{NPY_WINDOWS_GIT_ACTION_FIX})
+#   message(STATUS "=========NPY_WINDOWS_GIT_ACTION_FIX=====")
+#   set(myLDFLAGS "$ENV{LDFLAGS} -LD:/a/UppASD/UppASD/build -lasdlib -LC:/rtools43/x86_64-w64-mingw32.static.posix/lib -lopenblas -ID:/a/UppASD/UppASD/build/mod --fcompiler=gnu95")
+#   #set(myLDFLAGS "$ENV{LDFLAGS} -LD:/a/UppASD/UppASD/build -lasdlib -LC:/rtools43/x86_64-w64-mingw32.static.posix/lib -lopenblas -Imod")
+#else()
+#   set(myLDFLAGS="$ENV{LDFLAGS}")
+#endif()
+#message(STATUS "LDFLAGS aft: $ENV{LDFLAGS}")
+#message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
 
 
 
@@ -571,7 +571,7 @@ message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
 ##############################################################################################
       add_custom_target ( ${UppASD_F90w}
          DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
-         VERBATIM 
+         VERBATIM
          )
 
       add_custom_command(
@@ -580,7 +580,7 @@ message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
          COMMAND f2py  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
          COMMENT "Generating Python modules"
          DEPENDS ${UppASD_LIB}  ${F2PY_sources}
-         VERBATIM 
+         VERBATIM
          )
 
       message(STATUS "Python_INCLUDE_DIRS" ${Python_INCLUDE_DIRS})
