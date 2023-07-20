@@ -77,10 +77,13 @@ jobs:
         #  $pydistutilsConfig | Out-File "$env:USERPROFILE\pydistutils.cfg" -Encoding UTF8
         run: |
            echo "[build]" > ~/pydistutils.cfg
-           echo "compiler = mingw32" >> ~/pydistutils.cfg -Append
-           echo "" >> ~/pydistutils.cfg -Append
+           echo "compiler = mingw32" >> ~/pydistutils.cfg 
+           echo "" >> ~/pydistutils.cfg 
            echo "[build_ext]" > ~/pydistutils.cfg
-           echo "compiler = mingw32" >> ~/pydistutils.cfg -Append
+           echo "compiler = mingw32" >> ~/pydistutils.cfg 
+           echo '==pydistutils.cfg=='
+           cat ~/pydistutils.cfg
+           echo '==================='
            #echo "[build]" | Out-File -Encoding ASCII ~/pydistutils.cfg
            #echo "compiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg -Append
            #echo "[build]`ncompiler=mingw32"
