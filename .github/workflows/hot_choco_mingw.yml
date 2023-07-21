@@ -96,11 +96,11 @@ jobs:
           echo 'Looking for minGW /'
           ls /
           echo 'Looking for minGW /mingw64/'
-          ls /mingw64/
+          ls /msys64/mingw64/
           echo 'Looking for minGW /mingw64/'
-          ls /mingw64/bin
+          ls /msys64/mingw64/bin
           echo 'Looking for minGW /c/'
-          ls /c/
+          ls /c/msys64
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
@@ -109,18 +109,18 @@ jobs:
           which python
           echo '==============/==================='
           echo 'Find gfortran'
-          find /  -name "*gfortran*"
+          find /msys64/  -name "*gfortran*"
           echo 'Find blas'
-          find /  -name "*blas*"
+          find /msys64/  -name "*blas*"
           echo '=================================='
           echo '==============C==================='
           echo 'Find gfortran'
-          find /c/  -name "*gfortran*"
+          find /c/msys64/  -name "*gfortran*"
           echo 'Find blas'
-          find /c/  -name "*blas*"
+          find /c/msys64/  -name "*blas*"
           echo '=================================='
-          export CMAKE_PREFIX_PATH='/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
-          export PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export CMAKE_PREFIX_PATH='/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
@@ -166,9 +166,9 @@ jobs:
           
       - name: Test cmake with python
         run: |
-          export CMAKE_PREFIX_PATH='/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
-          export PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          export LD_LIBRARY_PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
+          export CMAKE_PREFIX_PATH='/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export LD_LIBRARY_PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
