@@ -415,16 +415,17 @@ ADD_CUSTOM_TARGET(distclean
 ###############################################################################################
 if(BUILD_PYTHON)
    # check if Python is installed
-   set(Python_VERSION $ENV{PYTHON_VERSION})
-   message(STATUS "Python target version: ${Python_VERSION}")
+   #set(Python_VERSION $ENV{PYTHON_VERSION})
+   #message(STATUS "Python target version: ${Python_VERSION}")
    include(FindPython)
 
    # Fix since FindPython is a bit flawed
    # https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
-   #set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
-   #set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
-   #set(Python_LIBRARY "${PYTHON_LIBRARY}")
-   find_package(Python ${Python_VERSION} EXACT REQUIRED COMPONENTS Interpreter Development.Module NumPy)
+   set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+   set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
+   set(Python_LIBRARY "${PYTHON_LIBRARY}")
+   find_package(Python COMPONENTS Interpreter Development.Module NumPy)
+   #find_package(Python ${Python_VERSION} EXACT REQUIRED COMPONENTS Interpreter Development.Module NumPy)
    #find_package(Python)
    #message(STATUS "Python_STDLIB ${Python_STDLIB}.")
    #message(STATUS "Python_SITELIB ${Python_SITELIB}")
