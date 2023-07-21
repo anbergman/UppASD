@@ -170,6 +170,7 @@ jobs:
           env
           echo '========================================='
           pip install setuptools wheel numpy>1.19 
+          export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
           FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           
