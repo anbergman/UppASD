@@ -1,4 +1,6 @@
-  push:
+name: Bash with rtools org
+
+on:  push:
   #release
   #pull_request:
 
