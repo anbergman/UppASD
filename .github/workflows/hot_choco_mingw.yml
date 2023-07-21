@@ -58,8 +58,6 @@ jobs:
             openblas:p
             lapack:p
             fftw:p
-            #ninja:p
-            #cmake:p
 
       - name: Install rtools 
         if: ${{ runner.os == 'Windows' }}
