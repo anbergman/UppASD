@@ -160,9 +160,9 @@ jobs:
           
       - name: Test cmake with python
         run: |
-          export CMAKE_PREFIX_PATH='/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
-          export PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          export LD_LIBRARY_PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
+          export CMAKE_PREFIX_PATH='/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export LD_LIBRARY_PATH=/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
