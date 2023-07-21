@@ -419,9 +419,9 @@ if(BUILD_PYTHON)
 
    # Fix since FindPython is a bit flawed
    # https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
-   set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
-   set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
-   set(Python_LIBRARY "${PYTHON_LIBRARY}")
+   #set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+   #set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
+   #set(Python_LIBRARY "${PYTHON_LIBRARY}")
    find_package(Python REQUIRED COMPONENTS Interpreter Development.Module NumPy)
    #find_package(Python)
    #message(STATUS "Python_STDLIB ${Python_STDLIB}.")
