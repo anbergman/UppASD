@@ -173,7 +173,7 @@ jobs:
           echo '========================================='
           which python
           pip install setuptools wheel numpy>1.19 
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
+          FC=gfortran CC=gcc /c/rtools43/x86_64-w64-mingw32.static.posix/cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           
       - name: Build and test wheels
