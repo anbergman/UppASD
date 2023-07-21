@@ -47,19 +47,19 @@ jobs:
         with:
           python-version: 3.9
 
-      #- name: Setup MSYS
-      #  uses: msys2/setup-msys2@v2
-      #  with:
-      #    msystem: UCRT64
-      #    path-type: inherit
-      #    pacboy: >-
-      #      toolchain:p
-      #      gcc-fortran:p
-      #      openblas:p
-      #      lapack:p
-      #      fftw:p
-      #      cmake:p
-      #      ninja:p
+      - name: Setup MSYS
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          path-type: full
+          pacboy: >-
+            toolchain:p
+            gcc-fortran:p
+            openblas:p
+            lapack:p
+            fftw:p
+            cmake:p
+            ninja:p
 
       #- name: Install rtools 
       #  if: ${{ runner.os == 'Windows' }}
@@ -107,11 +107,17 @@ jobs:
           which cmake
           echo 'which python'
           which python
-          echo '=================================='
+          echo '==============/==================='
           echo 'Find gfortran'
-          find /mingw64  -name "*gfortran*"
+          find /  -name "*gfortran*"
           echo 'Find blas'
-          find /mingw64  -name "*blas*"
+          find /  -name "*blas*"
+          echo '=================================='
+          echo '==============C==================='
+          echo 'Find gfortran'
+          find /c/  -name "*gfortran*"
+          echo 'Find blas'
+          find /c/  -name "*blas*"
           echo '=================================='
           export CMAKE_PREFIX_PATH='/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
@@ -162,7 +168,7 @@ jobs:
         run: |
           export CMAKE_PREFIX_PATH='/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          export LD_LIBRARY_PATH=/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
+          export LD_LIBRARY_PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
