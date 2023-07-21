@@ -63,8 +63,7 @@ jobs:
         run: |
           choco install -y pkgconfiglite
           choco install -y ninja
-          #    choco install -y vcbuildtools
-          #    choco install -y rtools
+          #choco install -y rtools
           
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
