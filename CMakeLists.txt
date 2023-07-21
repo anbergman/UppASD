@@ -578,63 +578,63 @@ message(STATUS "Transformed F2PY-include: ${F2PY_INCLUDE_DIR}")
 ##############################################################################################
 # Old Python generation
 ##############################################################################################
-      add_custom_target ( ${UppASD_F90w}  ALL
-         DEPENDS ${UppASD_LIB}
-         # Uncomment if f90wrap needs to be invoked
-         #DEPENDS ${UppASD_LIB} ${F2PY_sources}
-         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
-         COMMAND ${CMAKE_COMMAND} -E env "LDFLAGS=${myLDFLAGS}" f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -lasdlib ${F2PY_libs} -I${Python_INCLUDE_DIRS}  --link-blas_opt --link-lapack_opt --verbose
-         ### Old versions
-         ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
-         ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -L. -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
-         ### COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
-         COMMENT "Generating Python modules f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS}"
-         VERBATIM
-         )
+#      add_custom_target ( ${UppASD_F90w}  ALL
+#         DEPENDS ${UppASD_LIB}
+#         # Uncomment if f90wrap needs to be invoked
+#         #DEPENDS ${UppASD_LIB} ${F2PY_sources}
+#         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+#         COMMAND ${CMAKE_COMMAND} -E env "LDFLAGS=${myLDFLAGS}" f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -lasdlib ${F2PY_libs} -I${Python_INCLUDE_DIRS}  --link-blas_opt --link-lapack_opt --verbose
+#         ### Old versions
+#         ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --verbose
+#         ### COMMAND f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -L. -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS} --link-blas_opt --link-lapack_opt --verbose
+#         ### COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py" -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} --link-blas_opt --link-lapack_opt --lower
+#         COMMENT "Generating Python modules f2py -c ${F2PY_compiler}  ${F2PY_sources} -m _${f2py_module_name} -I${CMAKE_Fortran_MODULE_DIRECTORY} -L${CMAKE_BINARY_DIR} -l${UppASD_LIB} ${F2PY_libs} -I${Python_INCLUDE_DIRS}"
+#         VERBATIM
+#         )
 ##############################################################################################
 # New Python generation (not stable)
 ##############################################################################################
-#      add_custom_target ( ${UppASD_F90w}
-#         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
-#         VERBATIM
-#         )
-#
-#      #add_custom_command( 
-#      #   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_o}"
-#      #   COMMAND ${CMAKE_Fortran_COMPILER} -c  ${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}  -I${MOD}
-#      #   COMMENT "Writing F90wrappers for F2PY"
-#      #   DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
-#      #   )
-#
-#      add_custom_command(
-#         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}" "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
-#         COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name} 
-#         #COMMAND f2py  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
-#         COMMENT "Generating Python modules"
-#         DEPENDS ${UppASD_LIB}  ${F2PY_sources}
-#         VERBATIM
-#         )
-#
-#      message(STATUS "Python_INCLUDE_DIRS" ${Python_INCLUDE_DIRS})
-#      message(STATUS "F2PY_INCLUDE_DIR" ${F2PY_INCLUDE_DIR})
-#      message(STATUS "Python_NumPy_INCLUDE_DIRS" ${Python_NumPy_INCLUDE_DIRS})
-#
-#      # Set up target
-#      message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
-#      message(STATUS "F2PY_INCLUDE_DIR:        ${F2PY_INCLUDE_DIR}")
-#      message(STATUS "=============>  ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
-#
-#      Python_add_library(_${CMAKE_PROJECT_NAME} MODULE WITH_SOABI
-#         "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
-#         "${F2PY_sources}"
-#         "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
-#         "${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
-#         )
-#
-#      #target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python::NumPy ${UppASD_LIB})
-#      target_link_libraries(_${CMAKE_PROJECT_NAME}  PRIVATE Python::NumPy ${UppASD_LIB})
-#      add_dependencies(_${CMAKE_PROJECT_NAME} ${UppASD_F90w})
-#      target_include_directories(_${CMAKE_PROJECT_NAME} PRIVATE "${F2PY_INCLUDE_DIR}" )
+      add_custom_target ( ${UppASD_F90w}
+         DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
+         VERBATIM
+         )
+
+      #add_custom_command( 
+      #   OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_o}"
+      #   COMMAND ${CMAKE_Fortran_COMPILER} -c  ${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}  -I${MOD}
+      #   COMMENT "Writing F90wrappers for F2PY"
+      #   DEPENDS "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
+      #   )
+
+      add_custom_command(
+         OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}" "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
+         COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
+         #COMMAND f2py  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
+         COMMENT "Generating Python modules"
+         DEPENDS ${UppASD_LIB}  ${F2PY_sources}
+         VERBATIM
+         )
+
+      message(STATUS "Python_INCLUDE_DIRS" ${Python_INCLUDE_DIRS})
+      message(STATUS "F2PY_INCLUDE_DIR" ${F2PY_INCLUDE_DIR})
+      message(STATUS "Python_NumPy_INCLUDE_DIRS" ${Python_NumPy_INCLUDE_DIRS})
+
+      # Set up target
+      message(STATUS "CMAKE_CURRENT_BINARY_DIR: ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
+      message(STATUS "F2PY_INCLUDE_DIR:        ${F2PY_INCLUDE_DIR}")
+      message(STATUS "=============>  ${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}")
+
+      Python_add_library(_${CMAKE_PROJECT_NAME} MODULE WITH_SOABI
+         "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}"
+         "${F2PY_sources}"
+         "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
+         "${F2PY_INCLUDE_DIR}/fortranobject.c" # From NumPy
+         )
+
+      #target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python::NumPy ${UppASD_LIB})
+      target_link_libraries(_${CMAKE_PROJECT_NAME}  PRIVATE Python::NumPy ${UppASD_LIB})
+      add_dependencies(_${CMAKE_PROJECT_NAME} ${UppASD_F90w})
+      target_include_directories(_${CMAKE_PROJECT_NAME} PRIVATE "${F2PY_INCLUDE_DIR}" )
 ##############################################################################################
 
       # Not used by default (invoke only if new header files need to be generated)
