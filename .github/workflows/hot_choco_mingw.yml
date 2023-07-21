@@ -61,12 +61,12 @@ jobs:
       #      cmake:p
       #      ninja:p
 
-      - name: Install rtools 
-        if: ${{ runner.os == 'Windows' }}
-        run: |
-          choco install -y pkgconfiglite
-          choco install -y ninja
-          #    choco install -y rtools
+      #- name: Install rtools 
+      #  if: ${{ runner.os == 'Windows' }}
+      #  run: |
+      #    choco install -y pkgconfiglite
+      #    choco install -y ninja
+      #    #    choco install -y rtools
           
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
@@ -93,9 +93,18 @@ jobs:
           FC: gfortran
         run: |
           echo '=============== ls /c/mingw64 ==============='
-          ls /c/mingw64
-          export CMAKE_PREFIX_PATH=/c/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          echo 'Looking for minGW /'
+          ls /
+          echo 'Looking for minGW /c/'
+          ls /c/
+          echo 'which gfortran'
+          which gfortran
+          echo 'which cmake'
+          which cmake
+          echo 'which python'
+          which python
+          export CMAKE_PREFIX_PATH=/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix
+          export PATH=/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
