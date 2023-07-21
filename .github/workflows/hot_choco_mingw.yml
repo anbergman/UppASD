@@ -53,7 +53,6 @@ jobs:
           msystem: MINGW64
           path-type: full
           pacboy: >-
-            toolchain:p
             gcc-fortran:p
             openblas:p
             lapack:p
