@@ -107,6 +107,12 @@ jobs:
           which cmake
           echo 'which python'
           which python
+          echo '=================================='
+          echo 'Find gfortran'
+          find /mingw64  -name "*gfortran*"
+          echo 'Find blas'
+          find /mingw64  -name "*blas*"
+          echo '=================================='
           export CMAKE_PREFIX_PATH='/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           echo 'which gfortran'
@@ -154,8 +160,8 @@ jobs:
           
       - name: Test cmake with python
         run: |
-          export CMAKE_PREFIX_PATH=/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH='/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH'
+          export CMAKE_PREFIX_PATH='/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LD_LIBRARY_PATH=/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
