@@ -1,8 +1,8 @@
 name: Bash with rtools
 
 on:
-  #push:
-  release
+  push:
+  ##release
   #pull_request:
 
 concurrency:
@@ -92,16 +92,16 @@ jobs:
         env: 
           FC: gfortran
         run: |
-          echo '=============== ls /c/rtools43/x86_64-w64-mingw32.static.posix'
-          ls /c/rtools43/x86_64-w64-mingw32.static.posix 
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          ### echo 'which gfortran'
-          ### which gfortran
-          ### echo 'which cmake'
-          ### which cmake
-          ### echo 'which python'
-          ### which python
+          echo '=============== ls /c/mingw64 ==============='
+          ls /c/mingw64
+          export CMAKE_PREFIX_PATH=/c/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix
+          export PATH=/c/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          echo 'which gfortran'
+          which gfortran
+          echo 'which cmake'
+          which cmake
+          echo 'which python'
+          which python
           ### echo 'Looking for R-tools'
           ### ls /c/
           ### echo 'Looking in rtools43'
@@ -141,23 +141,23 @@ jobs:
           
       - name: Test cmake with python
         run: |
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          export LD_LIBRARY_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
+          export CMAKE_PREFIX_PATH=/c/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix
+          export PATH=/c/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export LD_LIBRARY_PATH=/c/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
           echo '========================================='
           env
           echo '========================================='
-          pip install setuptools wheel numpy>1.19 f90wrap
+          pip install setuptools wheel numpy>1.19 
           FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
           cmake --build build -v
           
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.14.0
         env:
-          CIBW_ENVIRONMENT_WINDOWS: PATH="/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH" CMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix" FC="gfortran" CC="gcc"
+          CIBW_ENVIRONMENT_WINDOWS: PATH="/c/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH" CMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix" FC="gfortran" CC="gcc"
           CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
 
       - name: Store artifacts

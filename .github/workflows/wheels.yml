@@ -1,7 +1,7 @@
 name: Build wheels on linux and macos
 
-on: [release]
-#on: [push, pull_request]
+#on: [release]
+on: [push, pull_request]
 
 jobs:
   build_wheels:
@@ -68,7 +68,8 @@ jobs:
       - uses: actions/setup-python@v3
 
       - name: Install cibuildwheel
-        run: python -m pip install cibuildwheel==2.10.1
+        run: python -m pip install --upgrade numpy cibuildwheel setuptools wheel
+        #run: python -m pip install cibuildwheel==2.10.1
 
       - name: Build wheels
         run: 
@@ -77,7 +78,7 @@ jobs:
         # env:
         #   CIBW_SOME_OPTION: value
         env:
-          CIBW_SKIP: pp38-manylinux* pp39* pp31* *-musllinux-* pp*-macosx-* 
+          CIBW_SKIP: ?p36-* pp38-manylinux* pp39* pp31* *-musllinux-* pp*-macosx-* 
           CIBW_ENVIRONMENT_WINDOWS: CC=gcc CXX=g++ FC=gfortran
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
 
