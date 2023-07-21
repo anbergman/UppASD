@@ -95,6 +95,8 @@ jobs:
           echo '=============== ls /c/mingw64 ==============='
           echo 'Looking for minGW /'
           ls /
+          echo 'Looking for minGW /mingw64/'
+          ls /mingw64/
           echo 'Looking for minGW /c/'
           ls /c/
           echo 'which gfortran'
@@ -104,7 +106,7 @@ jobs:
           echo 'which python'
           which python
           export CMAKE_PREFIX_PATH=/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/mingw64/;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export PATH=/mingw64/:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           echo 'which gfortran'
           which gfortran
           echo 'which cmake'
