@@ -107,12 +107,12 @@ jobs:
           which cmake
           echo 'which python'
           which python
-          echo '==============C==================='
-          echo 'Find gfortran'
-          find /c/msys64/  -name "*gfortran*"
-          echo 'Find blas'
-          find /c/msys64/  -name "*blas*"
-          echo '=================================='
+          #echo '==============C==================='
+          #echo 'Find gfortran'
+          #find /c/msys64/  -name "*gfortran*"
+          #echo 'Find blas'
+          #find /c/msys64/  -name "*blas*"
+          #echo '=================================='
           export CMAKE_PREFIX_PATH='/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           echo 'which gfortran'

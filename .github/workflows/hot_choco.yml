@@ -1,8 +1,8 @@
 name: Bash with rtools
 
 on:
-  #push:
-  release
+  push:
+  #release
   #pull_request:
 
 concurrency:
@@ -66,6 +66,7 @@ jobs:
         run: |
           choco install -y pkgconfiglite
           choco install -y ninja
+          choco install -y microsoft-visual-cpp-build-tools
           #    choco install -y rtools
           
       - name: Tell distutils to use mingw (Windows)
