@@ -160,7 +160,7 @@ jobs:
           which python
           which cmake
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
-          export CMAKE_PREFIX_PATH='/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR/bin;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=$Python_ROOT_DIR/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LD_LIBRARY_PATH=/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
@@ -172,7 +172,7 @@ jobs:
           which python
           which cmake
           pip install setuptools wheel numpy>1.19 
-          FC=gfortran CC=gcc /c/rtools43/x86_64-w64-mingw32.static.posix/bin/cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
+          FC=gfortran CC=gcc /cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           
       - name: Build and test wheels
