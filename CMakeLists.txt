@@ -423,15 +423,17 @@ if(BUILD_PYTHON)
    # Fix since FindPython is a bit flawed
    # https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
    find_package(Python COMPONENTS Interpreter Development.Module NumPy)
-   set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
-   set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
-   set(Python_LIBRARY "${PYTHON_LIBRARY}")
+   #set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
+   #set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
+   #set(Python_LIBRARY "${PYTHON_LIBRARY}")
    #find_package(Python ${Python_VERSION} EXACT REQUIRED COMPONENTS Interpreter Development.Module NumPy)
    #find_package(Python)
-   #message(STATUS "Python_STDLIB ${Python_STDLIB}.")
-   #message(STATUS "Python_SITELIB ${Python_SITELIB}")
-   #message(STATUS "Python_LIBRARIES ${Python_LIBRARIES}.")
-   #message(STATUS "Python_LIBRARY_DIRS ${Python_LIBRARY_DIRS}.")
+   message(STATUS "Python_EXECUTABLE         ${Python_EXECUTABLE}")
+   message(STATUS "Python_STDLIB             ${Python_STDLIB}.")
+   message(STATUS "Python_SITELIB            ${Python_SITELIB}")
+   message(STATUS "Python_LIBRARIES          ${Python_LIBRARIES}.")
+   message(STATUS "Python_LIBRARY_DIRS       ${Python_LIBRARY_DIRS}.")
+   message(STATUS "Python_NumPy_INCLUDE_DIRS ${Python_NumPy_INCLUDE_DIRS}")
 
    if (Python_FOUND)
       # Grab the variables from a local Python installation
@@ -562,19 +564,21 @@ message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
 # Transform F2PY include-string to acceptable slash convention (thanks ChatGPT..)
 ##############################################################################################
 # Input file name string (with double backslashes)
-message(STATUS "Original F2PY-include: ${F2PY_INCLUDE_DIR}")
-## Convert backslashes to slashes and replace drive letter (case-insensitive)
-#string(REGEX REPLACE "([Cc])(:)" "/\\1" t_string "${F2PY_INCLUDE_DIR}")
-## Use string(SUBSTRING ...) and string(TOLOWER ...) to convert the first character of the drive letter to lowercase
-#string(SUBSTRING "${t_string}" 0 3 t_string_a)
-#string(SUBSTRING "${t_string}" 3 -1 t_string_b)
-#string(TOLOWER "${t_string_a}" t_string_a)
-#set(t_string "${t_string_a}${t_string_b}")
-## Replace remaining backslashes with slashes
-#string(REPLACE "\\" "/" ${F2PY_INCLUDE_DIR}  "${t_string}")
-## Output the transformed string
-file(TO_CMAKE_PATH ${F2PY_INCLUDE_DIR} F2PY_INCLUDE_DIR)
-message(STATUS "Transformed F2PY-include: ${F2PY_INCLUDE_DIR}")
+if (${F2PY_INCLUDE_DIR})
+   message(STATUS "Original F2PY-include: ${F2PY_INCLUDE_DIR}")
+   ## Convert backslashes to slashes and replace drive letter (case-insensitive)
+   #string(REGEX REPLACE "([Cc])(:)" "/\\1" t_string "${F2PY_INCLUDE_DIR}")
+   ## Use string(SUBSTRING ...) and string(TOLOWER ...) to convert the first character of the drive letter to lowercase
+   #string(SUBSTRING "${t_string}" 0 3 t_string_a)
+   #string(SUBSTRING "${t_string}" 3 -1 t_string_b)
+   #string(TOLOWER "${t_string_a}" t_string_a)
+   #set(t_string "${t_string_a}${t_string_b}")
+   ## Replace remaining backslashes with slashes
+   #string(REPLACE "\\" "/" ${F2PY_INCLUDE_DIR}  "${t_string}")
+   ## Output the transformed string
+   file(TO_CMAKE_PATH ${F2PY_INCLUDE_DIR} F2PY_INCLUDE_DIR)
+   message(STATUS "Transformed F2PY-include: ${F2PY_INCLUDE_DIR}")
+endif ()
 
 ##############################################################################################
 
