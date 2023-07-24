@@ -83,7 +83,8 @@ jobs:
           which cmake
           echo '================='
           export PATH=$Python_ROOT_DIR:/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:$PATH
-          export CMAKE_PREFIX_PATH="/c/msys64/mingw64/share/cmake/OpenBLAS/;/c/msys64/mingw64/share/cmake/;/c/msys64/mingw64/lib/cmake"
+          export CMAKE_PREFIX_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
+          export CMAKE_MODULE_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           #export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake'
           export NPY_DISTUTILS_APPEND_FLAGS=1
           echo '================='
@@ -94,13 +95,13 @@ jobs:
           #$Env:PATH += ';C:\msys64\mingw64\bin'
           #$Env:PATH += ';C:\msys64\mingw64\lib'
           #$Env:PATH += ';C:\msys64\mingw64\include'
-          FC=gfortran CC=gcc cmake -S . -B build  -DBUILD_PYTHON=ON -G Ninja -DCMAKE_PREFIX_PATH="/c/msys64/mingw64/share/cmake/OpenBLAS;/c/msys64/mingw64/share/cmake/;/c/msys64/mingw64/lib/cmake"
+          FC=gfortran CC=gcc cmake -S . -B build  -DBUILD_PYTHON=ON -G Ninja -DCMAKE_PREFIX_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
         # env:
         #   CIBW_SOME_OPTION: value
         env:
-          CMAKE_PREFIX_PATH: "/c/msys64/mingw64"
+          CMAKE_PREFIX_PATH: "/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           CC: gcc
           CXX: g++
           FC: gfortran 
@@ -122,10 +123,13 @@ jobs:
       - name: Build wheels
         run: |
           export PATH=$Python_ROOT_DIR:/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:$PATH
+          export CMAKE_MODULE_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
+          export CMAKE_PREFIX_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           #$Env:PATH += ';C:\msys64\mingw64\bin'
           #$Env:PATH += ';C:\msys64\mingw64\lib'
           #$Env:PATH += ';C:\msys64\mingw64\include'
           python -m cibuildwheel --output-dir wheelhouse
+          export NPY_DISTUTILS_APPEND_FLAGS=1
         # to supply options, put them in 'env', like:
         # env:
         #   CIBW_SOME_OPTION: value
