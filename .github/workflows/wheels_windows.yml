@@ -56,21 +56,6 @@ jobs:
           #git
           #make
 
-      - name: Update Github path for mingw64
-        if: runner.os == 'Windows'
-        run: |
-          Add-Content $env:GITHUB_PATH "C:\msys64\mingw64\bin"
-          Add-Content $env:GITHUB_PATH "C:\msys64\mingw64\lib"
-          Add-Content $env:GITHUB_PATH "C:\msys64\mingw64\include"
-          #pacboy: >-
-          #  #toolchain:p
-          #  #gcc-fortran:p
-          #  openblas:p
-          #  lapack:p
-          #  fftw:p
-          #  #cmake:p
-          #  #ninja:p
-
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
         run: |
@@ -98,11 +83,12 @@ jobs:
       - name: Run CMAKE
         run: |
           which cmake
-          $Env:PATH += ';C:\msys64\mingw64\bin'
-          $Env:PATH += ';C:\msys64\mingw64\lib'
-          $Env:PATH += ';C:\msys64\mingw64\include'
+          export PATH=/c/msys64/mingw64/bin:$PATH
+          #$Env:PATH += ';C:\msys64\mingw64\bin'
+          #$Env:PATH += ';C:\msys64\mingw64\lib'
+          #$Env:PATH += ';C:\msys64\mingw64\include'
           which cmake
-          FC=gfortran CC=gcc cmake -S . -B build -DBLAS_DIR="c:\msys64\mingw64\lib" -DLAPACK_DIR="c:\msys64\mingw64\lib" -DBUILD_PYTHON=ON
+          FC=gfortran CC=gcc cmake -S . -B build -DBLAS_DIR="c:\msys64\mingw64\lib" -DLAPACK_DIR="c:\msys64\mingw64\lib" -DBUILD_PYTHON=ON -G Ninja
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
         # env:
@@ -120,9 +106,10 @@ jobs:
 
       - name: Build wheels
         run: |
-          $Env:PATH += ';C:\msys64\mingw64\bin'
-          $Env:PATH += ';C:\msys64\mingw64\lib'
-          $Env:PATH += ';C:\msys64\mingw64\include'
+          export PATH=/c/msys64/mingw64/bin:$PATH
+          #$Env:PATH += ';C:\msys64\mingw64\bin'
+          #$Env:PATH += ';C:\msys64\mingw64\lib'
+          #$Env:PATH += ';C:\msys64\mingw64\include'
           python -m cibuildwheel --output-dir wheelhouse
         # to supply options, put them in 'env', like:
         # env:
