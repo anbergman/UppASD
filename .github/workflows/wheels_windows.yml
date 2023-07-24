@@ -94,7 +94,7 @@ jobs:
           #$Env:PATH += ';C:\msys64\mingw64\bin'
           #$Env:PATH += ';C:\msys64\mingw64\lib'
           #$Env:PATH += ';C:\msys64\mingw64\include'
-          FC=gfortran CC=gcc cmake -S . -B build  -DBUILD_PYTHON=ON -G Ninja
+          FC=gfortran CC=gcc cmake -S . -B build  -DBUILD_PYTHON=ON -G Ninja -DCMAKE_PREFIX_PATH="/c/msys64/mingw64/share/cmake/OpenBLAS;/c/msys64/mingw64/share/cmake/;/c/msys64/mingw64/lib/cmake"
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
         # env:

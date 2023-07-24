@@ -1,4 +1,4 @@
-.github/workflows/hot_choco_rtools.yml name: Wheel compilation for Windows using only mingw
+name: Wheel compilation for Windows using only mingw
 
 on:
   push:
