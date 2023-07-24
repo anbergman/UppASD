@@ -56,7 +56,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: 3.11
 
           
       - name: Tell distutils to use mingw (Windows)
@@ -106,7 +106,7 @@ jobs:
           export parsed_pythonpath=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g')
           echo "parsed_pythonpath=" ${parsed_pythonpath}
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
-          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake;${parsed_pythonpath}/Library'
+          export CMAKE_PREFIX_PATH='$parsed_pythonpath;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake;${parsed_pythonpath}/Library:/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/mingw64/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
@@ -117,7 +117,7 @@ jobs:
           which python
           which cmake
           pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH="{parsed_pythonpath}/Library/lib/cmake/mkl -DMKL_DIR=${parsed_pythonpath}/Library
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH=${parsed_pythonpath}/Library/lib/cmake/mkl -DMKL_DIR=${parsed_pythonpath}/Library
           #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           
