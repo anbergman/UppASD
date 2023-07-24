@@ -145,6 +145,7 @@ ADD_LIBRARY(${UppASD_LIB} ${lib_type})
 set(MKL_LINK static)
 find_package(MKL CONFIG)
 
+#find_package(FFTW3)
 include(${CMAKE_MODULE_PATH}/FindFFTW.cmake)
 if (FFTW_FOUND)
    message(STATUS "FFTW found ${FFTW_FOUND} ${FFTW_INCLUDES} ${FFTW_INCLUDE_DIR}")
