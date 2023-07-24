@@ -2,9 +2,8 @@
 requires = [
     "setuptools",
     "wheel",
-    "numpy>1.19", 
-    "f90wrap"]
-#    "numpy>1.19"]
+#    "numpy>1.19", 
+    "numpy>1.19"]
 #    "f90wrap"]
 
 build-backend = "setuptools.build_meta"

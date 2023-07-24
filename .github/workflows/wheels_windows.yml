@@ -1,15 +1,15 @@
 name: Build wheels on windows
 
-on: [release]
-  #on: [push, pull_request]
+#on: [release]
+on: [push, pull_request]
 
 jobs:
   build_wheels:
     name: Build wheels on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
-    #defaults:
-    #  run:
-    #    shell: msys2 {0}
+    defaults:
+      run:
+        shell: bash
     continue-on-error: true
     strategy:
       matrix:
@@ -44,12 +44,15 @@ jobs:
         with:
           msystem: MINGW64
           update: false
-          path-type: inherit
+          path-type: full
           install: >-
             mingw-w64-x86_64-gcc-fortran
             mingw-w64-x86_64-openblas
             mingw-w64-x86_64-lapack
             mingw-w64-x86_64-fftw
+            mingw-w64-x86_64-pkg-config
+            mingw-w64-x86_64-ninja
+            mingw-w64-clang-x86_64-cmake
           #git
           #make
 
@@ -70,20 +73,22 @@ jobs:
 
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
-        #run: |
-        #  $pydistutilsConfig = @"
-        #  [build]
-        #   compiler = mingw32"@
-        #  $pydistutilsConfig | Out-File "$env:USERPROFILE\pydistutils.cfg" -Encoding UTF8
         run: |
-           echo "[build]" | Out-File -Encoding ASCII ~/pydistutils.cfg
-           echo "compiler=mingw32" | Out-File -Encoding ASCII ~/pydistutils.cfg -Append
-           #echo "[build]`ncompiler=mingw32" 
+           echo "[build]" > ~/pydistutils.cfg
+           echo "compiler = mingw32" >> ~/pydistutils.cfg 
+           echo "" >> ~/pydistutils.cfg 
+           echo "[build_ext]" > ~/pydistutils.cfg
+           echo "compiler = mingw32" >> ~/pydistutils.cfg 
 
       - uses: actions/checkout@v3
 
       # Used to host cibuildwheel
-      - uses: actions/setup-python@v3
+      #- uses: actions/setup-python@v3
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
 
       - name: Install cibuildwheel
         run: |
@@ -97,7 +102,7 @@ jobs:
           $Env:PATH += ';C:\msys64\mingw64\lib'
           $Env:PATH += ';C:\msys64\mingw64\include'
           which cmake
-          cmake -S . -B build -DBLAS_DIR="c:\msys64\mingw64\lib" -DLAPACK_DIR="c:\msys64\mingw64\lib" -DBUILD_PYTHON=ON
+          FC=gfortran CC=gcc cmake -S . -B build -DBLAS_DIR="c:\msys64\mingw64\lib" -DLAPACK_DIR="c:\msys64\mingw64\lib" -DBUILD_PYTHON=ON
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
         # env:
