@@ -65,6 +65,7 @@ jobs:
            echo "[build_ext]" > ~/pydistutils.cfg
            echo "compiler = mingw32" >> ~/pydistutils.cfg 
 
+      - name: Checkout repository
       - uses: actions/checkout@v3
 
       # Used to host cibuildwheel
@@ -73,7 +74,6 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
-
 
       - name: Install cibuildwheel
         run: |
@@ -107,7 +107,7 @@ jobs:
           #CIBW_SKIP: pp39* pp31*
           #CIBW_ENVIRONMENT_WINDOWS: >
           #  PATH="$PATH;C:\\\\msys64\\mingw64\\bin"
-          CIBW_ENVIRONMENT_WINDOWS: >
+          #CIBW_ENVIRONMENT_WINDOWS: >
           #CMAKE_PREFIX_PATH="C:\\\\msys64\\mingw64" CC=gcc CXX=g++ FC=gfortran 
           #CIBW_ENVIRONMENT_WINDOWS: CC=gcc CXX=g++ FC=gfortran
           CIBW_REPAIR_WHEEL_COMMAND_MACOS: ""
