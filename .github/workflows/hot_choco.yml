@@ -47,26 +47,21 @@ jobs:
         with:
           python-version: 3.9
 
-      #- name: Setup MSYS
-      #  uses: msys2/setup-msys2@v2
-      #  with:
-      #    msystem: UCRT64
-      #    path-type: inherit
-      #    pacboy: >-
-      #      toolchain:p
-      #      gcc-fortran:p
-      #      openblas:p
-      #      lapack:p
-      #      fftw:p
-      #      cmake:p
-      #      ninja:p
+      - name: Setup MSYS
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          path-type: inherit
+          pacboy: >-
+            cmake:p
+            ninja:p
 
       - name: Install rtools 
         if: ${{ runner.os == 'Windows' }}
         run: |
-          choco install -y pkgconfiglite
-          choco install -y ninja
-          #choco install -y rtools
+          #choco install -y pkgconfiglite
+          #choco install -y ninja
+          choco install -y rtools
           
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
@@ -94,8 +89,8 @@ jobs:
         run: |
           echo '=============== ls /c/rtools43/x86_64-w64-mingw32.static.posix'
           ls /c/rtools43/x86_64-w64-mingw32.static.posix 
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=$PATH:/c/rtools43/x86_64-w64-mingw32.static.posix/bin
+          export CMAKE_PREFIX_PATH="/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix"
+          export PATH=$PATH:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin
           #export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           ### echo 'which gfortran'
           ### which gfortran
@@ -137,14 +132,15 @@ jobs:
           ### echo 'ls /mingw64'
           ### ls /mingw64
           echo '=================================='
-          #cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix 
+          cmake -S . -B mockbuild
+          #cmake -S . -B build -DCMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix;/c/msys64/mingw64/bin"
           #cmake --build build
           
       - name: Test cmake with python
         run: |
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          export LD_LIBRARY_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
+          export CMAKE_PREFIX_PATH="/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix"
+          export PATH=/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export LD_LIBRARY_PATH=/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1

@@ -48,8 +48,9 @@ jobs:
           msystem: MINGW64
           path-type: full
           pacboy: >-
-            gcc-fortran:p
+            toolchain:p
             openblas:p
+            libblas:p
             lapack:p
             fftw:p
 
@@ -110,9 +111,10 @@ jobs:
           echo '========================================='
           which python
           which cmake
-          pip install setuptools wheel numpy>1.19 
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
-          #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
+          pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
+          #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python -DBLAS_LIBRARIES=/c/msys64/mingw64/lib/liblas.a -DLAPACK_LIBRARIES=/c/msys64/mingw64/lib/liblapack.a
+
           cmake --build build -v
           
       - name: Build a single wheel

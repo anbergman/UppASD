@@ -94,6 +94,8 @@ jobs:
           export FC=gfortran
           export CC=gcc
           echo '=================================='
+          pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
+          find C:\hostedtoolcache\windows\Python\3.9.13\x64 -name "*mkl*"
           
       - name: Test cmake with python
         run: |
