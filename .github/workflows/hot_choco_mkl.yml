@@ -96,6 +96,8 @@ jobs:
           echo '=================================='
           pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
           find  $(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g') -name "*fftw*"
+          echo '=================================='
+          pkg-config --variable pc_path pkg-config
           
       - name: Test cmake with python
         run: |
@@ -115,7 +117,7 @@ jobs:
           which python
           which cmake
           pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH="${parsedpythonpath}/Library/lib/cmake/mkl"
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH="${parsed_pythonpath}/Library/lib/cmake/mkl"
           #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           
