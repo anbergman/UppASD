@@ -612,7 +612,7 @@ message(STATUS "Transformed F2PY-include: ${F2PY_INCLUDE_DIR}")
       add_custom_command(
          OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}" "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
          #COMMAND ${Python_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
-         COMMAND f2py   ${F2PY_sources} -m _${f2py_module_name}  --lower
+         COMMAND f2py   ${F2PY_sources} -m _${f2py_module_name}  --lower --quiet
          COMMENT "Generating Python modules"
          DEPENDS ${UppASD_LIB}  ${F2PY_sources}
          VERBATIM

@@ -1,8 +1,8 @@
-name: Bash with rtools org
+name: Wheel compilation for Windows using rtools and mingw
 
 on:
   push:
-  #release
+  ##release
   #pull_request:
 
 concurrency:
@@ -42,31 +42,28 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup MSYS
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          path-type: full
+          pacboy: >-
+            gcc-fortran:p
+            openblas:p
+            lapack:p
+            fftw:p
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: 3.9
-
-      #- name: Setup MSYS
-      #  uses: msys2/setup-msys2@v2
-      #  with:
-      #    msystem: UCRT64
-      #    path-type: inherit
-      #    pacboy: >-
-      #      toolchain:p
-      #      gcc-fortran:p
-      #      openblas:p
-      #      lapack:p
-      #      fftw:p
-      #      cmake:p
-      #      ninja:p
 
       - name: Install rtools 
         if: ${{ runner.os == 'Windows' }}
         run: |
           choco install -y pkgconfiglite
           choco install -y ninja
-          #choco install -y rtools
+          #    choco install -y rtools
           
       - name: Tell distutils to use mingw (Windows)
         if: runner.os == 'Windows'
@@ -92,73 +89,61 @@ jobs:
         env: 
           FC: gfortran
         run: |
-          echo '=============== ls /c/rtools43/x86_64-w64-mingw32.static.posix'
-          ls /c/rtools43/x86_64-w64-mingw32.static.posix 
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=$PATH:/c/rtools43/x86_64-w64-mingw32.static.posix/bin
-          #export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          ### echo 'which gfortran'
-          ### which gfortran
-          ### echo 'which cmake'
-          ### which cmake
-          ### echo 'which python'
-          ### which python
-          ### echo 'Looking for R-tools'
-          ### ls /c/
-          ### echo 'Looking in rtools43'
-          ### ls /c/rtools43
-          ### echo 'Looking in rtools43/ucrt64'
-          ### ls /c/rtools43/ucrt64
-          ### echo 'Looking in rtools43/ucrt64/bin'
-          ### ls /c/rtools43/ucrt64/bin
-          ### echo 'Looking in rtools43/ucrt64/lib'
-          ### ls /c/rtools43/ucrt64/lib
-          ### echo "FC=gfortran" >> $env:GITHUB_ENV
-          ### echo "PLAT=x86_64" >> $env:GITHUB_ENV
-          ### echo "MSYSTEM=UCRT64" >> $env:GITHUB_ENV
-          ### echo 'ENV'
-          ### env
-          ### echo '=================================='
-          ### echo 'Find gfortran'
-          ### find /c/rtools43 -name "*gfortran*"
-          ### echo 'Find blas'
-          ### find /c/rtools43 -name "*blas*"
-          ### echo '=================================='
-          ### echo 'which gfortran'
-          ### which gfortran
-          ### echo 'which cmake'
-          ### which cmake
-          ### echo 'which python'
-          ### which python
+          export CMAKE_PREFIX_PATH='/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          #export PATH=/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          echo 'which gfortran'
+          which gfortran
+          echo 'which cmake'
+          which cmake
+          echo 'which python'
+          which python
           export FC=gfortran
           export CC=gcc
-          ### echo 'ls /'
-          ### ls /
-          ### echo 'ls /mingw64'
-          ### ls /mingw64
           echo '=================================='
-          #cmake -S . -B build -DCMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix 
-          #cmake --build build
           
       - name: Test cmake with python
         run: |
-          export CMAKE_PREFIX_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix
-          export PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
-          export LD_LIBRARY_PATH=/c/rtools43/x86_64-w64-mingw32.static.posix/lib:$LD_LIBRARY_PATH
+          which python
+          which cmake
+          export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
+          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
           echo '========================================='
           env
           echo '========================================='
-          pip install setuptools wheel numpy>1.19 f90wrap
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
+          which python
+          which cmake
+          pip install setuptools wheel numpy>1.19 
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
+          #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
+          
+      - name: Build a single wheel
+        run: |
+          which python
+          which cmake
+          export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
+          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          #export PATH=$Python_ROOT_DIR:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export LDFLAGS="-Wl,-rpath=."
+          export NPY_DISTUTILS_APPEND_FLAGS=1
+          export NPY_WINDOWS_GIT_ACTION_FIX=1
+          echo '========================================='
+          env
+          echo '========================================='
+          which python
+          which cmake
+          python -m pip wheel . -v
           
       - name: Build and test wheels
         uses: pypa/cibuildwheel@v2.14.0
         env:
-          CIBW_ENVIRONMENT_WINDOWS: PATH="/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH" CMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix" FC="gfortran" CC="gcc"
+          CIBW_ENVIRONMENT_WINDOWS: PATH="/c/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH" CMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix" FC="gfortran" CC="gcc"
           CIBW_BUILD: cp${{ matrix.python }}-${{ matrix.platform }}
 
       - name: Store artifacts
