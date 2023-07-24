@@ -564,7 +564,7 @@ message(STATUS "myLDFLAGS: $ENV{myLDFLAGS}")
 # Transform F2PY include-string to acceptable slash convention (thanks ChatGPT..)
 ##############################################################################################
 # Input file name string (with double backslashes)
-if (${F2PY_INCLUDE_DIR})
+if (F2PY_INCLUDE_DIR)
    message(STATUS "Original F2PY-include: ${F2PY_INCLUDE_DIR}")
    ## Convert backslashes to slashes and replace drive letter (case-insensitive)
    #string(REGEX REPLACE "([Cc])(:)" "/\\1" t_string "${F2PY_INCLUDE_DIR}")
