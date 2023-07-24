@@ -1,4 +1,4 @@
-name: Wheel compilation for Windows using only mingw
+.github/workflows/hot_choco_rtools.yml name: Wheel compilation for Windows using only mingw
 
 on:
   push:
@@ -121,7 +121,6 @@ jobs:
           which cmake
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
           export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake'
-          #export PATH=$Python_ROOT_DIR:/c/msys64/mingw64/bin:$PATH
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/mingw64/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
@@ -131,6 +130,9 @@ jobs:
           echo '========================================='
           which python
           which cmake
+          pip install setuptools wheel numpy>1.19 
+          #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
+          #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           python -m pip wheel . -v
           
       - name: Build and test wheels
