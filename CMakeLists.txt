@@ -422,7 +422,7 @@ if(BUILD_PYTHON)
 
    # Fix since FindPython is a bit flawed
    # https://github.com/scikit-build/scikit-build/issues/506#issuecomment-706791791
-   find_package(Python COMPONENTS Interpreter Development.Module NumPy)
+   find_package(Python3 COMPONENTS Interpreter Development.Module NumPy)
    #set(Python_EXECUTABLE "${PYTHON_EXECUTABLE}")
    #set(Python_INCLUDE_DIR "${PYTHON_INCLUDE_DIR}")
    #set(Python_LIBRARY "${PYTHON_LIBRARY}")
