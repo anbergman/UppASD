@@ -110,7 +110,7 @@ jobs:
           echo "export PYTHON_VERSION"
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
           echo "export CMAKE_PREFIX_PATH"
-          export CMAKE_PREFIX_PATH="$parsed_pythonpath;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix
+          export CMAKE_PREFIX_PATH="$parsed_pythonpath;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix"
           echo "export PATH"
           export PATH=$(parsed_pythonpath):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."

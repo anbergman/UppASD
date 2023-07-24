@@ -117,7 +117,7 @@ jobs:
           which python
           which cmake
           pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH="${parsed_pythonpath}/Library/lib/cmake/mkl"
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH="{parsed_pythonpath}/Library/lib/cmake/mkl -DMKL_DIR=${parsed_pythonpath}/Library
           #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           
