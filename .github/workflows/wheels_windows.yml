@@ -1,4 +1,4 @@
-name: Build wheels on windows
+.github/workflows/hot_choco_mingw.ymlname: Build wheels on windows using only MSYS
 
 #on: [release]
 on: [push, pull_request]
@@ -82,12 +82,20 @@ jobs:
 
       - name: Run CMAKE
         run: |
+          echo '================='
+          which python
+          which gfortran
           which cmake
-          export PATH=$Python_ROOT_DIR/Scripts:/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:$PATH
+          echo '================='
+          export PATH=$Python_ROOT_DIR:/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:$PATH
+          echo '================='
+          which python
+          which gfortran
+          which cmake
+          echo '================='
           #$Env:PATH += ';C:\msys64\mingw64\bin'
           #$Env:PATH += ';C:\msys64\mingw64\lib'
           #$Env:PATH += ';C:\msys64\mingw64\include'
-          which cmake
           FC=gfortran CC=gcc cmake -S . -B build  -DBUILD_PYTHON=ON -G Ninja
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
@@ -106,7 +114,7 @@ jobs:
 
       - name: Build wheels
         run: |
-          export PATH=$Python_ROOT_DIR/Scripts:/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:$PATH
+          export PATH=$Python_ROOT_DIR:/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:$PATH
           #$Env:PATH += ';C:\msys64\mingw64\bin'
           #$Env:PATH += ';C:\msys64\mingw64\lib'
           #$Env:PATH += ';C:\msys64\mingw64\include'

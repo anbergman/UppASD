@@ -1,4 +1,4 @@
-name: Bash with rtools
+name: Bash with rtools and mingw
 
 on:
   push:
@@ -106,8 +106,8 @@ jobs:
           which python
           which cmake
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
-          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR/Scripts;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
-          export PATH=$Python_ROOT_DIR/Scripts:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=$Python_ROOT_DIR:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
@@ -125,8 +125,8 @@ jobs:
           which python
           which cmake
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
-          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR/Scripts;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
-          export PATH=$Python_ROOT_DIR/Scripts:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
+          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
+          export PATH=$Python_ROOT_DIR:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
           export NPY_WINDOWS_GIT_ACTION_FIX=1
