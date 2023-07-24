@@ -95,14 +95,14 @@ jobs:
           export CC=gcc
           echo '=================================='
           pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
-          find  $(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g') -name "*mkl*"
+          find  $(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g') -name "*fftw*"
           
       - name: Test cmake with python
         run: |
           which python
           which cmake
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
-          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake'
+          export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake;${Python3_ROOT_DIR}/Library'
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/mingw64/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
@@ -113,7 +113,7 @@ jobs:
           which python
           which cmake
           pip install setuptools wheel numpy>1.19 mkl-devel pylib-fftw3
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_MODULE_PATH="${Python3_ROOT_DIR}/Library/lib/cmake/mkl"
           #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           cmake --build build -v
           

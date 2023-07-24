@@ -101,10 +101,15 @@ jobs:
           
       - name: Test cmake with python
         run: |
+          echo "which python:"
           which python
+          echo "which cmake:""
           which cmake
+          echo "export PYTHON_VERSION"
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
+          echo "export CMAKE_PREFIX_PATH"
           export CMAKE_PREFIX_PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g');/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix
+          echo "export PATH"
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
           export LDFLAGS="-Wl,-rpath=."
           export NPY_DISTUTILS_APPEND_FLAGS=1
