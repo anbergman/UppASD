@@ -103,7 +103,7 @@ jobs:
         run: |
           echo "which python:"
           which python
-          echo "which cmake:""
+          echo "which cmake:"
           which cmake
           echo "export PYTHON_VERSION"
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`

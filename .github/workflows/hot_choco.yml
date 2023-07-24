@@ -132,7 +132,7 @@ jobs:
           ### echo 'ls /mingw64'
           ### ls /mingw64
           echo '=================================='
-          FC=gfortran CC=gcc cmake -S . -B mockbuild
+          cmake -S . -B mockbuild -DCMAKE_Fortran_COMPILER=/c/msys64/mingw64/bin/gfortran.exe
           #cmake -S . -B build -DCMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix;/c/msys64/mingw64/bin"
           #cmake --build build
           
@@ -148,7 +148,7 @@ jobs:
           env
           echo '========================================='
           pip install setuptools wheel numpy>1.19 f90wrap
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DCMAKE_Fortran_COMPILER=/c/msys64/mingw64/bin/gfortran.exe
           cmake --build build -v
           
       - name: Build and test wheels

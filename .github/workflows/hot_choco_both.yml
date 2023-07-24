@@ -106,6 +106,7 @@ jobs:
         run: |
           which python
           which cmake
+          which gfortran
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
           export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
@@ -117,6 +118,7 @@ jobs:
           echo '========================================='
           which python
           which cmake
+          which gfortran
           pip install setuptools wheel numpy>1.19 
           #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
           FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
@@ -126,6 +128,7 @@ jobs:
         run: |
           which python
           which cmake
+          which gfortran
           export PYTHON_VERSION=`python -c "import platform;print(platform.python_version())"`
           export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/rtools43/x86_64-w64-mingw32.static.posix'
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/rtools43/x86_64-w64-mingw32.static.posix/bin:/c/msys64/mingw64/bin:/c/rtools43/x86_64-w64-mingw32.static.posix/bin:$PATH
@@ -137,6 +140,8 @@ jobs:
           echo '========================================='
           which python
           which cmake
+          which gfortran
+          cp /c/msys64/mingw64/bin/ld.exe /c/rtools43/x86_64-w64-mingw32.static.posix/bin
           pip install setuptools wheel numpy>1.19 
           python -m pip wheel . -v
           
