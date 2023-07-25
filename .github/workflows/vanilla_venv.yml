@@ -35,7 +35,7 @@ jobs:
       with:
         msystem: ${{matrix.sys}}
         release: false
-        path-type: inherit
+        path-type: full
         pacboy: >-
           toolchain:p
           gcc-fortran:p
@@ -51,7 +51,7 @@ jobs:
       with:
         msystem: ${{matrix.sys}}
         release: false
-        path-type: inherit
+        path-type: full
         pacboy: >-
           toolchain:p
           flang:p
@@ -116,6 +116,12 @@ jobs:
         echo '--> which python'
         which python
         source ~/build_env/Scripts/activate
+        echo '--> which gfortran'
+        which gfortran
+        echo '--> which cmake'
+        which cmake
+        echo '--> which python'
+        which python
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON
         cmake --build build 
         ls ./lib
