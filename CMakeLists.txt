@@ -40,7 +40,10 @@ enable_language(C)
 ##############################################################################################
 # Add our local modlues to the module path
 ##############################################################################################
-SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
+message(STATUS "Initial module path: ${CMAKE_MODULE_PATH}")
+SET(LOCAL_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
+SET(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${LOCAL_MODULE_PATH}")
+message(STATUS "Final module path  : ${CMAKE_MODULE_PATH}")
 ##############################################################################################
 
 ##############################################################################################
@@ -134,7 +137,7 @@ if (BUILD_PYTHON)
    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
    #   ADD_LIBRARY(${UppASD_pyLIB} SHARED)
 endif(BUILD_PYTHON)
-message(STATUS " LIB INFO: ${UppASD_LIB} ${lib_type} ${SRC}")
+message(STATUS " LIB INFO: ${UppASD_LIB} ${lib_type} ${SRC} ${CMAKE_POSITION_INDEPENDENT_CODE}")
 ADD_LIBRARY(${UppASD_LIB} ${lib_type})
 ##############################################################################################
 
@@ -143,12 +146,29 @@ ADD_LIBRARY(${UppASD_LIB} ${lib_type})
 # MKL / FFTW actions
 ##############################################################################################
 set(MKL_LINK static)
+set(MKL_INTERFACE lp64)
+set(MKL_THREADING sequential)
 find_package(MKL CONFIG)
+message(STATUS "${MKL_IMPORTED_TARGETS}") 
 
-#find_package(FFTW3)
-include(${CMAKE_MODULE_PATH}/FindFFTW.cmake)
+set(FFTW_USE_STATIC_LIBS ON)
+find_package(FFTW)
+#include(${CMAKE_MODULE_PATH}/FindFFTW.cmake)
 if (FFTW_FOUND)
-   message(STATUS "FFTW found ${FFTW_FOUND} ${FFTW_INCLUDES} ${FFTW_INCLUDE_DIR}")
+	message(STATUS "FFTW found       : ${FFTW_FOUND}, ${FFTW_INCLUDES}, ${FFTW_INCLUDE_DIRS}")
+	message(STATUS "FFTW_LIBRARIES   : ${FFTW_LIBRARIES}")
+	message(STATUS "FFTW_INCLUDE_DIRS: ${FFTW_INCLUDE_DIRS}")
+	message(STATUS "FFTW_DOUBLE_LIB  : ${FFTW_DOUBLE_LIB}")
+	message(STATUS "FFTW_DOUBLE_OPENMP_LIB  : ${FFTW_DOUBLE_OPENMP_LIB}")
+   set(FFTW_LIB ${FFTW_LIBRARIES})
+   #set(FFTW_LIB "${FFTW_DOUBLE_LIB};${FFTW_DOUBLE_OPENMP_LIB}")
+   # It sets the following variables:
+#   FFTW_FOUND                  ... true if fftw is found on the system
+#   FFTW_[component]_LIB_FOUND  ... true if the component is found on the system (see components below)
+#   FFTW_LIBRARIES              ... full paths to all found fftw libraries
+#   FFTW_[component]_LIB        ... full path to one of the components (see below)
+#   FFTW_INCLUDE_DIRS           ... fftw include directory paths
+
 else (FFTW_FOUND)
    set(FFTW_LIB "")
    set(FFTW_LIBRARIES "")
@@ -189,7 +209,7 @@ CMAKE_DEPENDENT_OPTION(RUN_REG_TESTS "Run regression-test"  ON "BUILD_TESTING" O
 ##############################################################################################
 # Determine and set compiler-dependent flags
 ##############################################################################################
-INCLUDE(${CMAKE_MODULE_PATH}/SetFortranFlags.cmake) 
+INCLUDE(${LOCAL_MODULE_PATH}/SetFortranFlags.cmake) 
 ##############################################################################################
 
 ##############################################################################################
@@ -254,40 +274,44 @@ endif()
 ##############################################################################################
 # If MKL/VSL is requested. First checks here to set the linear algebra packages
 ##############################################################################################
-#if(USE_VSL OR USE_MKL OR USE_MKL_FFT)
-#
-#   set(BLA_DEFINITIONS)
-#
-#   if (BLA_VENDOR MATCHES "_seq")
-#      set(MKL_USE_parallel OFF)
-#   else()
-#      set(MKL_USE_parallel ON)
-#   endif()
-#
-#   if (MKL_FOUND)
-#      message( STATUS "MKL_FOUND condition true")
-#      set(BLA_INCLUDE_DIR ${MKL_INCLUDE_DIR})
-#      set(BLAS_LIBRARIES ${MKL_LIBRARIES})
-#      set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
-#      set(BLA_DEFINITIONS USE_MKL)
-#      set(MKL_INTERFACE_FULL "lp64")
-#   else()
-#      #include(FindBLAS)
-#      #include(FindLAPACK)
-#      find_package(BLAS)
-#      find_package(LAPACK REQUIRED)
-#   endif()
-#   message(STATUS "mkl-location: ${MKL_LIBRARY_DIR}")
-#   message(STATUS "mkl-includes: ${MKL_INCLUDE}")
-#   link_directories(${MKL_LIBRARY_DIR})
-#
-#else()
-#   find_package(BLAS)
-#   find_package(LAPACK REQUIRED)
-#endif()
-#set(BLA_STATIC ON)
-find_package(BLAS REQUIRED)
-find_package(LAPACK REQUIRED)
+set(BLA_STATIC ON)
+message( STATUS "USING::::: ${USE_VSL} ${USE_MKL} ${USE_MKL_FFT}")
+if(USE_VSL OR USE_MKL OR USE_MKL_FFT)
+
+   set(BLA_DEFINITIONS)
+
+   if (BLA_VENDOR MATCHES "_seq")
+      set(MKL_USE_parallel OFF)
+   else()
+      set(MKL_USE_parallel ON)
+   endif()
+
+   if (MKL_FOUND)
+      message( STATUS "MKL_FOUND condition true")
+      set(BLA_INCLUDE_DIR ${MKL_INCLUDE_DIR})
+      set(BLAS_LIBRARIES ${MKL_LIBRARIES})
+      set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
+      set(BLA_DEFINITIONS USE_MKL)
+      #set(MKL_INTERFACE_FULL "lp64")
+   else()
+      #include(FindBLAS)
+      #include(FindLAPACK)
+      find_package(BLAS REQUIRED)
+      find_package(LAPACK REQUIRED)
+   endif()
+   message(STATUS "mkl-location: ${MKL_LIBRARY_DIR}")
+   message(STATUS "mkl-includes: ${MKL_INCLUDE}")
+   #link_directories(${MKL_LIBRARY_DIR})
+
+   target_compile_options(${UppASD_LIB} PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_COMPILE_OPTIONS>)
+   target_include_directories(${UppASD_LIB} PUBLIC $<TARGET_PROPERTY:MKL::MKL,INTERFACE_INCLUDE_DIRECTORIES>)
+
+else()
+   find_package(BLAS REQUIRED)
+   find_package(LAPACK REQUIRED)
+endif()
+#find_package(BLAS REQUIRED)
+#find_package(LAPACK REQUIRED)
 message(STATUS "Math libs: 
 BLAS:${BLAS_FOUND} ${BLAS_LIBRARIES}  ${BLAS_LINKER_FLAGS}
 LAPACK:${LAPACK_FOUND} ${LAPACK_LIBRARIES}  ${LAPACK_LINKER_FLAGS}
@@ -312,7 +336,7 @@ ENDIF()
 ##############################################################################################
 # Extract git-stamp
 ##############################################################################################
-INCLUDE(${CMAKE_MODULE_PATH}/git-watcher.cmake)
+INCLUDE(${LOCAL_MODULE_PATH}/git-watcher.cmake)
 ##############################################################################################
 
 ##############################################################################################
@@ -396,8 +420,8 @@ elseif(USE_FFTW)
    add_compile_definitions(USE_FFTW)
    message(STATUS "FFT-> ${USE_FFTW} ")
    #include(${CMAKE_MODULE_PATH}/FindFFTW.cmake)
-   include_directories(${FFTW_INCLUDE_DIR})
-   message(STATUS "FFTW: -I${FFTW_INCLUDE_DIR}  -L${FFTW_LIBRARIES} ${FFTW_LIB}")
+   include_directories(${FFTW_INCLUDE_DIRS})
+   message(STATUS "FFTW: -I${FFTW_INCLUDE_DIRS} ${FFTW_LIB}")
 endif()
 ##############################################################################################
 
@@ -618,8 +642,8 @@ endif ()
 
       add_custom_command(
          OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/${f2py_module_c}" "${CMAKE_CURRENT_BINARY_DIR}/${f2py_wrapper_f}"
-         #COMMAND ${Python3_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower
-         COMMAND f2py   ${F2PY_sources} -m _${f2py_module_name}  --lower --quiet
+         COMMAND ${Python3_EXECUTABLE}  -m "numpy.f2py"  ${F2PY_sources} -m _${f2py_module_name}  --lower --quiet
+         #COMMAND f2py   ${F2PY_sources} -m _${f2py_module_name}  --lower --quiet
          COMMENT "Generating Python modules"
          DEPENDS ${UppASD_LIB}  ${F2PY_sources}
          VERBATIM
@@ -642,7 +666,7 @@ endif ()
          )
 
       #target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python3::NumPy ${UppASD_LIB})
-      target_link_libraries(_${CMAKE_PROJECT_NAME}  PRIVATE Python3::NumPy ${UppASD_LIB})
+      target_link_libraries(_${CMAKE_PROJECT_NAME}  PUBLIC Python3::NumPy ${UppASD_LIB}    ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${OVF_LIB} ${FFTW_LIB} ${CUDA_curand_LIBRARY} ${OpenMP_Fortran_LIBRARIES} )
       add_dependencies(_${CMAKE_PROJECT_NAME} ${UppASD_F90w})
       target_include_directories(_${CMAKE_PROJECT_NAME} PRIVATE "${F2PY_INCLUDE_DIR}" )
 ##############################################################################################

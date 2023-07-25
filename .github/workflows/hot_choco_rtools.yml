@@ -123,7 +123,8 @@ jobs:
           which cmake
           current_python=`which python`
           pip install setuptools wheel numpy>1.19 
-          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja  -DPYTHON_EXECUTABLE=${current_python}
+          FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja 
+          #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja  -DPYTHON_EXECUTABLE=${current_python}
           cmake --build build -v
           #FC=gfortran CC=gcc cmake -S . -B build -DBUILD_PYTHON=ON -G Ninja -DPYTHON_EXECUTABLE=${Python3_ROOT_DIR}/bin/python
           

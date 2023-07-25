@@ -1,0 +1,95 @@
+name: Build binaries and python library on Windows (MSYS2+bash)
+
+on:
+  push:
+  #release:
+  #pull_request:
+  #workflow_dispatch:
+
+jobs:
+
+  build:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { icon: '⬛', sys: mingw32, arch: i686 }
+          - { icon: '🟦', sys: mingw64, arch: x86_64 }
+          - { icon: '🟨', sys: ucrt64,  arch: x86_64  } # Experimental!
+          #- { icon: '🟧', sys: clang64, arch: x86_64 } # Experimental!
+    name: 🚧 ${{ matrix.icon }} ${{ matrix.sys }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+
+    - name: '🧰 Checkout'
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: '${{ matrix.icon }} Setup MSYS2 gcc'
+      if: ${{ matrix.sys != 'clang64' }}
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        pacboy: >-
+          toolchain:p
+          openblas:p
+          lapack:p
+          fftw:p
+          cmake:p
+          ninja:p
+          
+    - name: '${{ matrix.icon }} Setup MSYS2 clang'
+      if: ${{ matrix.sys == 'clang64' }}
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        pacboy: >-
+          toolchain:p
+          flang:p
+          openblas:p
+          lapack:p
+          fftw:p
+          cmake:p
+          ninja:p
+
+    - name: '🚧 Verify environment'
+      run: |
+        echo '----PATH----'
+        echo $PATH
+        echo '----ENV----'
+        env
+        
+          
+    - name: '🚧 Install python packages'
+      run: |
+        python -m ensurepip
+        python -m pip install build wheel setuptools numpy
+        echo "Python version"
+        python --version
+        
+          
+    - name: '🚧 Build TOOL executable'
+      run: |
+        cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+        cmake --build build 
+        ls ./bin
+        cp ./bin/sd.gfortran.exe ./bin/sd.gfortran.${{matrix.sys}}.${{matrix.arch}}.exe
+        cp ./bin/sd.gfortran.exe ./bin/uppasd.${{matrix.sys}}.${{matrix.arch}}.exe
+        ls ./bin
+        
+    - name: '🚧 Build TOOL python library'
+      run: |
+        cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON
+        cmake --build build 
+        ls ./lib
+        
+    - uses: actions/upload-artifact@v3
+      with:
+       name: uppasd.${{matrix.sys}}.${{matrix.arch}}
+       path: ./bin/uppasd*.exe
