@@ -29,55 +29,70 @@ jobs:
       with:
         fetch-depth: 0
 
-    #- name: '${{ matrix.icon }} Setup MSYS2 gcc'
-    #  if: ${{ matrix.sys != 'clang64' }}
-    #  uses: msys2/setup-msys2@v2
-    #  with:
-    #    msystem: ${{matrix.sys}}
-    #    update: true
-    #    pacboy: >-
-    #      toolchain:p
-    #      openblas:p
-    #      lapack:p
-    #      fftw:p
-    #      cmake:p
-    #      ninja:p
-    #      
-    #- name: '${{ matrix.icon }} Setup MSYS2 clang'
-    #  if: ${{ matrix.sys == 'clang64' }}
-    #  uses: msys2/setup-msys2@v2
-    #  with:
-    #    msystem: ${{matrix.sys}}
-    #    update: true
-    #    pacboy: >-
-    #      toolchain:p
-    #      flang:p
-    #      openblas:p
-    #      lapack:p
-    #      fftw:p
-    #      cmake:p
-    #      ninja:p
+    - name: '${{ matrix.icon }} Setup MSYS2 gcc'
+      if: ${{ matrix.sys != 'clang64' }}
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        pacboy: >-
+          toolchain:p
+          openblas:p
+          lapack:p
+          fftw:p
+          cmake:p
+          ninja:p
+          
+    - name: '${{ matrix.icon }} Setup MSYS2 clang'
+      if: ${{ matrix.sys == 'clang64' }}
+      uses: msys2/setup-msys2@v2
+      with:
+        msystem: ${{matrix.sys}}
+        update: true
+        pacboy: >-
+          toolchain:p
+          flang:p
+          openblas:p
+          lapack:p
+          fftw:p
+          cmake:p
+          ninja:p
 
-    - name: '🚧 Verify environment before'
+    - name: Setup Python interpreter
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
+    #- name: '🚧 Verify environment before'
+    #  run: |
+    #    export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+    #    echo "{PATH}={/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH}" >> "$GITHUB_ENV"
+    #    echo '----PATH----'
+    #    echo $PATH
+    #    echo '----ENV----'
+    #    env
+    #    echo '---/mingw64----'
+    #    ls /mingw64
+    #    echo '---/mingw64/bin----'
+    #    ls /mingw64/bin
+    #    echo '---/c---''
+    #    ls /c/
+    #    echo '---/c/msys64/---''
+    #    ls /c/msys64/
+    #    echo '---/c/msys64/mingw64---'
+    #    ls /c/msys64/mingw64/
+    #    
+    - name: '🚧 Verify environment without env'
       run: |
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        echo "{PATH}={/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH}" >> "$GITHUB_ENV"
+        #export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         echo '----PATH----'
         echo $PATH
         echo '----ENV----'
         env
-        echo '---/mingw64----'
-        ls /mingw64
-        echo '---/mingw64/bin----'
-        ls /mingw64/bin
-        echo '---/c---''
-        ls /c/
-        echo '---/c/msys64/---''
-        ls /c/msys64/
-        echo '---/c/msys64/mingw64---'
-        ls /c/msys64/mingw64/
         
-    - name: '🚧 Verify environment after'
+    - name: '🚧 Verify environment with env'
+      env:
+        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
       run: |
         #export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         echo '----PATH----'
@@ -88,11 +103,14 @@ jobs:
           
     - name: '🚧 Install python packages'
       run: |
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        python -m ensurepip
-        python -m pip install build wheel setuptools numpy
+        ${pythonLocation}/python -m ensurepip
+        ${pythonLocation}/python -m pip install build wheel setuptools numpy
         echo "Python version"
-        python --version
+        ${pythonLocation}/python --version
+        
+    - name: '🚧 Overwrite directories'
+      run: |
+        ln -lsn /c/msys64/mingw64 /mingw64
         
           
     - name: '🚧 Build TOOL executable'
