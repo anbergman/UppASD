@@ -108,15 +108,15 @@ jobs:
         echo "Python version"
         ${pythonLocation}/python --version
         
-    - name: '🚧 Overwrite directories'
-      run: |
-        ln -fsn /c/msys64/mingw64 /mingw64
-        echo "     ls /mingw64    "
-        ls -ltr /mingw64
-        ln -fsn /c/msys64/mingw64/bin /c/ProgramData/Chocolatey/bin/
-        echo "      ls  /c/CHoco   "
-        ls -ltr /c/ProgramData/Chocolatey/bin/
-        #cp /c/msys64/mingw64/bin/* /c/ProgramData/Chocolatey/bin/
+    #- name: '🚧 Overwrite directories'
+    #  run: |
+    #    ln -fsn /c/msys64/mingw64 /mingw64
+    #    echo "     ls /mingw64    "
+    #    ls -ltr /mingw64
+    #    ln -fsn /c/msys64/mingw64/bin /c/ProgramData/Chocolatey/bin/
+    #    echo "      ls  /c/CHoco   "
+    #    ls -ltr /c/ProgramData/Chocolatey/bin/
+    #    #cp /c/msys64/mingw64/bin/* /c/ProgramData/Chocolatey/bin/
         
           
     - name: '🚧 Build TOOL executable'
@@ -125,12 +125,12 @@ jobs:
         which gfortran
         echo '--> which cmake'
         which cmake
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        export PATH=${pythonLocation}:/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         echo '--> which gfortran'
         which gfortran
         echo '--> which cmake'
         which cmake
-        cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+        FC=x86_64-w64-mingw32-gfortran cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
         ls ./bin
         cp ./bin/sd.gfortran.exe ./bin/sd.gfortran.${{matrix.sys}}.${{matrix.arch}}.exe
