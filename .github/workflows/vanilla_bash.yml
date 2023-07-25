@@ -1,7 +1,7 @@
 name: Build binaries and python library on Windows (MSYS2+bash)
 
 on:
-  #push:
+  push:
   #release:
   #pull_request:
   #workflow_dispatch:
@@ -29,34 +29,34 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: '${{ matrix.icon }} Setup MSYS2 gcc'
-      if: ${{ matrix.sys != 'clang64' }}
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: ${{matrix.sys}}
-        update: true
-        pacboy: >-
-          toolchain:p
-          openblas:p
-          lapack:p
-          fftw:p
-          cmake:p
-          ninja:p
-          
-    - name: '${{ matrix.icon }} Setup MSYS2 clang'
-      if: ${{ matrix.sys == 'clang64' }}
-      uses: msys2/setup-msys2@v2
-      with:
-        msystem: ${{matrix.sys}}
-        update: true
-        pacboy: >-
-          toolchain:p
-          flang:p
-          openblas:p
-          lapack:p
-          fftw:p
-          cmake:p
-          ninja:p
+    #- name: '${{ matrix.icon }} Setup MSYS2 gcc'
+    #  if: ${{ matrix.sys != 'clang64' }}
+    #  uses: msys2/setup-msys2@v2
+    #  with:
+    #    msystem: ${{matrix.sys}}
+    #    update: true
+    #    pacboy: >-
+    #      toolchain:p
+    #      openblas:p
+    #      lapack:p
+    #      fftw:p
+    #      cmake:p
+    #      ninja:p
+    #      
+    #- name: '${{ matrix.icon }} Setup MSYS2 clang'
+    #  if: ${{ matrix.sys == 'clang64' }}
+    #  uses: msys2/setup-msys2@v2
+    #  with:
+    #    msystem: ${{matrix.sys}}
+    #    update: true
+    #    pacboy: >-
+    #      toolchain:p
+    #      flang:p
+    #      openblas:p
+    #      lapack:p
+    #      fftw:p
+    #      cmake:p
+    #      ninja:p
 
     - name: '🚧 Verify environment before'
       run: |
