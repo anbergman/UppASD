@@ -82,7 +82,7 @@ jobs:
     #    echo '---/c/msys64/mingw64---'
     #    ls /c/msys64/mingw64/
     #    
-    - name: '🚧 Verify environment without env'
+    - name: '🚧 Verify environment without path'
       run: |
         #export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         echo '----PATH----'
@@ -90,11 +90,10 @@ jobs:
         echo '----ENV----'
         env
         
-    - name: '🚧 Verify environment with env'
-      env:
-        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+    - name: '🚧 Verify environment with path'
       run: |
         #export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         echo '----PATH----'
         echo $PATH
         echo '----ENV----'
@@ -125,12 +124,13 @@ jobs:
         which gfortran
         echo '--> which cmake'
         which cmake
-        export PATH=${pythonLocation}:/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        #export PATH=${pythonLocation}:/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         echo '--> which gfortran'
         which gfortran
         echo '--> which cmake'
         which cmake
-        FC=x86_64-w64-mingw32-gfortran cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+        FC=gfortran CC=cpp cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
         ls ./bin
         cp ./bin/sd.gfortran.exe ./bin/sd.gfortran.${{matrix.sys}}.${{matrix.arch}}.exe

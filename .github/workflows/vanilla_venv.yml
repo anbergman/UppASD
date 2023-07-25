@@ -81,6 +81,7 @@ jobs:
         cat $GITHUB_PATH
         echo '---------------------------------'
         echo "$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" > github_header
+        echo $(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         paste github_header $GITHUB_PATH > $GITHUB_PATH
         echo '---------------------------------'
         cat $GITHUB_PATH
@@ -99,7 +100,7 @@ jobs:
         which cmake
         echo '===========> which python'
         which python
-        export PATH=$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         FC=gfortran CC=gcc cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         echo '===========> PATH'
         echo $PATH
@@ -127,7 +128,8 @@ jobs:
         which cmake
         echo '--> which python'
         which python
-        export PATH=$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        #export PATH=$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         echo '===========> PATH'
         echo $PATH
         echo '===========> ENV'
