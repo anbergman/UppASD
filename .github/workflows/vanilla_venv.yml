@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { icon: '⬛', sys: mingw32, arch: i686 }
           - { icon: '🟦', sys: mingw64, arch: x86_64 }
-          - { icon: '🟨', sys: ucrt64,  arch: x86_64  } # Experimental!
+          #- { icon: '⬛', sys: mingw32, arch: i686 }
+          #- { icon: '🟨', sys: ucrt64,  arch: x86_64  } # Experimental!
           #- { icon: '🟧', sys: clang64, arch: x86_64 } # Experimental!
     name: 🚧 ${{ matrix.icon }} ${{ matrix.sys }}
     defaults:
@@ -68,6 +68,7 @@ jobs:
 
     - name: '🚧 Setup python environment' 
       run: |
+        which python
         python -m ensurepip
         python -m pip install virtualenv
         python -m venv ~/build_env
@@ -98,7 +99,18 @@ jobs:
         which cmake
         echo '===========> which python'
         which python
+        export PATH=$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         FC=gfortran CC=gcc cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+        echo '===========> PATH'
+        echo $PATH
+        echo '===========> ENV'
+        env
+        echo '===========> which gfortran'
+        which gfortran
+        echo '===========> which cmake'
+        which cmake
+        echo '===========> which python'
+        which python
         cmake --build build 
         ls ./bin
         cp ./bin/sd.gfortran.exe ./bin/sd.gfortran.${{matrix.sys}}.${{matrix.arch}}.exe
@@ -115,6 +127,11 @@ jobs:
         which cmake
         echo '--> which python'
         which python
+        export PATH=$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        echo '===========> PATH'
+        echo $PATH
+        echo '===========> ENV'
+        env
         source ~/build_env/Scripts/activate
         echo '--> which gfortran'
         which gfortran

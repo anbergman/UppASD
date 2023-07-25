@@ -75,6 +75,17 @@ jobs:
         with:
           python-version: 3.9
 
+      - name: '🚧 Setup python environment' 
+        run: |
+          which python
+          python -m ensurepip
+          python -m pip install virtualenv
+          python -m venv ~/build_env
+          source ~/build_env/Scripts/activate
+          python -m pip install build wheel setuptools numpy cibuildwheel 
+          deactivate
+          
+
       - name: Run CMAKE
         run: |
           echo '================='
@@ -83,6 +94,7 @@ jobs:
           which cmake
           echo '================='
           export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g')::/c/msys64/mingw64/bin:/c/msys64/mingw64/lib:/c/rtools43/x86_64-w64-mingw32.static.posix:$PATH
+          source ~/build_env/Scripts/activate
           export CMAKE_PREFIX_PATH="/c/rtools43/x86_64-w64-mingw32.static.posix;/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           export CMAKE_MODULE_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           #export CMAKE_PREFIX_PATH='$Python_ROOT_DIR;/c/msys64/mingw64/bin;/c/msys64/mingw64/lib;/c/msys64/mingw64/share/cmake'
@@ -92,9 +104,6 @@ jobs:
           which gfortran
           which cmake
           echo '================='
-          #$Env:PATH += ';C:\msys64\mingw64\bin'
-          #$Env:PATH += ';C:\msys64\mingw64\lib'
-          #$Env:PATH += ';C:\msys64\mingw64\include'
           FC=gfortran CC=gcc cmake -S . -B build  -DBUILD_PYTHON=ON -G Ninja -DCMAKE_PREFIX_PATH="/c/msys64/mingw64/share;/c/msys64/mingw64/lib"
           cmake --build build --verbose
         # to supply options, put them in 'env', like:
