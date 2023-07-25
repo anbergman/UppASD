@@ -67,7 +67,13 @@ jobs:
         echo '----ENV----'
         env
         echo '---/mingw64----'
-        ls /c/msys64/mingw64
+        ls /mingw64
+        echo '---/c---''
+        ls /c/
+        echo '---/c/msys64/---''
+        ls /c/msys64/
+        echo '---/c/msys64/mingw64---''
+        ls /c/msys64/mingw64/
         
     - name: '🚧 Verify environment after'
       run: |
