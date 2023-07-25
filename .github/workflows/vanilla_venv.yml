@@ -101,7 +101,6 @@ jobs:
         echo '===========> which python'
         which python
         export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
-        FC=gfortran CC=gcc cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         echo '===========> PATH'
         echo $PATH
         echo '===========> ENV'
@@ -112,6 +111,7 @@ jobs:
         which cmake
         echo '===========> which python'
         which python
+        FC=gfortran CC=gcc cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
         ls ./bin
         cp ./bin/sd.gfortran.exe ./bin/sd.gfortran.${{matrix.sys}}.${{matrix.arch}}.exe

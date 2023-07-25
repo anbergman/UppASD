@@ -125,7 +125,11 @@ jobs:
         echo '--> which cmake'
         which cmake
         #export PATH=${pythonLocation}:/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo '===========> PATH'
+        echo $PATH
         export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        echo '===========> PATH'
+        echo $PATH
         echo '--> which gfortran'
         which gfortran
         echo '--> which cmake'
