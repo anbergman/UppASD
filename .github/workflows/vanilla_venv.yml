@@ -34,7 +34,7 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         msystem: ${{matrix.sys}}
-        update: true
+        path-type: full
         pacboy: >-
           toolchain:p
           openblas:p
@@ -48,7 +48,7 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         msystem: ${{matrix.sys}}
-        update: true
+        path-type: full
         pacboy: >-
           toolchain:p
           flang:p
@@ -60,6 +60,11 @@ jobs:
 
     - name: '🚧 Verify environment'
       run: |
+        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo '----PATH----'
+        echo $PATH
+        echo '----ENV----'
+        env
         export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         echo '----PATH----'
         echo $PATH
