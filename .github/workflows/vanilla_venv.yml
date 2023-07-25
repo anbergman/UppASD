@@ -85,15 +85,19 @@ jobs:
         cat $GITHUB_PATH
           
     - name: '🚧 Build TOOL executable'
+      env:
+        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
       run: |
         echo '===========> which gfortran'
         which gfortran
         echo '===========> which cmake'
         which cmake
+        echo '===========> which python"
+        which python
         echo '===========> ENV'
         env
         echo '===========> PATH'
-        $PATH
+        echo $PATH
         FC=gfortran CC=gcc cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
         ls ./bin
@@ -102,6 +106,8 @@ jobs:
         ls ./bin
         
     - name: '🚧 Build TOOL python library'
+      env: 
+        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
       run: |
         echo '--> which gfortran'
         which gfortran
