@@ -1,4 +1,4 @@
-name: Build binaries and python library on Windows (MSYS2 shell)
+name: Build binaries and python library on Windows (MSYS2+bash+venv)
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
     name: 🚧 ${{ matrix.icon }} ${{ matrix.sys }}
     defaults:
       run:
-        shell: msys2 {0}
+        shell: bash
     steps:
 
     - name: '🧰 Checkout'
@@ -42,9 +42,6 @@ jobs:
           fftw:p
           cmake:p
           ninja:p
-          python-pip:p
-          python-numpy:p
-          python-scipy:p
           
     - name: '${{ matrix.icon }} Setup MSYS2 clang'
       if: ${{ matrix.sys == 'clang64' }}
@@ -60,13 +57,30 @@ jobs:
           fftw:p
           cmake:p
           ninja:p
-          python-pip:p
-          python-numpy:p
-          python-scipy:p
 
+    - name: '🚧 Verify environment'
+      run: |
+        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo '----PATH----'
+        echo $PATH
+        echo '----ENV----'
+        env
+        
+          
+    - name: '🚧 Setup python environment' 
+      run: |
+        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        python -m ensurepip
+        python -m pip install virtualenv
+        python -m venv ~/build_env
+        source ~/build_env/Scripts/activate
+        python -m pip install build wheel setuptools numpy cibuildwheel 
+        deactivate
+        
           
     - name: '🚧 Build TOOL executable'
       run: |
+        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
         ls ./bin
@@ -76,9 +90,12 @@ jobs:
         
     - name: '🚧 Build TOOL python library'
       run: |
+        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        source ~/build_env/Scripts/activate
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON
         cmake --build build 
         ls ./lib
+        deactivate
         
     - uses: actions/upload-artifact@v3
       with:
