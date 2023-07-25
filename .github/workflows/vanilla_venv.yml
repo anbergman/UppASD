@@ -61,36 +61,13 @@ jobs:
           cmake:p
           ninja:p
 
-    - name: '🚧 Verify environment'
-      run: |
-        echo '----PATH----'
-        echo $PATH
-        echo '----ENV----'
-        env
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        echo '----PATH----'
-        echo $PATH
-        echo '----ENV----'
-        env
-        
-    - name: '🚧 Verify environment 2'
-      env:
-        PATH : /c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH 
-      run: |
-        echo '----PATH----'
-        echo $PATH
-        echo '----ENV----'
-        env
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        echo '----PATH----'
-        echo $PATH
-        echo '----ENV----'
-        env
-        
-          
+    - name: Setup Python interpreter
+      uses: actions/setup-python@v4
+      with:
+        python-version: 3.11
+
     - name: '🚧 Setup python environment' 
       run: |
-        which python
         python -m ensurepip
         python -m pip install virtualenv
         python -m venv ~/build_env
@@ -98,16 +75,17 @@ jobs:
         python -m pip install build wheel setuptools numpy cibuildwheel 
         deactivate
         
+    - name: '🚧 Add MSYS tools to path'
+      run: |
+        cat $GITHUB_PATH
+        echo '---------------------------------'
+        echo "/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" > github_header
+        paste github_header $GITHUB_PATH > $GITHUB_PATH
+        echo '---------------------------------'
+        cat $GITHUB_PATH
           
     - name: '🚧 Build TOOL executable'
       run: |
-        echo $PATH
-        echo '--> which gfortran'
-        which gfortran
-        echo '--> which cmake'
-        which cmake
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        echo $PATH
         echo '--> which gfortran'
         which gfortran
         echo '--> which cmake'
@@ -121,7 +99,12 @@ jobs:
         
     - name: '🚧 Build TOOL python library'
       run: |
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo '--> which gfortran'
+        which gfortran
+        echo '--> which cmake'
+        which cmake
+        echo '--> which python'
+        which pythond
         source ~/build_env/Scripts/activate
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON
         cmake --build build 
