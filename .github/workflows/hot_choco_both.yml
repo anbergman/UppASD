@@ -1,8 +1,8 @@
 name: Wheel compilation for Windows using rtools and mingw
 
 on:
-  release
-  #push:
+  push:
+  #release
   #pull_request:
 
 concurrency:
