@@ -14,9 +14,9 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { icon: '⬛', sys: mingw32, arch: i686 }
           - { icon: '🟦', sys: mingw64, arch: x86_64 }
-          - { icon: '🟨', sys: ucrt64,  arch: x86_64  } # Experimental!
+          #- { icon: '⬛', sys: mingw32, arch: i686 }
+          #- { icon: '🟨', sys: ucrt64,  arch: x86_64  } # Experimental!
           #- { icon: '🟧', sys: clang64, arch: x86_64 } # Experimental!
     name: 🚧 ${{ matrix.icon }} ${{ matrix.sys }}
     defaults:
@@ -58,9 +58,18 @@ jobs:
           cmake:p
           ninja:p
 
-    - name: '🚧 Verify environment'
+    - name: '🚧 Verify environment before'
       run: |
         export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo "{PATH}={/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH}" >> "$GITHUB_ENV"
+        echo '----PATH----'
+        echo $PATH
+        echo '----ENV----'
+        env
+        
+    - name: '🚧 Verify environment after'
+      run: |
+        #export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
         echo '----PATH----'
         echo $PATH
         echo '----ENV----'
