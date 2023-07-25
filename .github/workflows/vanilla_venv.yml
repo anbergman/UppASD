@@ -35,7 +35,7 @@ jobs:
       with:
         msystem: ${{matrix.sys}}
         release: false
-        path-type: minimal
+        path-type: inherit
         pacboy: >-
           toolchain:p
           gcc-fortran:p
@@ -51,7 +51,7 @@ jobs:
       with:
         msystem: ${{matrix.sys}}
         release: false
-        path-type: minimal
+        path-type: inherit
         pacboy: >-
           toolchain:p
           flang:p
@@ -72,23 +72,29 @@ jobs:
         echo $PATH
         echo '----ENV----'
         env
-        echo '----/c/msys64/'
-        ls /c/msys64/
-        echo '----/c/msys64/mingw64'
-        ls /c/msys64/mingw64
-        echo '----/c/msys64/mingw64/bin'
-        ls /c/msys64/mingw64/bin
+        
+    - name: '🚧 Verify environment 2'
+      env:
+        PATH : /c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH 
+      run: |
+        echo '----PATH----'
+        echo $PATH
+        echo '----ENV----'
+        env
+        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo '----PATH----'
+        echo $PATH
+        echo '----ENV----'
+        env
         
           
     - name: '🚧 Setup python environment' 
       run: |
         which python
-        export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        which python
         python -m ensurepip
         python -m pip install virtualenv
         python -m venv ~/build_env
-        source ~/build_env/bin/activate
+        source ~/build_env/Scripts/activate
         python -m pip install build wheel setuptools numpy cibuildwheel 
         deactivate
         
@@ -116,7 +122,7 @@ jobs:
     - name: '🚧 Build TOOL python library'
       run: |
         export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        source ~/build_env/bin/activate
+        source ~/build_env/Scripts/activate
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON
         cmake --build build 
         ls ./lib
