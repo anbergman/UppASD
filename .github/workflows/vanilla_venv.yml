@@ -65,6 +65,12 @@ jobs:
         echo $PATH
         echo '----ENV----'
         env
+        echo '----/c/msys64/'
+        ls /c/msys64/
+        echo '----/c/msys64/mingw64'
+        ls /c/msys64/mingw64
+        echo '----/c/msys64/mingw64/bin'
+        ls /c/msys64/mingw64/bin
         
           
     - name: '🚧 Setup python environment' 

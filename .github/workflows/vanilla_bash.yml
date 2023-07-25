@@ -1,7 +1,7 @@
 name: Build binaries and python library on Windows (MSYS2+bash)
 
 on:
-  push:
+  #push:
   #release:
   #pull_request:
   #workflow_dispatch:
@@ -78,7 +78,15 @@ jobs:
           
     - name: '🚧 Build TOOL executable'
       run: |
+        echo '--> which gfortran'
+        which gfortran
+        echo '--> which cmake'
+        which cmake
         export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
+        echo '--> which gfortran'
+        which gfortran
+        echo '--> which cmake'
+        which cmake
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
         cmake --build build 
         ls ./bin
