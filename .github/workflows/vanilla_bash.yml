@@ -119,6 +119,8 @@ jobs:
         
           
     - name: '🚧 Build TOOL executable'
+      env:
+        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
       run: |
         echo '--> which gfortran'
         which gfortran
