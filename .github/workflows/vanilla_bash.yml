@@ -110,7 +110,7 @@ jobs:
         
     - name: '🚧 Overwrite directories'
       run: |
-        ln -lsn /c/msys64/mingw64 /mingw64
+        ln -fsn /c/msys64/mingw64 /mingw64
         
           
     - name: '🚧 Build TOOL executable'
