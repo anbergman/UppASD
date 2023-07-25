@@ -66,6 +66,8 @@ jobs:
         echo $PATH
         echo '----ENV----'
         env
+        echo '---/mingw64----'
+        ls /c/msys64/mingw64
         
     - name: '🚧 Verify environment after'
       run: |
