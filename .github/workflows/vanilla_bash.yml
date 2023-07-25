@@ -111,6 +111,7 @@ jobs:
     - name: '🚧 Overwrite directories'
       run: |
         ln -fsn /c/msys64/mingw64 /mingw64
+        cp /c/msys64/mingw64/bin/* /c/ProgramData/Chocolatey/bin/
         
           
     - name: '🚧 Build TOOL executable'
