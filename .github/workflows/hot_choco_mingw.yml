@@ -1,8 +1,8 @@
 name: Wheel compilation for Windows using only mingw
 
 on:
-  push:
-  ##release
+  release
+  #push:
   #pull_request:
 
 concurrency:
