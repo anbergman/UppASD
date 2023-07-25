@@ -111,7 +111,9 @@ jobs:
     - name: '🚧 Overwrite directories'
       run: |
         ln -fsn /c/msys64/mingw64 /mingw64
+        ls /mingw64
         ln -fsn /c/msys64/mingw64/bin /c/ProgramData/Chocolatey/bin/
+        ls /c/ProgramData/Chocolatey/bin/
         #cp /c/msys64/mingw64/bin/* /c/ProgramData/Chocolatey/bin/
         
           
