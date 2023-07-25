@@ -88,7 +88,7 @@ jobs:
         python -m ensurepip
         python -m pip install virtualenv
         python -m venv ~/build_env
-        source ~/build_env/Scripts/activate
+        source ~/build_env/bin/activate
         python -m pip install build wheel setuptools numpy cibuildwheel 
         deactivate
         
@@ -116,7 +116,7 @@ jobs:
     - name: '🚧 Build TOOL python library'
       run: |
         export PATH=/c/msys64/mingw64/bin:/c/msys64/usr/bin:$PATH
-        source ~/build_env/Scripts/activate
+        source ~/build_env/bin/activate
         cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release -DBUILD_PYTHON=ON
         cmake --build build 
         ls ./lib
