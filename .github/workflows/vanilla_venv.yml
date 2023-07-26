@@ -78,17 +78,21 @@ jobs:
         
     - name: '🚧 Add MSYS tools to path'
       run: |
+        echo '-----Original github path--------'
         cat $GITHUB_PATH
-        echo '---------------------------------'
-        echo "$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" > github_header
-        echo $(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        echo '------Action addition------------'
+        #echo "$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" > github_header
+        echo "$(echo '$Python_ROOT_DIR' | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" > github_header
+        echo "$(echo '$Python_ROOT_DIR' | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" 
+        #echo $(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         paste github_header $GITHUB_PATH > $GITHUB_PATH
-        echo '---------------------------------'
+        echo '-----Final github path-----------'
         cat $GITHUB_PATH
           
     - name: '🚧 Build TOOL executable'
-      env:
-        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+      #env:
+      #  PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+      #  # env here does not expand dollar signs
       run: |
         echo '===========> PATH'
         echo $PATH
