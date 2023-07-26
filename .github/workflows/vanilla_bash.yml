@@ -118,6 +118,7 @@ jobs:
         paste github_header $GITHUB_PATH > $GITHUB_PATH
         echo '-----Final github path-----------'
         cat $GITHUB_PATH
+        cp /c/msys64/${{matrix.sys}}/bin/* /usr/bin
         
           
     - name: '🚧 Build TOOL executable'
