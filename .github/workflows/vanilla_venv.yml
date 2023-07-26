@@ -123,15 +123,15 @@ jobs:
         ls ./bin
         
     - name: '🚧 Build TOOL python library'
-      env: 
-        PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+      #env: 
+      #  PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
       run: |
-        echo '--> which gfortran'
-        which gfortran
-        echo '--> which cmake'
-        which cmake
-        echo '--> which python'
-        which python
+        #echo '--> which gfortran'
+        #which gfortran
+        #echo '--> which cmake'
+        #which cmake
+        #echo '--> which python'
+        #which python
         #export PATH=$pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         echo '===========> PATH'
