@@ -107,24 +107,24 @@ jobs:
         echo "Python version"
         ${pythonLocation}/python --version
         
-    #- name: '🚧 Overwrite directories'
-    #  run: |
-    #    ln -fsn /c/msys64/mingw64 /mingw64
-    #    echo "     ls /mingw64    "
-    #    ls -ltr /mingw64
-    #    ln -fsn /c/msys64/mingw64/bin /c/ProgramData/Chocolatey/bin/
-    #    echo "      ls  /c/CHoco   "
-    #    ls -ltr /c/ProgramData/Chocolatey/bin/
-    #    #cp /c/msys64/mingw64/bin/* /c/ProgramData/Chocolatey/bin/
+    - name: '🚧 Add MSYS tools to path'
+      run: |
+        echo '-----Original github path--------'
+        cat $GITHUB_PATH
+        echo '------Action addition------------'
+        parsedPython=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g')
+        echo "$parsedPython:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" > github_header
+        echo "$parsedPython:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin" 
+        paste github_header $GITHUB_PATH > $GITHUB_PATH
+        echo '-----Final github path-----------'
+        cat $GITHUB_PATH
         
           
     - name: '🚧 Build TOOL executable'
-      #env:
-      #  PATH: $pythonLocation:/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
       run: |
-        echo '===========> PATH'
-        echo $PATH
-        export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        #echo '===========> PATH'
+        #echo $PATH
+        #export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         echo '===========> PATH'
         echo $PATH
         echo '--> which gfortran'

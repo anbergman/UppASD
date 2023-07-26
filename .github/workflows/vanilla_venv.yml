@@ -150,6 +150,14 @@ jobs:
         ls ./lib
         deactivate
         
+    - name: '🚧 Build single wheel'
+      run: |
+        export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
+        source ~/build_env/Scripts/activate
+        rm -f build
+        python -m pip wheel . -v
+        deactivate
+
     - uses: actions/upload-artifact@v3
       with:
        name: uppasd.${{matrix.sys}}.${{matrix.arch}}
