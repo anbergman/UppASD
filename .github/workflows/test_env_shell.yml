@@ -137,6 +137,7 @@ jobs:
           echo 'Install packages'
           #python -m pip install cibuildwheel pipx wheel build ninja meson
           echo 'run it'
+          python -m pip install numpy
           python -m pip wheel . -v
           ls *.whl
           #python -m cibuildwheel --platform windows

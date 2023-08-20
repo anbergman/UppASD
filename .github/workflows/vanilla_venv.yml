@@ -157,6 +157,7 @@ jobs:
         rm -rf build
         python -m pip wheel . -vvv
         deactivate
+        ls *.whl
 
     - uses: actions/upload-artifact@v3
       with:
