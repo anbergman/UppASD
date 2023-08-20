@@ -155,7 +155,7 @@ jobs:
         export PATH=$(echo "$Python_ROOT_DIR" | sed -E 's/^C:/\/c/; s/\\/\//g'):/c/msys64/${{matrix.sys}}/bin:/c/msys64/usr/bin:$PATH
         source ~/build_env/Scripts/activate
         rm -rf build
-        python -m pip wheel . -v
+        python -m pip wheel . -vvv
         deactivate
 
     - uses: actions/upload-artifact@v3

@@ -65,22 +65,24 @@ class cmake_build_ext(build_ext):
             if not os.path.exists(self.build_temp):
                 os.makedirs(self.build_temp)
 
+            print('Before CMAKE')
             # Config
             subprocess.check_call(['cmake', ext.cmake_lists_dir] + cmake_args,
                                   cwd=self.build_temp)
 
+            print('Inbetw CMAKE')
             # Build
             subprocess.check_call(['cmake', '--build', '.','--parallel', '--config', cfg],
                                   cwd=self.build_temp)
 
-            #src_file=glob.glob('./'+self.build_temp+'/_uppasd.*.*')
-            lib_path=self.build_temp.replace('temp','lib') #+'/uppasd/'
-            src_file=glob.glob('./'+lib_path+'/_uppasd.*.*')
-            if not os.path.exists(lib_path):
-                os.makedirs(lib_path)
+            ### #src_file=glob.glob('./'+self.build_temp+'/_uppasd.*.*')
+            ### lib_path=self.build_temp.replace('temp','lib') #+'/uppasd/'
+            ### src_file=glob.glob('./'+lib_path+'/_uppasd.*.*')
+            ### if not os.path.exists(lib_path):
+            ###     os.makedirs(lib_path)
 
-            shutil.copy2(src_file[0],'uppasd/')
-            #shutil.copy2(src_file[0],lib_path)
+            ### shutil.copy2(src_file[0],'uppasd/')
+            ### #shutil.copy2(src_file[0],lib_path)
             
 
 
@@ -106,5 +108,5 @@ setup(
         package_dir={'uppasd': 'uppasd'},
         ext_modules=[CMakeExtension(name='_uppasd')],
         scripts=['scripts/uppasd','scripts/uppasd_interactive'],
-        install_requires=['numpy>1.19','f90wrap>0.1']
+        install_requires=['numpy>1.19']
         )
