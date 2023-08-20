@@ -1,6 +1,6 @@
 name: Build wheels across platforms with msys II
 
-on: [release]
+on: [push]
 
 jobs:
   build_wheels:

@@ -1,6 +1,6 @@
 name: Build wheels across platforms
 
-on: [release]
+on: [push]
 
 jobs:
   build_wheels:

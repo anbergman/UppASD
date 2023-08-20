@@ -1,8 +1,8 @@
 name: Build binaries and python library on Windows (MSYS2 shell)
 
 on:
-  release:
-  #push:
+  #release:
+  push:
   #pull_request:
   #workflow_dispatch:
 
