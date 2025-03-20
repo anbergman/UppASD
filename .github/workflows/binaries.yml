@@ -104,6 +104,14 @@ jobs:
              ls -l
              cd ..
 
+      - name: Build .deb and .rpm packages on Mac OS ${{ matrix.icon}}
+        if: runner.os == 'macOS'
+        run: |
+             cd build
+             cpack -G DragNDrop
+             ls -l
+             cd ..
+
       - name: Build NSIS installation package on Windows ${{ matrix.icon}}
         if: runner.os == 'Windows'
         run: |

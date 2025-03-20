@@ -904,10 +904,10 @@ if(WIN32)
    include(InstallRequiredSystemLibraries)
 
     # Include NSIS for creating Windows installers
-    # set(CPACK_GENERATOR "NSIS64")
+    set(CPACK_GENERATOR "NSIS64")
 
     # Include the custom NSIS script
-    # set(CPACK_NSIS_INCLUDE "${CMAKE_SOURCE_DIR}/cpack/CustomInstallNSIS.nsh")
+    set(CPACK_NSIS_INCLUDE "${CMAKE_SOURCE_DIR}/cpack/CustomInstallNSIS.nsh")
 
     # Additional NSIS settings if needed
     set(CPACK_NSIS_MODIFY_PATH ON)
