@@ -872,6 +872,8 @@ message(STATUS "--> ${CMAKE_SYSTEM_NAME}")
 
 # Set package properties
 set(CPACK_PACKAGE_NAME "UppASD")
+set(CPACK_PACKAGE_FILE_NAME "UppASD-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_DESCRIPTION "UppASD is a package for atomistic spin dynamics and Monte Carlo simulations.")
 set(CPACK_PACKAGE_VERSION "1.0.1")
 set(CPACK_PACKAGE_CONTACT "uppasd@physics.uu.se")
 set(CPACK_PACKAGE_VENDOR "The UppASD group")
@@ -883,6 +885,20 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/cpack/README.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "UppASD is a package for atomistic spin dynamics and Monte Carlo simulations.")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/UppASD/UppASD")
 #set(CPACK_GENERATOR "STGZ;DEB;RPM")
+
+
+if(APPLE)
+    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/cpack/dialog.jpg") # Optional background image
+    set(CPACK_DMG_FORMAT "UDZO") # Compressed image
+    set(CPACK_DMG_APPLICATION_ICON "${CMAKE_SOURCE_DIR}/cpack/uppasd.icns")
+    set(CPACK_DMG_DS_STORE "${CMAKE_SOURCE_DIR}/cpack/DS_Store")
+    set(CPACK_DMG_VOLUME_NAME "UppASD")
+    # install(TARGETS uppasd DESTINATION ".") # Place uppasd in the DMG root
+
+
+
+endif()
 
 if(WIN32)
    include(InstallRequiredSystemLibraries)
@@ -908,6 +924,6 @@ if(WIN32)
     set(CPACK_WIX_PATCH_FILE "${CMAKE_SOURCE_DIR}/cpack/wixpath.xml")
     # set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_SOURCE_DIR}/PathEnvironment.wxs")
    set(CPACK_WIX_VERSION "4")
-   endif()
+endif()
 
 include(CPack)
