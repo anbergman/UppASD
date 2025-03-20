@@ -61,7 +61,7 @@ jobs:
       - name: Build binaries ${{ matrix.icon}} on macOS
         if: runner.os == 'macOS'
         run: |
-             FC=gfortran cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+             FC=gfortran-14 cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
              cmake --build build --parallel 
              mkdir ./dist
              ls -l ./bin
