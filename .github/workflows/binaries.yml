@@ -24,7 +24,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           # fftw3 
-          brew install fftw ninja meson
+          brew install fftw ninja meson gcc
           fftw-wisdom -V
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
 
@@ -58,7 +58,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Build binaries ${{ matrix.icon}}
+      - name: Build binaries ${{ matrix.icon}} on macOS
+        if: runner.os == 'macOS'
+        run: |
+             FC=gfortran cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
+             cmake --build build --parallel 
+             mkdir ./dist
+             ls -l ./bin
+             cp ./bin/uppasd* ./dist/uppasd.${{runner.os}}.${{matrix.arch}}.exe
+
+      - name: Build binaries ${{ matrix.icon}} 
         run: |
              cmake -S . -G Ninja -B build -DCMAKE_BUILD_TYPE=Release
              cmake --build build --parallel 
@@ -67,6 +76,7 @@ jobs:
              cp ./bin/uppasd* ./dist/uppasd.${{runner.os}}.${{matrix.arch}}.exe
 
       - name: Install python packages for testing
+        if: runner.os != 'Windows'
         run: |
             python -m ensurepip 
             python -m pip install pyyaml
