@@ -48,10 +48,10 @@ jobs:
             mingw-w64-x86_64-fftw
             mingw-w64-x86_64-cmake
             mingw-w64-x86_64-ninja
-            mingw-w64-x86_64-python-pip
-            mingw-w64-x86_64-python-pipx
             mingw-w64-x86_64-python-virtualenv
             git 
+          #  mingw-w64-x86_64-python-pip
+          #  mingw-w64-x86_64-python-pipx
 
       - uses: actions/checkout@v4
 
@@ -70,9 +70,9 @@ jobs:
 
       - name: Build wheels on Windows ${{ matrix.icon}}
         if: runner.os == 'Windows'
-        uses: pypa/cibuildwheel@v2.23.1
-        # run: |
-        #   pipx run cibuildwheel --output-dir wheelhouse
+        # uses: pypa/cibuildwheel@v2.23.1
+        run: |
+          pipx run cibuildwheel --output-dir wheelhouse
         # which gfortran
         # . my_env/Scripts/activate
         # python -m cibuildwheel --output-dir wheelhouse

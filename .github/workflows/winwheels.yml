@@ -2,7 +2,7 @@ name: Build wheels on Windows, using old build algo
 
 on:
   release:
-  push:
+  # push:
   # pull_request:
   # workflow_dispatch:
 
