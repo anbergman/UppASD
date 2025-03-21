@@ -872,7 +872,8 @@ message(STATUS "--> ${CMAKE_SYSTEM_NAME}")
 
 # Set package properties
 set(CPACK_PACKAGE_NAME "UppASD")
-set(CPACK_PACKAGE_FILE_NAME "UppASD-${CMAKE_SYSTEM_NAME}")
+set(CPACK_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSION}-${CPACK_SYSTEM_NAME}")
+#set(CPACK_PACKAGE_FILE_NAME "UppASD-${CMAKE_SYSTEM_NAME}")
 set(CPACK_PACKAGE_DESCRIPTION "UppASD is a package for atomistic spin dynamics and Monte Carlo simulations.")
 set(CPACK_PACKAGE_VERSION "1.0.1")
 set(CPACK_PACKAGE_CONTACT "uppasd@physics.uu.se")
@@ -884,11 +885,11 @@ set(CPACK_RESOURCE_FILE_WELCOME "${CMAKE_SOURCE_DIR}/cpack/WELCOME.txt")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/cpack/README.txt")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "UppASD is a package for atomistic spin dynamics and Monte Carlo simulations.")
 set(CPACK_PACKAGE_HOMEPAGE_URL "https://github.com/UppASD/UppASD")
-#set(CPACK_GENERATOR "STGZ;DEB;RPM")
-
+# Default linux generators
+set(CPACK_GENERATOR "DEB;RPM;TGZ;ZIP")
 
 if(APPLE)
-    set(CPACK_GENERATOR "DragNDrop")
+    set(CPACK_GENERATOR "DragNDrop,ZIP")
     set(CPACK_DMG_BACKGROUND_IMAGE "${CMAKE_SOURCE_DIR}/cpack/dialog.jpg") # Optional background image
     set(CPACK_DMG_FORMAT "UDZO") # Compressed image
     set(CPACK_DMG_APPLICATION_ICON "${CMAKE_SOURCE_DIR}/cpack/uppasd.icns")
@@ -901,29 +902,32 @@ if(APPLE)
 endif()
 
 if(WIN32)
-   include(InstallRequiredSystemLibraries)
-
-    # Include NSIS for creating Windows installers
-    set(CPACK_GENERATOR "NSIS64")
-
-    # Include the custom NSIS script
-    set(CPACK_NSIS_INCLUDE "${CMAKE_SOURCE_DIR}/cpack/CustomInstallNSIS.nsh")
-
-    # Additional NSIS settings if needed
-    set(CPACK_NSIS_MODIFY_PATH ON)
-    set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
-    set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "Call AddToPath")
-
-    # WIX installer
-    # set(CPACK_WIX_UPGRADE_GUID "E25F58C1-EC45-422A-9700-7254DB19547B")
-    # WIX installer
-    set(CPACK_WIX_LICENSE_RTF "${CMAKE_SOURCE_DIR}/cpack/LICENSE.rtf")
-    set(CPACK_WIX_UI_BANNER "${CMAKE_SOURCE_DIR}/cpack/banner.jpg")
-    set(CPACK_WIX_UI_DIALOG "${CMAKE_SOURCE_DIR}/cpack/dialog.jpg")
-    set(CPACK_WIX_UPGRADE_GUID "02cf4cf7-fa5b-43de-a8ff-b39098d35db3")
-    set(CPACK_WIX_PATCH_FILE "${CMAKE_SOURCE_DIR}/cpack/wixpath.xml")
-    # set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_SOURCE_DIR}/PathEnvironment.wxs")
-   set(CPACK_WIX_VERSION "4")
+    set(CPACK_GENERATOR "ZIP")
 endif()
+# if(WIN32)
+#    include(InstallRequiredSystemLibraries)
+# 
+#     # Include NSIS for creating Windows installers
+#     set(CPACK_GENERATOR "NSIS64")
+# 
+#     # Include the custom NSIS script
+#     set(CPACK_NSIS_INCLUDE "${CMAKE_SOURCE_DIR}/cpack/CustomInstallNSIS.nsh")
+# 
+#     # Additional NSIS settings if needed
+#     set(CPACK_NSIS_MODIFY_PATH ON)
+#     set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
+#     set(CPACK_NSIS_EXTRA_INSTALL_COMMANDS "Call AddToPath")
+# 
+#     # WIX installer
+#     # set(CPACK_WIX_UPGRADE_GUID "E25F58C1-EC45-422A-9700-7254DB19547B")
+#     # WIX installer
+#     set(CPACK_WIX_LICENSE_RTF "${CMAKE_SOURCE_DIR}/cpack/LICENSE.rtf")
+#     set(CPACK_WIX_UI_BANNER "${CMAKE_SOURCE_DIR}/cpack/banner.jpg")
+#     set(CPACK_WIX_UI_DIALOG "${CMAKE_SOURCE_DIR}/cpack/dialog.jpg")
+#     set(CPACK_WIX_UPGRADE_GUID "02cf4cf7-fa5b-43de-a8ff-b39098d35db3")
+#     set(CPACK_WIX_PATCH_FILE "${CMAKE_SOURCE_DIR}/cpack/wixpath.xml")
+#     # set(CPACK_WIX_EXTRA_SOURCES "${CMAKE_SOURCE_DIR}/PathEnvironment.wxs")
+#    set(CPACK_WIX_VERSION "4")
+# endif()
 
 include(CPack)

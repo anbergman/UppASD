@@ -88,10 +88,10 @@ jobs:
              ctest --verbose --output-on-failure
              cd ..
 
-      - name: Build self-extracting package ${{ matrix.icon}}
+      - name: Build zip file archive ${{ matrix.icon}}
         run: |
              cd build
-             cpack -G STGZ
+             cpack -G ZIP
              ls -l
              cd ..
 
@@ -104,7 +104,7 @@ jobs:
              ls -l
              cd ..
 
-      - name: Build .deb and .rpm packages on Mac OS ${{ matrix.icon}}
+      - name: Build DragNDrop package on Mac OS ${{ matrix.icon}}
         if: runner.os == 'macOS'
         run: |
              cd build
@@ -112,14 +112,14 @@ jobs:
              ls -l
              cd ..
 
-      - name: Build NSIS installation package on Windows ${{ matrix.icon}}
-        if: runner.os == 'Windows'
-        run: |
-             cd build
-             cat CPackConfig.cmake
-             cpack -G NSIS64
-             ls -l
-             cd ..
+      # - name: Build NSIS installation package on Windows ${{ matrix.icon}}
+      #   if: runner.os == 'Windows'
+      #   run: |
+      #        cd build
+      #        cat CPackConfig.cmake
+      #        cpack -G NSIS64
+      #        ls -l
+      #        cd ..
 
       # - name: Build WIX installation package on Windows ${{ matrix.icon}}
       #   if: runner.os == 'Windows'
@@ -169,18 +169,24 @@ jobs:
       #     name: UppASD.${{runner.os}}.${{matrix.arch}}.installer.exe
       #     path: ./build/uppasd*.exe
 
-      - name: Upload Windows WIX installer
-        uses: actions/upload-artifact@v4
-        if: runner.os == 'Windows'
-        with:
-          name: UppASD.${{runner.os}}.${{matrix.arch}}.msi
-          path: ./build/UppASD*.msi
+      # - name: Upload Windows WIX installer
+      #   uses: actions/upload-artifact@v4
+      #   if: runner.os == 'Windows'
+      #   with:
+      #     name: UppASD.${{runner.os}}.${{matrix.arch}}.msi
+      #     path: ./build/UppASD*.msi
 
       - name: Upload binaries
         uses: actions/upload-artifact@v4
         with:
           name: uppasd.${{runner.os}}.${{matrix.arch}}
           path: ./dist/uppasd*
+
+      - name: Upload zip archives
+        uses: actions/upload-artifact@v4
+        with:
+          name: uppasd.${{runner.os}}.${{matrix.arch}}
+          path: ./build/UppASD*.zip
 
       # - name: Upload NSIS log
       #   if: runner.os == 'Windows'
