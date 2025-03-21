@@ -142,11 +142,11 @@ jobs:
       #       cp ./bin/sd.* ./dist/uppasd.${{matrix.os}}.${{matrix.arch}}
       #       echo "Binary:" uppasd.${{matrix.os}}.${{matrix.arch}}
 
-      - name: Upload self-extracting package
-        uses: actions/upload-artifact@v4
-        with:
-          name: UppASD.${{runner.os}}.${{matrix.arch}}
-          path: ./build/UppASD*.sh
+      # - name: Upload self-extracting package
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: UppASD.${{runner.os}}.${{matrix.arch}}
+      #     path: ./build/UppASD*.sh
 
       - name: Upload .deb package
         uses: actions/upload-artifact@v4
@@ -185,7 +185,7 @@ jobs:
       - name: Upload zip archives
         uses: actions/upload-artifact@v4
         with:
-          name: uppasd.${{runner.os}}.${{matrix.arch}}
+          name: uppasd.${{runner.os}}.${{matrix.arch}}.zip
           path: ./build/UppASD*.zip
 
       # - name: Upload NSIS log
