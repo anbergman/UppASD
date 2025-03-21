@@ -70,8 +70,9 @@ jobs:
 
       - name: Build wheels on Windows ${{ matrix.icon}}
         if: runner.os == 'Windows'
-        run: |
-          pipx run cibuildwheel --output-dir wheelhouse
+        uses: pypa/cibuildwheel@v2.23.1
+        # run: |
+        #   pipx run cibuildwheel --output-dir wheelhouse
         # which gfortran
         # . my_env/Scripts/activate
         # python -m cibuildwheel --output-dir wheelhouse
@@ -89,7 +90,7 @@ jobs:
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
    
       - name: Build wheels on Linux and macOS ${{ matrix.icon}}
-        uses: pypa/cibuildwheel@v2.23.0
+        uses: pypa/cibuildwheel@v2.23.1
         if: runner.os != 'Windows'
         with:
           output-dir: wheelhouse
