@@ -24,7 +24,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           # fftw3 
-          brew install fftw ninja meson gcc
+          brew install fftw meson
           fftw-wisdom -V
           echo "SDKROOT=$(xcrun --sdk macosx --show-sdk-path)" >> $GITHUB_ENV
 

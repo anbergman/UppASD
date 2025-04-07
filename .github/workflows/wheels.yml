@@ -24,7 +24,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
           # fftw3 
-          brew install fftw ninja meson
+          brew install fftw meson
           fftw-wisdom -V
 
       - name: Provide ninja on Linux ${{ matrix.icon}}
@@ -44,6 +44,7 @@ jobs:
             mingw-w64-x86_64-gcc-fortran
             mingw-w64-x86_64-blas
             mingw-w64-x86_64-openblas
+            mingw-w64-x86_64-openblas64
             mingw-w64-x86_64-lapack
             mingw-w64-x86_64-fftw
             mingw-w64-x86_64-cmake
